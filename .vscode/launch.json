@@ -1,0 +1,73 @@
+{
+    "configurations": [
+        {
+            "name": "GCC-Run",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
+            "externalConsole": true,
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "preLaunchTask": "cpp-build-and-run",
+            "presentation": {
+                "hidden": false,
+                "group": "",
+                "order": 1
+            }
+        },
+        {
+            "name": "MSVC-Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "internalConsoleOptions": "neverOpen",
+            "console": "integratedTerminal",
+            "enableDebugHeap": true,
+            
+            "preLaunchTask": "debugFile",
+            "presentation": {
+                "hidden": false,
+                "group": "",
+                "order": 2
+            }
+        },
+        {
+            "name": "GCC-Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "avoidWindowsConsoleRedirection": false,
+            "internalConsoleOptions": "neverOpen",
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\Program Files\\msys64\\ucrt64\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "debugFile",
+            "presentation": {
+                "hidden": false,
+                "group": "",
+                "order": 3
+            }
+        },
+    ],
+    "version": "2.0.0"
+}

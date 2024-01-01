@@ -1,0 +1,49 @@
+{
+    "tasks": [
+        {
+            "label": "debugFile",
+            "detail": "Builds the file for debugging.",
+            "type": "cppbuild",
+            "command": "C:\\Program Files\\msys64\\ucrt64\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-Wall",
+                "${file}",
+                "-o",
+                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault" : true
+            },
+            "presentation": {
+                "clear": true,
+                "showReuseMessage": false,
+                "echo": false,
+                "reveal": "silent",
+                "close": true
+            }
+        },
+        {
+            "label": "cpp-build-and-run",
+            "type": "shell",
+            "command": "cmd",
+            "args": ["/c", "start", "cmd", "/k", "run.bat", "${fileBasename}"],
+
+            "presentation": {
+                "clear": true,
+                "showReuseMessage": false,
+                "reveal": "silent",
+                "close": true
+            }
+        }
+    ],
+    "version": "2.0.0"
+}
