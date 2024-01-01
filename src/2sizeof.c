@@ -1,4 +1,3 @@
-/* C program to display size in bytes of different data types using sizeof() operator */
 #include <stdio.h>
 
 void print_size(const char* type, int size){
