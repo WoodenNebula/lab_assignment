@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     print_size("long long", sizeof(long long));
     print_size("unsigned", sizeof(unsigned));
     print_size("short", sizeof(short));
+    print_size("int*", sizeof(int*));
 
     return 0;
 }
