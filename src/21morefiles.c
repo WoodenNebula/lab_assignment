@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
         if ( ch == ' ') {
             continue;
         } else if( ch != '\n') {
-            putchar(ch);
             num_char++;
         } else if( ch == '\n' ) {
             num_line++;
@@ -30,6 +29,6 @@ int main(int argc, char *argv[]) {
 
     printf("\nLines = %d\nCharacters[EXCLUDING WHITESPACES] = %d", num_line, num_char);
 
-
+    fclose(file);
     return 0;
 }
