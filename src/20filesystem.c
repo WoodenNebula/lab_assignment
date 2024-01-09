@@ -67,10 +67,9 @@ int main(int argc, char *argv[]) {
             ERROR("FILE DIDN'T OPEN!");
         }
 
-        int line_num = 0;
-        while( fgets(lines[line_num], sizeof(lines[line_num]), file) != NULL ) {
-            printf("%s", lines[line_num]);
-            line_num++;
+        char line_buffer[50];
+        while( fgets(line_buffer, sizeof(line_buffer), file) != NULL ) {
+            printf("%s", line_buffer);
         }
         puts("\n");
 
