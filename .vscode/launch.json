@@ -1,42 +1,23 @@
 {
     "configurations": [
         {
-            "name": "GCC-Run",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
-            "externalConsole": true,
-            "cwd": "${workspaceFolder}",
-            "MIMode": "gdb",
-            "preLaunchTask": "cpp-build-and-run",
-            "presentation": {
-                "hidden": false,
-                "group": "",
-                "order": 1
-            }
-        },
-        {
-            "name": "MSVC-Debug",
+            "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
+            "preLaunchTask": "",
             "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "internalConsoleOptions": "neverOpen",
-            "console": "integratedTerminal",
-            "enableDebugHeap": true,
-            
-            "preLaunchTask": "debugFile",
-            "presentation": {
-                "hidden": false,
-                "group": "",
-                "order": 2
-            }
+            "console": "externalTerminal",
+            "logging": {
+                "moduleLoad": false,
+                "trace": true
+            },
         },
         {
-            "name": "GCC-Debug",
+            "name": "C++: gdb.exe build and debug active file",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
@@ -45,10 +26,8 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "avoidWindowsConsoleRedirection": false,
-            "internalConsoleOptions": "neverOpen",
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\Program Files\\msys64\\ucrt64\\bin\\gdb.exe",
+            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -61,13 +40,8 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "debugFile",
-            "presentation": {
-                "hidden": false,
-                "group": "",
-                "order": 3
-            }
-        },
+            "preLaunchTask": "C++: g++.exe build active file",
+        }
     ],
     "version": "2.0.0"
 }

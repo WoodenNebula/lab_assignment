@@ -1,10 +1,10 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "label": "debugFile",
-            "detail": "Builds the file for debugging.",
             "type": "cppbuild",
-            "command": "C:\\Program Files\\msys64\\ucrt64\\bin\\gcc.exe",
+            "label": "C++: g++.exe build active file",
+            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
@@ -14,36 +14,23 @@
                 "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault" : true
-            },
+            "group": "build",
+            "detail": "compiler: g++.exe",
             "presentation": {
-                "clear": true,
-                "showReuseMessage": false,
-                "echo": false,
+                "echo": true,
                 "reveal": "silent",
-                "close": true
+                "revealProblems": "onProblem",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+                "close": true,
             }
         },
-        {
-            "label": "cpp-build-and-run",
-            "type": "shell",
-            "command": "cmd",
-            "args": ["/c", "start", "cmd", "/k", "run.bat", "${fileBasename}"],
-
-            "presentation": {
-                "clear": true,
-                "showReuseMessage": false,
-                "reveal": "silent",
-                "close": true
-            }
-        }
-    ],
-    "version": "2.0.0"
+    ]
 }
