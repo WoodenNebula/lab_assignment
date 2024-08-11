@@ -4,7 +4,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "preLaunchTask": "",
+            "preLaunchTask": "C++: g++.exe build active file",
             "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
