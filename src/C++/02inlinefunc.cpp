@@ -1,4 +1,4 @@
-#include <iostream>about:blank#blocked
+#include <iostream>
 
 inline float area(float rad) {
     return 3.14f * rad * rad;
