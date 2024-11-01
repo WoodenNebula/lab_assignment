@@ -1,23 +1,63 @@
 #include "./set-helper.h"
-using Set = std::vector<int>;
 
-Set setUnion(const Set& setA, const Set& setB) {
-  std::vector<int> setU(setA);
+namespace SET
+{
+  Set Union(const Set& setA, const Set& setB) {
+    Set setU(setA);
 
-  for (const int& x : setB) {
-    if (std::find(setU.begin(), setU.end(), x) == setU.end()) {
-      setU.push_back(x);
+    for (const auto& x : setB) {
+      auto indx = std::find(setA.begin(), setA.end(), x);
+      bool isCommonElement = indx != setA.end();
+      if (!isCommonElement) {
+        setU.push_back(x);
+      }
     }
+
+    std::sort(setU.begin(), setU.end());
+    return setU;
   }
 
-  return setU;
-}
+  Set Intersection(const Set& setA, const Set& setB) {
+    Set setN;
+
+    for (const auto& x : setB) {
+      auto indx = std::find(setA.begin(), setA.end(), x);
+      bool isCommonElement = indx != setA.end();
+      if (isCommonElement) {
+        setN.push_back(x);
+      }
+    }
+
+    std::sort(setN.begin(), setN.end());
+    return setN;
+  }
+
+  Set Difference(const Set& setA, const Set& setB) {
+    Set diff(setA);
+
+    for (const auto& x : setB) {
+      if (diff.size() <= 0) {
+        break;
+      }
+
+      auto indx = std::find(diff.begin(), diff.end(), x);
+      bool isCommonElement = indx != diff.end();
+
+      if (isCommonElement) {
+        diff.erase(indx);
+      }
+    }
+
+    return diff;
+  }
+};
 
 int main() {
-  Set A = SET::inputSet('A');
-  Set B = SET::inputSet('B');
+  using namespace SET;
+  Set A = InputSet('A');
+  Set B = InputSet('B');
 
-  Set U = setUnion(A, B);
-
-  std::cout << "A u B = " << U << std::endl;
+  std::cout << "A u B = " << Union(A, B) << std::endl;
+  std::cout << "A n B = " << Intersection(A, B) << std::endl;
+  std::cout << "A - B = " << Difference(A, B) << std::endl;
 }

@@ -2,8 +2,9 @@
 
 
 int main() {
-  std::vector<int> setA = SET::inputSet('A');
-  std::vector<int> setB = SET::inputSet('B');
+  using namespace SET;
+  Set setA = InputSet('A');
+  Set setB = InputSet('B');
 
   // std::cout << setA << ", " << setB << std::endl;
 

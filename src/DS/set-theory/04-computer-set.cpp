@@ -11,9 +11,9 @@ size_t findInUniversalSet(const std::vector<int>& setU, int valueToFind) {
 }
 
 int main() {
-  // std::vector<int> setU = SET::inputSet('U');
-  std::vector<int> setU = SET::inputSet('U');
-  std::vector<int> setA = SET::inputSet('A');
+  using namespace SET;
+  Set setU = InputSet('U');
+  Set setA = InputSet('A');
 
   std::string bitString(setU.size(), '0');
 
