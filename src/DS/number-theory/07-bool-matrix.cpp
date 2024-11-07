@@ -16,9 +16,9 @@ std::ostream& operator<<(std::ostream& os, const BoolMatrix& matrix) {
 
 BoolMatrix join(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
   BoolMatrix result;
-  for (int i = 0; i < matrixA.size(); i++) {
+  for (size_t i = 0; i < matrixA.size(); i++) {
     std::vector<bool> row;
-    for (int j = 0; j < matrixA[i].size(); j++) {
+    for (size_t j = 0; j < matrixA[i].size(); j++) {
       row.push_back(matrixA[i][j] || matrixB[i][j]);
     }
     result.push_back(row);
@@ -28,9 +28,9 @@ BoolMatrix join(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
 
 BoolMatrix meet(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
   BoolMatrix result;
-  for (int i = 0; i < matrixA.size(); i++) {
+  for (size_t i = 0; i < matrixA.size(); i++) {
     std::vector<bool> row;
-    for (int j = 0; j < matrixA[i].size(); j++) {
+    for (size_t j = 0; j < matrixA[i].size(); j++) {
       row.push_back(matrixA[i][j] && matrixB[i][j]);
     }
     result.push_back(row);
@@ -40,11 +40,11 @@ BoolMatrix meet(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
 
 BoolMatrix product(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
   BoolMatrix result;
-  for (int i = 0; i < matrixA.size(); i++) {
+  for (size_t i = 0; i < matrixA.size(); i++) {
     std::vector<bool> row;
-    for (int j = 0; j < matrixB[i].size(); j++) {
+    for (size_t j = 0; j < matrixB[i].size(); j++) {
       bool value = false;
-      for (int k = 0; k < matrixA[i].size(); k++) {
+      for (size_t k = 0; k < matrixA[i].size(); k++) {
         value = value || (matrixA[i][k] && matrixB[k][j]);
       }
       row.push_back(value);
