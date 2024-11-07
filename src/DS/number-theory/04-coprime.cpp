@@ -9,16 +9,14 @@ int gcdEuclidean(int x, int y) {
   return gcdEuclidean(y, x % y);
 }
 
-bool isGcd(int x, int y) {
+bool isCoPrime(int x, int y) {
   return gcdEuclidean(x, y) == 1;
 }
-
-
 
 int main() {
   int x, y;
   std::cout << "Enter x, y: ";
   std::cin >> x >> y;
 
-  std::cout << (isGcd(x, y) ? "Co-Prime" : "Not Co-Prime") << std::endl;
+  std::cout << (isCoPrime(x, y) ? "Co-Prime" : "Not Co-Prime") << std::endl;
 }
