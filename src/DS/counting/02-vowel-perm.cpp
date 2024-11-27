@@ -1,20 +1,7 @@
 #include <iostream>
 #include <unordered_map>
-#include <cmath>
 #include <string>
-#include <algorithm>
-
-int fact(int n) {
-  if (n <= 0) {
-    return 1;
-  }
-
-  return n * fact(n - 1);
-}
-
-int perm(int n, int r) {
-  return fact(n) / fact(n - r);
-}
+#include "./Math.h"
 
 using Vowels = std::unordered_map<char, int>;
 Vowels getVowels(const std::string& word) {

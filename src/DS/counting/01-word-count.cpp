@@ -2,17 +2,10 @@
 #include <string>
 #include <unordered_map>
 #include <algorithm>
+#include "./Math.h"
 
-
-int fact(int n) {
-  if (n <= 0) {
-    return 1;
-  }
-
-  return n * fact(n - 1);
-}
 using Map = std::unordered_map<char, int>;
-    
+
 Map findRepeats(const std::string& word) {
   std::string lowerWord = word;
   Map repeats;
