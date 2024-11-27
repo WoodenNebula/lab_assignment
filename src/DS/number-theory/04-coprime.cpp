@@ -1,16 +1,8 @@
 #include <iostream>
-
-int gcdEuclidean(int x, int y) {
-  // std::cout << "(x, y) = (" << x << ", " << y << ")" << std::endl;
-  if (y == 0) {
-    return x;
-  }
-
-  return gcdEuclidean(y, x % y);
-}
+#include "./algo.h"
 
 bool isCoPrime(int x, int y) {
-  return gcdEuclidean(x, y) == 1;
+  return Algo::gcdEuclidean(x, y) == 1;
 }
 
 int main() {

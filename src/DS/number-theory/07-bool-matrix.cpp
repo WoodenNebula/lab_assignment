@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 
-using BoolMatrix = std::vector<std::vector<bool>>;
+using BM = std::vector<std::vector<bool>>;
 
-std::ostream& operator<<(std::ostream& os, const BoolMatrix& matrix) {
+std::ostream& operator<<(std::ostream& os, const BM& matrix) {
   for (const auto& row : matrix) {
     os << "| ";
     for (const auto& num : row) {
@@ -14,38 +14,38 @@ std::ostream& operator<<(std::ostream& os, const BoolMatrix& matrix) {
   return os;
 }
 
-BoolMatrix join(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
-  BoolMatrix result;
-  for (size_t i = 0; i < matrixA.size(); i++) {
+BM join(const BM& A, const BM& B) {
+  BM result;
+  for (size_t i = 0; i < A.size(); i++) {
     std::vector<bool> row;
-    for (size_t j = 0; j < matrixA[i].size(); j++) {
-      row.push_back(matrixA[i][j] || matrixB[i][j]);
+    for (size_t j = 0; j < A[i].size(); j++) {
+      row.push_back(A[i][j] || B[i][j]);
     }
     result.push_back(row);
   }
   return result;
 }
 
-BoolMatrix meet(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
-  BoolMatrix result;
-  for (size_t i = 0; i < matrixA.size(); i++) {
+BM meet(const BM& A, const BM& B) {
+  BM result;
+  for (size_t i = 0; i < A.size(); i++) {
     std::vector<bool> row;
-    for (size_t j = 0; j < matrixA[i].size(); j++) {
-      row.push_back(matrixA[i][j] && matrixB[i][j]);
+    for (size_t j = 0; j < A[i].size(); j++) {
+      row.push_back(A[i][j] && B[i][j]);
     }
     result.push_back(row);
   }
   return result;
 }
 
-BoolMatrix product(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
-  BoolMatrix result;
-  for (size_t i = 0; i < matrixA.size(); i++) {
+BM product(const BM& A, const BM& B) {
+  BM result;
+  for (size_t i = 0; i < A.size(); i++) {
     std::vector<bool> row;
-    for (size_t j = 0; j < matrixB[i].size(); j++) {
+    for (size_t j = 0; j < B[i].size(); j++) {
       bool value = false;
-      for (size_t k = 0; k < matrixA[i].size(); k++) {
-        value = value || (matrixA[i][k] && matrixB[k][j]);
+      for (size_t k = 0; k < A[i].size(); k++) {
+        value = value || (A[i][k] && B[k][j]);
       }
       row.push_back(value);
     }
@@ -55,19 +55,19 @@ BoolMatrix product(const BoolMatrix& matrixA, const BoolMatrix& matrixB) {
 }
 
 int main() {
-  BoolMatrix matrixA = {
+  BM A = {
     { 1, 0, 1 },
     { 0, 1, 0 },
     { 1, 0, 1 } };
-  BoolMatrix matrixB = {
+  BM B = {
     { 0, 1, 1 },
     { 0, 1, 0 },
     { 1, 1, 0 } };
 
-  std::cout << "Matrix A :\n" << matrixA << std::endl;
-  std::cout << "Matrix B :\n" << matrixB << std::endl;
+  std::cout << "Matrix A :\n" << A << std::endl;
+  std::cout << "Matrix B :\n" << B << std::endl;
 
-  std::cout << "Join :\n" << join(matrixA, matrixB) << std::endl;
-  std::cout << "Meet :\n" << meet(matrixA, matrixB) << std::endl;
-  std::cout << "Product :\n" << product(matrixA, matrixB) << std::endl;
+  std::cout << "Join :\n" << join(A, B) << std::endl;
+  std::cout << "Meet :\n" << meet(A, B) << std::endl;
+  std::cout << "Product :\n" << product(A, B) << std::endl;
 }
