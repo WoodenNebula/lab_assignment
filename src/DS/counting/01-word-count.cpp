@@ -42,4 +42,5 @@ int main() {
 
   std::cout << "Number of all possile words = " << countWords(word) << std::endl;
 
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

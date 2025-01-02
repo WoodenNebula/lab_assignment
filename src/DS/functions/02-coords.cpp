@@ -24,4 +24,5 @@ int main() {
     printCoords(x);
     i--;
   }
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

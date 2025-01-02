@@ -11,4 +11,5 @@ int main() {
   std::cin >> x >> y;
 
   std::cout << (isCoPrime(x, y) ? "Co-Prime" : "Not Co-Prime") << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

@@ -44,4 +44,5 @@ int main() {
     for (auto x : f_arr) {
         std::cout << x << ", ";
     }
+    std::cout <<  std::endl;
 }

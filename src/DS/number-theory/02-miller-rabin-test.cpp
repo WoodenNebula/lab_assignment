@@ -57,4 +57,5 @@ int main() {
   std::cin >> n;
 
   std::cout << (isPrime(n) ? "Prime" : "Composite") << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

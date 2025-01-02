@@ -14,4 +14,5 @@ int main() {
   std::cin >> n;
 
   std::cout << "Sum of digits of n = " << sum(n) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

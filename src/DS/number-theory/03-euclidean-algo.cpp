@@ -15,4 +15,5 @@ int main() {
   int a, b;
   std::cout << "gcd(x, y) by Extended Euclidean algo = " << gcdExEuclidean(x, y, a, b) << " , a = " << a << ", b = " << b << std::endl;
   std::cout << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

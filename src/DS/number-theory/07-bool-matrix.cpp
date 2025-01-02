@@ -64,10 +64,11 @@ int main() {
     { 0, 1, 0 },
     { 1, 1, 0 } };
 
-  std::cout << "Matrix A :\n" << A << std::endl;
-  std::cout << "Matrix B :\n" << B << std::endl;
+  // std::cout << "Matrix A :\n" << A << std::endl;
+  // std::cout << "Matrix B :\n" << B << std::endl;
 
   std::cout << "Join :\n" << join(A, B) << std::endl;
   std::cout << "Meet :\n" << meet(A, B) << std::endl;
   std::cout << "Product :\n" << product(A, B) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

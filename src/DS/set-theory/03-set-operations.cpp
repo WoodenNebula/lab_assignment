@@ -54,10 +54,11 @@ namespace SET
 
 int main() {
   using namespace SET;
-  Set A = InputSet('A');
-  Set B = InputSet('B');
+  Set A = {4, 3, 2};
+  Set B = {1, 2, 3};
 
   std::cout << "A u B = " << Union(A, B) << std::endl;
   std::cout << "A n B = " << Intersection(A, B) << std::endl;
   std::cout << "A - B = " << Difference(A, B) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

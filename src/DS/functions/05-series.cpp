@@ -25,4 +25,5 @@ int main() {
   }
 
   std::cout << getNthTerm(N_TERM) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

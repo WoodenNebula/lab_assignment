@@ -24,4 +24,5 @@ int main() {
   std::vector<int> remainders = { 2, 3, 1 };
 
   std::cout << "x = " << findX(modulos, remainders) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

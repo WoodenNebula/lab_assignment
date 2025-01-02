@@ -12,4 +12,5 @@ void printTriangle(int row) {
 
 int main() {
   printTriangle(4);
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

@@ -14,4 +14,5 @@ int main() {
   std::cin >> b;
 
   std::cout << a << " MOD " << b << " = " << mod(a, b) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }

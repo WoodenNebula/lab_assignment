@@ -19,4 +19,5 @@ int main() {
 
   std::cout << "fog = " << composite(f, g, x) << std::endl;
   std::cout << "gof = " << composite(g, f, x) << std::endl;
+  std::cout << "\nSurab Parajuli    Section: A    Roll: 34" << std::endl;
 }
