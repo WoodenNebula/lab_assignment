@@ -1,23 +1,7 @@
 {
   "configurations": [
     {
-      "name": "(Windows) Launch",
-      "type": "cppvsdbg",
-      "request": "launch",
-      "preLaunchTask": "C++: g++.exe build active file",
-      "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "console": "externalTerminal",
-      "logging": {
-        "moduleLoad": false,
-        "trace": true
-      }
-    },
-    {
-      "name": "C++: gdb.exe build and debug active file",
+      "name": "C++: Build and launch File",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
@@ -25,7 +9,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": false,
+      "externalConsole": true,
       "MIMode": "gdb",
       "miDebuggerPath": "C:\\Program Files\\msys64\\ucrt64\\bin\\gdb.exe",
       "setupCommands": [
@@ -40,32 +24,7 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "C++: g++.exe build active file"
-    },
-    {
-      "name": "(gdb) Launch",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "enter program name, for example ${workspaceFolder}/a.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${fileDirname}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "/path/to/gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
-      ]
+      "preLaunchTask": "C++: Build File"
     }
   ],
   "version": "2.0.0"
