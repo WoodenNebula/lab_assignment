@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/src/**"
+                "${workspaceFolder}/src/**",
+                "C:\\Program Files\\msys64\\ucrt64\\include\\**"
             ],
             "defines": [
                 "_DEBUG",

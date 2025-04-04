@@ -1,7 +1,33 @@
 {
   "configurations": [
     {
-      "name": "C++: Build and launch File",
+      "name": "2. Graphics: Build File",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:\\Program Files\\msys64\\ucrt64\\bin\\gdb.exe",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "C++: Build Graphics File"
+    },
+    {
+      "name": "1. Normal: Build & Launch File",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
