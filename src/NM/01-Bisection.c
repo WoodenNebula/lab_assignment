@@ -20,12 +20,7 @@ int main() {
     float f_mid = f(coeff, x_mid);
 
 
-    if (f_lower * f_upper > 0) {
-        printf("%.3f and %.3f do not bracket root\n", x_lower, x_upper);
-        footer();
-        return 0;
-    }
-
+    if (f_lower * f_upper > 0) { abortOnError("Non bracketing guess"); }
 
     float root;
 

@@ -43,6 +43,15 @@ void footer() {
     system("pause");
 }
 
+void abortOnError(const char* msg) {
+    printf("\e[1;91m");
+    printf(msg);
+    printf("\e[0m");
+    footer();
+    exit(EXIT_FAILURE);
+}
+
+
 /// Numerical Method
 // Assuming a cubic equation i.e. f(x) = ax³ + bx² + cx + d
 typedef struct {
