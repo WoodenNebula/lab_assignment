@@ -81,10 +81,10 @@ void promptOneGuess(float* x) {
 
 void promptTwoGuess(float* x_lower, float* x_upper) {
     printf("Enter two initial guesses:\n");
-    printf("lower = ");
+    printf("First = ");
     scanf("%f", x_lower);
 
-    printf("upper = ");
+    printf("Second = ");
     scanf("%f", x_upper);
 }
 
