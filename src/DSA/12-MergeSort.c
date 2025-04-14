@@ -102,9 +102,9 @@ void mergeSort(int arr[], int left, int right, int depth) {
         Array array = { arr + left, (size_t)(mid + 1 - left) };
         printArray(&array);
 
-        printf("Right subarray:\n", depth);
-        array = { arr + mid + 1, (size_t)(right - mid) };
-        printArray(&array);
+        printf("Right subarray:\n");
+        Array arrRight = { arr + mid + 1, (size_t)(right - mid) };
+        printArray(&arrRight);
 
         printf("[Merged]: ");
         Array mergedArray = { arr + left, (size_t)(right + 1 - left) };
