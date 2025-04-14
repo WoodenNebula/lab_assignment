@@ -53,25 +53,25 @@ void abortOnError(const char* msg) {
 }
 
 typedef struct {
-    int m;
-    int n;
+    int row;
+    int col;
     double data[10][10];
 } Matrix;
 
 void inputMatrixDimensions(Matrix* o_mat, const char* msg) {
     printf(msg);
     printf("\n");
-    scanf("%d%d", &(o_mat->m), &(o_mat->n));
+    scanf("%d%d", &(o_mat->row), &(o_mat->col));
     printf("\n");
 }
 
 void inputMatrix(Matrix* o_mat, const char* msg) {
     printf(msg);
     printf("\n");
-    for (int i = 0; i < o_mat->m; i++) {
-        printf("  row[%d] <- ", i + 1);
-        for (int j = 0; j < o_mat->n; j++) {
-            scanf("%lf", &(o_mat->data)[i][j]);
+    for (int r = 0; r < o_mat->row; r++) {
+        printf("  row[%d] <- ", r + 1);
+        for (int c = 0; c < o_mat->col; c++) {
+            scanf("%lf", &(o_mat->data)[r][c]);
         }
     }
     printf("\n");
@@ -80,10 +80,10 @@ void inputMatrix(Matrix* o_mat, const char* msg) {
 void printMatrix(const Matrix* matrix, const char* msg) {
     printf(msg);
     printf("\n");
-    for (int i = 0; i < matrix->m; i++) {
+    for (int r = 0; r < matrix->row; r++) {
         printf("| ");
-        for (int j = 0; j < matrix->n; j++) {
-            printf("%.4lf ", (matrix->data)[i][j]);
+        for (int c = 0; c < matrix->col; c++) {
+            printf("%.4lf ", (matrix->data)[r][c]);
         }
         printf("|\n");
     }
