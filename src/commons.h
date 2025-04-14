@@ -4,6 +4,7 @@
 #include <locale.h>
 
 #define MAX_SIZE 100
+#define FLOAT_TOLERANCE 0.000001
 
 typedef struct {
     int* arr;
@@ -51,6 +52,43 @@ void abortOnError(const char* msg) {
     exit(EXIT_FAILURE);
 }
 
+typedef struct {
+    int m;
+    int n;
+    double data[10][10];
+} Matrix;
+
+void inputMatrixDimensions(Matrix* o_mat, const char* msg) {
+    printf(msg);
+    printf("\n");
+    scanf("%d%d", &(o_mat->m), &(o_mat->n));
+    printf("\n");
+}
+
+void inputMatrix(Matrix* o_mat, const char* msg) {
+    printf(msg);
+    printf("\n");
+    for (int i = 0; i < o_mat->m; i++) {
+        printf("  row[%d] <- ", i + 1);
+        for (int j = 0; j < o_mat->n; j++) {
+            scanf("%lf", &(o_mat->data)[i][j]);
+        }
+    }
+    printf("\n");
+}
+
+void printMatrix(const Matrix* matrix, const char* msg) {
+    printf(msg);
+    printf("\n");
+    for (int i = 0; i < matrix->m; i++) {
+        printf("| ");
+        for (int j = 0; j < matrix->n; j++) {
+            printf("%.4lf ", (matrix->data)[i][j]);
+        }
+        printf("|\n");
+    }
+    printf("\n");
+}
 
 /// Numerical Method
 // Assuming a cubic equation i.e. f(x) = ax³ + bx² + cx + d
