@@ -34,6 +34,9 @@ void insertionSort(int arr[], int size) {
 
         // Place `key` in its correct position
         arr[j + 1] = key;
+
+        Array array = { arr, size };
+        printArray(&array);
     }
 }
 

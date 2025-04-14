@@ -68,30 +68,60 @@ void merge(int arr[], int left, int mid, int right) {
 }
 
 // MergeSort function
-void mergeSort(int arr[], int left, int right) {
+void mergeSort(int arr[], int left, int right, int depth) {
     if (left < right) {
         int mid = left + (right - left) / 2; // Calculate the middle index
 
+        // printf("\n[%d] Left subarray:\n", depth);
+        // Array array = { arr + left, mid + 1 - left };
+        // printArray(&array);
+
+        // printf("Right subarray:\n", depth);
+        // array = { arr + mid + 1, right - mid };
+        // printArray(&array);
+
         // Recursively sort the left and right subarrays
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
+        mergeSort(arr, left, mid, depth + 1);
+
+        // printf("For Right subarray:\n");
+        // printf("\n[%d] Left subarray:\n", depth);
+        // array = { arr + left, mid + 1 - left };
+        // printArray(&array);
+
+        // printf("[%d] Right subarray:\n", depth);
+        // array = { arr + mid + 1, right - mid };
+        // printArray(&array);
+
+        mergeSort(arr, mid + 1, right, depth + 1);
+
 
         // Merge the sorted subarrays
         merge(arr, left, mid, right);
+
+        printf("\n[%d] Left subarray:\n", depth);
+        Array array = { arr + left, (size_t)(mid + 1 - left) };
+        printArray(&array);
+
+        printf("Right subarray:\n", depth);
+        array = { arr + mid + 1, (size_t)(right - mid) };
+        printArray(&array);
+
+        printf("[Merged]: ");
+        Array mergedArray = { arr + left, (size_t)(right + 1 - left) };
+        printArray(&mergedArray);
     }
 }
 
 int main() {
     Array array = promptArray();
 
-    mergeSort(array.arr, 0, array.size - 1);
+    mergeSort(array.arr, 0, array.size - 1, 1);
 
     printf("Sorted array:\n");
     printArray(&array);
 
     free(array.arr);
 
-    printf("\nSurab Parajuli\nSection: A, Roll: 34\n");
-    system("pause");
+    footer();
     return 0;
 }

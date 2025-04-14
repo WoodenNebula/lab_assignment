@@ -65,11 +65,11 @@ void printStack() {
     }
     printf("Current Stack:\n");
     Node* temp = top;
-    while (temp != NULL) {
+    while (temp->next != NULL) {
         printf("%d -> ", temp->data);
         temp = temp->next;
     }
-    printf("NULL\n");
+    printf("%d\n", temp->data);
 }
 
 // Function to display the menu

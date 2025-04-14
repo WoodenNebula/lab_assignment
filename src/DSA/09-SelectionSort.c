@@ -29,10 +29,13 @@ void selectionSort(int arr[], int size) {
                 minIndex = j;
             }
         }
-        // Swap the smallest element with the element at index i
+    // Swap the smallest element with the element at index i
         int temp = arr[i];
         arr[i] = arr[minIndex];
         arr[minIndex] = temp;
+
+        Array array = { arr, size };
+        printArray(&array);
     }
 }
 

@@ -82,11 +82,11 @@ void printQueue() {
     }
     printf("Current Queue:\n");
     Node* temp = front;
-    while (temp != NULL) {
+    while (temp->next != NULL) {
         printf("%d <- ", temp->data);
         temp = temp->next;
     }
-    printf("NULL\n");
+    printf("%d\n", temp->data);
 }
 
 // Function to display the menu
