@@ -1,40 +1,25 @@
+#include <stdio.h>
+#include <math.h>
 #include "commons.h"
 
-#define MAX 10
+double gx(int x, int y) { return (double)(2 * x * x * y * y); }
 
-// Function to initialize the grid
-void initializeGrid(Matrix* grid, double boundaryValue) {
-    for (int i = 0; i < grid->row; i++) {
-        for (int j = 0; j < grid->col; j++) {
-            if (i == 0 || i == grid->row - 1 || j == 0 || j == grid->col - 1) {
-                grid->data[i][j] = boundaryValue; // Boundary condition
-            }
-            else {
-                grid->data[i][j] = 0.0; // Initial guess for interior points
-            }
-        }
-    }
-}
+#define E 0.0001
 
-// Function to solve Poisson's equation using the finite difference method
-void solvePoisson(Matrix* grid, double tolerance) {
+void solvePoisson(Matrix* grid, double h) {
     double maxError;
     Matrix newGrid = *grid; // Temporary grid for updates
 
     do {
         maxError = 0.0;
 
-        // Update the grid using the finite difference method
-        for (int i = 1; i < grid->row - 1; i++) {
-            for (int j = 1; j < grid->col - 1; j++) {
-                newGrid.data[i][j] = 0.25 * (grid->data[i - 1][j] + grid->data[i + 1][j] +
-                    grid->data[i][j - 1] + grid->data[i][j + 1]);
+        for (int r = 1; r < grid->row - 1; r++) {
+            for (int c = 1; c < grid->col - 1; c++) {
+                newGrid.data[r][c] = 0.25 * (grid->data[r - 1][c] + grid->data[r + 1][c] +
+                    grid->data[r][c - 1] + grid->data[r][c + 1] - (h * h * gx(r, c)));
 
-// Calculate the maximum error
-                double error = fabs(newGrid.data[i][j] - grid->data[i][j]);
-                if (error > maxError) {
-                    maxError = error;
-                }
+                double e = fabs(newGrid.data[r][c] - grid->data[r][c]);
+                if (e > maxError) { maxError = e; }
             }
         }
 
@@ -44,38 +29,57 @@ void solvePoisson(Matrix* grid, double tolerance) {
                 grid->data[i][j] = newGrid.data[i][j];
             }
         }
-    } while (maxError > tolerance);
+    } while (maxError > E);
 }
 
 int main() {
     Matrix grid;
-    double boundaryValue, tolerance;
 
     // Input grid dimensions
-    inputMatrixDimensions(&grid, "Enter the grid dimensions (rows and columns):");
-    if (grid.row > MAX || grid.col > MAX) {
-        abortOnError("Grid size exceeds the maximum limit.\n");
+    inputMatrixDimensions(&grid, "Enter plate and grid dimensions (plate grid):");
+    grid.row += 2; // Adding boundary rows
+    grid.col += 2; // Adding boundary columns
+
+    struct Temps {
+        double left; double right;
+        double bottom; double top;
+    }t = { 0, 0, 0, 0 };
+    // }t = { 75, 100, 300, 50 };
+
+    // printf("Boundary values:\n(left, right, bottom, top)\n");
+    // scanf("%lf%lf%lf%lf", &t.left, &t.right, &t.bottom, &t.top);
+
+    // Initialize the grid with boundary conditions
+    for (int r = 0; r < grid.row; r++) {
+        for (int c = 0; c < grid.col; c++) {
+            int isTop = r == 0, isBottom = r == grid.row - 1;
+            int isLeft = c == 0, isRight = c == grid.col - 1;
+            int isDiagonal = (r == c || c == grid.row - 1 - r);
+
+            double term = 0.0;
+            if (!isDiagonal) {
+                if (isTop) { term = t.top; }
+                if (isBottom) { term = t.bottom; }
+                if (isLeft) { term = t.left; }
+                if (isRight) { term = t.right; }
+            }
+
+            if (!isTop && !isBottom && !isRight && !isLeft) {
+                term = grid.data[grid.row - 1][c];
+            }
+
+            grid.data[r][c] = term;
+        }
     }
 
-    // Input boundary value
-    printf("Enter the boundary value: ");
-    scanf("%lf", &boundaryValue);
-
-    // Input tolerance
-    printf("Enter the tolerance: ");
-    scanf("%lf", &tolerance);
-
-    // Initialize the grid
-    initializeGrid(&grid, boundaryValue);
-
-    // Print the initial grid
-    printMatrix(&grid, "Initial Grid:");
+    double h = 1;
+    printf("Enter step(h):\n");
+    scanf("%lf", &h);
 
     // Solve Poisson's equation
-    solvePoisson(&grid, tolerance);
+    solvePoisson(&grid, h);
 
-    // Print the solution grid
-    printMatrix(&grid, "Solution Grid:");
+    printMatrix(&grid, "Final grid after solving Poisson's equation:");
 
     footer();
     return 0;
