@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <GL/gl.h>
 #include "graphics/graphics.h"
 
 void ignoreLine() {
@@ -54,18 +55,49 @@ void drawLine() {
     shutdownGraphics();
     std::cout << "Line\n";
 }
-void drawTriangle() {}
-void drawRectangle() {
-    int left = 200;
-    int top = 300;
-    int right = 400;
-    int bottom = 100;
+
+void drawTriangle() {
+    Vec2 top{ 300, 400 };
+    Vec2 left{ 100, 100 };
+    Vec2 right{ 600, 100 };
+
 
     initGraphics();
-    rectangle(left, top, right, bottom);
+    line(left.x, left.y, right.x, right.y);
+    line(left.x, left.y, top.x, top.y);
+    line(top.x, top.y, right.x, right.y);
+
+    shutdownGraphics();
+    std::cout << "Triangle\n";
+}
+
+void drawRectangle() {
+    Vec2 leftBottom{ 200, 100 };
+    Vec2 rightTop{ 400, 300 };
+
+    initGraphics();
+    rectangle(leftBottom.x, rightTop.y, rightTop.x, leftBottom.x);
     shutdownGraphics();
 }
-void drawHexagon() {}
+void drawHexagon() {
+    Vec2 topLeft{ 300, 100 };
+    Vec2 topRight{ 500, 100 };
+    Vec2 left{ 200, 200 };
+    Vec2 bottomLeft{ 300, 300 };
+    Vec2 bottomRight{ 500, 300 };
+    Vec2 right{ 600, 200 };
+
+    initGraphics();
+    line(topLeft.x, topLeft.y, left.x, left.y);
+    line(left.x, left.y, bottomLeft.x, bottomLeft.y);
+    line(bottomLeft.x, bottomLeft.y, bottomRight.x, bottomRight.y);
+    line(bottomRight.x, bottomRight.y, right.x, right.y);
+    line(right.x, right.y, topRight.x, topRight.y);
+    line(topRight.x, topRight.y, topLeft.x, topLeft.y);
+
+    shutdownGraphics();
+    std::cout << "Triangle\n";
+}
 
 E_MenuOptions processInput(E_MenuOptions input) {
     switch (input) {

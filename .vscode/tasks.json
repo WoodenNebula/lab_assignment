@@ -13,7 +13,7 @@
                 "${file}",
                 "-o",
                 "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
-                // "-lopengl32",
+                "-lopengl32",
                 "-lbgi",
                 "-lgdi32",
                 "-lcomdlg32",
@@ -29,6 +29,16 @@
             ],
             "group": {
                 "kind": "build"
+            },
+            "presentation": {
+                "close": true,
+                "revealProblems": "never",
+                "showReuseMessage": false,
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
             },
             "detail": "Specific build for files including graphics.h and gl.h"
         },
