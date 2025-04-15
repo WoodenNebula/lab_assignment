@@ -43,11 +43,11 @@ int main() {
     struct Temps {
         double left; double right;
         double bottom; double top;
-    }t = { 0, 0, 0, 0 };
+    }t;
     // }t = { 75, 100, 300, 50 };
 
-    // printf("Boundary values:\n(left, right, bottom, top)\n");
-    // scanf("%lf%lf%lf%lf", &t.left, &t.right, &t.bottom, &t.top);
+    printf("Boundary values:\n(left, right, bottom, top)\n");
+    scanf("%lf%lf%lf%lf", &t.left, &t.right, &t.bottom, &t.top);
 
     // Initialize the grid with boundary conditions
     for (int r = 0; r < grid.row; r++) {

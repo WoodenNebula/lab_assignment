@@ -8,7 +8,7 @@
 int main() {
     Coeff coeff;
     promptEquation(&coeff);
-    // printEquation(&coeff);
+    printEquation(&coeff);
 
     float x_lower, x_upper;
     promptTwoGuess(&x_lower, &x_upper);

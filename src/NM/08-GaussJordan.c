@@ -4,20 +4,20 @@
 
 int main() {
     Matrix augMat;
-    augMat = (Matrix){
-        .row = 4,
-        .col = 5,
-        .data = {
-            { 1, 1, 2, 0, 1 },
-        { 2, -1, 0, 1, -2 },
-        { 1, -1, -1, -2, 4 },
-        { 2, -1, 2, -1, 0 }
-    }
-    };
-    printMatrix(&augMat, "Augmented Matrix is: ");
-    // inputMatrixDimensions(&augMat, "Enter (coeff) square matrix dimensions: row = col");
-    // augMat.col = augMat.row + 1;
-    // inputMatrix(&augMat, "Enter data for Augmented Matrix: ");
+    // augMat = (Matrix){
+        // .row = 4,
+        // .col = 5,
+        // .data = {
+            // { 1, 1, 2, 0, 1 },
+        // { 2, -1, 0, 1, -2 },
+        // { 1, -1, -1, -2, 4 },
+        // { 2, -1, 2, -1, 0 }
+    // }
+    // };
+    // printMatrix(&augMat, "Augmented Matrix is: ");
+    inputMatrixDimensions(&augMat, "Enter (coeff) square matrix dimensions: row = col");
+    augMat.col = augMat.row + 1;
+    inputMatrix(&augMat, "Enter data for Augmented Matrix: ");
 
     // Elimination
     for (int row = 0; row < augMat.row; row++) {
