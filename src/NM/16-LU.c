@@ -4,71 +4,73 @@
 
 int main() {
     Matrix coeff;
-    coeff = (Matrix){
-        .row = 3,
-        .col = 3,
-        .data = {
-            { 20, 15, 10 },
-        { -3, -2.249, 7 },
-        { 5, 1, 3 } }
-    };
-    // inputMatrixDimensions(&coeff, "Enter square matrix dimensions: row = col");
-    // coeff.col = coeff.row;
-    // inputMatrix(&coeff, "Enter Data(s): ");
+    // coeff = (Matrix){
+    //     .row = 3,
+    //     .col = 3,
+    //     .data = {
+    //         { 2, 3, 1 },
+    //     { 1, 2, 3 },
+    //     { 3, 1, 2 } }
+    // };
+    inputMatrixDimensions(&coeff, "Enter square matrix dimensions: row = col");
+    coeff.col = coeff.row;
+    inputMatrix(&coeff, "Enter Data(s): ");
 
     Matrix rhs = { .row = coeff.row, .col = 1 };
-    rhs = (Matrix){
-        .row = 3, .col = 1,
-        .data = {
-            { 45 },
-        { 1.751 },
-        { 9 } }
-    };
-    // inputMatrix(&rhs, "Enter RHS:");
+    // rhs = (Matrix){
+    //     .row = 3, .col = 1,
+    //     .data = {
+    //         { 9 },
+    //     { 6 },
+    //     { 8 } }
+    // };
+    inputMatrix(&rhs, "Enter RHS:");
 
     Matrix u = { .row = coeff.row, .col = coeff.col };
     Matrix l = { .row = coeff.row, .col = coeff.col };
+    // init
+    for (int i = 0; i < u.row; i++) {
+        for (int j = 0; j < u.col; j++) {
+            u.data[i][j] = 0.0;
+            l.data[i][j] = 0.0;
+        }
+    }
 
     // Computing L and U matrices
-    for (int col = 0;col < coeff.row;col++) {
-        u.data[0][col] = coeff.data[0][col];
-    }
+    for (int i = 0; i < coeff.row; i++) {
+        u.data[0][i] = coeff.data[0][i];
 
-    for (int row = 0; row < coeff.row; row++)
-        l.data[row][row] = 1;
-
-    for (int i = 1;i < coeff.row; i++)
         l.data[i][0] = coeff.data[i][0] / u.data[0][0];
+        l.data[i][i] = 1;
+    }
 
-    for (int j = 1;j < coeff.row;j++) {
-        for (int i = 1;i <= j;i++) {
+    for (int r = 1; r < coeff.row; r++) {
+        for (int c = 1; c <= r; c++) {
             double sum = 0.0;
-            for (int k = 0;k <= i - 1;k++) {
-                sum += (l.data[i][k] * u.data[k][j]);
+            for (int k = 0; k < c; k++) {
+                sum += (l.data[c][k] * u.data[k][r]);
             }
-            u.data[i][j] = coeff.data[i][j] - sum;
+            u.data[c][r] = coeff.data[c][r] - sum;
         }
-        for (int i = j + 1;i < coeff.row;i++) {
+        for (int c = r + 1; c < coeff.row; c++) {
             double sum = 0.0;
-            for (int k = 0;k <= j - 1;k++) {
-                sum += l.data[i][k] * u.data[k][j];
+            for (int k = 0; k < r; k++) {
+                sum += l.data[c][k] * u.data[k][r];
             }
-            l.data[i][j] = (coeff.data[i][j] - sum) / u.data[j][j];
+            l.data[c][r] = (coeff.data[c][r] - sum) / u.data[r][r];
         }
     }
+
     // Solving for z using Forward Substitution
-    Matrix b = { .row = coeff.row, .col = 1 };
     Matrix z = { .row = coeff.row, .col = 1 };
-    z.data[0][0] = b.data[0][0];
+    z.data[0][0] = rhs.data[0][0];
     for (int i = 1;i < coeff.row;i++) {
         double sum = 0.0;
         for (int j = 0;j < i;j++) {
             sum += (l.data[i][j] * z.data[j][0]);
         }
-        z.data[i][0] = b.data[i][0] - sum;
-        sum = 0;
+        z.data[i][0] = rhs.data[i][0] - sum;
     }
-
 
     // Backward Substitution
     Matrix  x = { .row = coeff.row, .col = 1 };
