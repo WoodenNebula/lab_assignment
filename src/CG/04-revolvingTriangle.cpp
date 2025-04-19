@@ -3,22 +3,22 @@
 #include <GL/glut.h>
 
 #include "Window.h"
+#include "Polygon.h"
 #include "Utility.h"
 
 void drawTriangle(CG::Vec2f center, float radius) {
     glBegin(GL_POLYGON);
 
-    CG::Vec2f offset{ radius, radius };
-    CG::Vec2f bottomLeft = CG::Window::NormalizeToViewport(center - offset);
-    CG::Vec2f bottomRight = CG::Window::NormalizeToViewport({ center.x + offset.x, center.y - offset.y });
-    CG::Vec2f top = CG::Window::NormalizeToViewport({ center.x, center.y + offset.y });
-
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2f(bottomLeft.x, bottomLeft.y);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex2f(bottomRight.x, bottomRight.y);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex2f(top.x, top.y);
+    CG::Triangle triangle(center, { radius, radius }, { 0.0f, 0.0f, 0.0f });
+    CG::Vec3f colors[] = {
+        { 1.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f }
+    };
+    for (size_t i = 0; i < triangle.vertices.size(); i++) {
+        glColor3fv(&colors[i].r);
+        glVertex2fv(&triangle.vertices[i].x);
+    }
     glEnd();
 }
 
@@ -27,8 +27,7 @@ void drawFunc() {
 
     CG::Vec2f center{ CG::Window::WindowSize().x / 2, CG::Window::WindowSize().y / 2 };
     glRotatef(0.05f, 1.0f, 1.0f, 1.0f);
-    drawTriangle(center, 100.0f);
-
+    drawTriangle(center, 300.0f);
 
     glutSwapBuffers();
     glutPostRedisplay();
