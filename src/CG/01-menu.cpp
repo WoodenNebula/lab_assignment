@@ -24,7 +24,7 @@ void printMenu() {
 }
 
 void initGraphics() {
-    CG::Vec2i windowSize{ 800, 800 };
+    CG::Vec2f windowSize{ 800.0f, 800.0f };
     int window = initwindow(windowSize.x, windowSize.y, "Graphics", 0, 0, false, false);
     setcurrentwindow(window);
 }
@@ -37,7 +37,7 @@ void shutdownGraphics() {
 
 
 void drawLine() {
-    CG::Vec2i p1, p2;
+    CG::Vec2f p1, p2;
     std::cout << "Enter (x1, y1): ";
     std::cin >> p1;
 
@@ -54,7 +54,7 @@ void drawLine() {
 }
 
 void drawTriangle() {
-    CG::Vec2i top, left, right;
+    CG::Vec2f top, left, right;
     std::cout << "Enter coordinates of triangle:\n";
 
     std::cout << "Top (x1, y1): ";
@@ -76,7 +76,7 @@ void drawTriangle() {
 }
 
 void drawRectangle() {
-    CG::Vec2i bottomLeft, topRight;
+    CG::Vec2f bottomLeft, topRight;
 
     std::cout << "Down Left (x2, y2): ";
     std::cin >> bottomLeft;
@@ -90,7 +90,7 @@ void drawRectangle() {
 }
 
 void drawHexagon() {
-    CG::Vec2i topLeft, topRight, left, bottomLeft, bottomRight, right;
+    CG::Vec2f topLeft, topRight, left, bottomLeft, bottomRight, right;
 
     std::cout << "Top Left: ";
     std::cin >> topLeft;
