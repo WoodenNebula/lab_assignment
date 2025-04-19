@@ -13,6 +13,8 @@ public:
         m_windowID = glutCreateWindow(title);
         glClearColor(0.27f, 0.27f, 0.27f, 1.0f);
 
+        glLoadIdentity();
+        glMatrixMode(GL_PROJECTION);
         glutKeyboardFunc(keyCallback);
     }
     ~Window() { glutDestroyWindow(m_windowID); }
