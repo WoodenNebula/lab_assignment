@@ -2,15 +2,18 @@
 #include <cmath>
 #include <GL/glut.h>
 
+#include "Utility.h"
 #include "Window.h"
 #include "Polygon.h"
-#include "Utility.h"
+#include "Maths.h"
 
-void drawTriangle(CG::Vec2f center, float radius) {
+using namespace CG::Maths;
+
+void drawTriangle(Vec2f center, float radius) {
     glBegin(GL_POLYGON);
 
     CG::Triangle triangle(center, { radius, radius }, { 0.0f, 0.0f, 0.0f });
-    CG::Vec3f colors[] = {
+    Vec3f colors[] = {
         { 1.0f, 0.0f, 0.0f },
         { 0.0f, 1.0f, 0.0f },
         { 0.0f, 0.0f, 1.0f }
@@ -25,7 +28,7 @@ void drawTriangle(CG::Vec2f center, float radius) {
 void drawFunc() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    CG::Vec2f center{ CG::Window::WindowSize().x / 2, CG::Window::WindowSize().y / 2 };
+    Vec2f center{ CG::Window::WindowSize().x / 2, CG::Window::WindowSize().y / 2 };
     glRotatef(0.05f, 1.0f, 1.0f, 1.0f);
     drawTriangle(center, 300.0f);
 

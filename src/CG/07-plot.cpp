@@ -2,10 +2,14 @@
 #include <vector>
 #include <ctime>
 #include <GL/glut.h>
+
 #include "Window.h"
 #include "Utility.h"
+#include "Maths.h"
 
-std::vector<CG::Vec2f> points;
+using namespace CG::Maths;
+
+std::vector<Vec2f> points;
 
 void generateRandomPoints(int count) {
     points.clear();
@@ -16,12 +20,12 @@ void generateRandomPoints(int count) {
     }
 }
 
-void drawPoint(const CG::Vec2f& point, float size = 10.0f) {
+void drawPoint(const Vec2f& point, float size = 10.0f) {
     glPointSize(size);
-    auto color = CG::getRandomColor();
+    auto color = CG::Utility::getRandomColor();
     glColor3fv(&color.r);
     glBegin(GL_POINTS);
-    CG::Vec2f normalizedPoint = CG::Window::NormalizeToViewport(point);
+    Vec2f normalizedPoint = CG::Window::NormalizeToViewport(point);
     glVertex2f(normalizedPoint.x, normalizedPoint.y);
     glEnd();
 }

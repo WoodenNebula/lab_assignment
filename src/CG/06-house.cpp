@@ -5,15 +5,17 @@
 #include "Window.h"
 #include "Utility.h"
 #include "Polygon.h"
+#include "Maths.h"
 
+using namespace CG::Maths;
 
 void drawFunc() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    CG::Vec2f wallDimensions = { 300.0f, 250.0f };
-    CG::Vec2f windowDimensions = { 75.0f, 75.0f };
-    CG::Vec2f doorDimensions = { 80.0f, 100.0f };
-    CG::Vec2f roofDimensions = { wallDimensions.x, 100.0f };
+    Vec2f wallDimensions = { 300.0f, 250.0f };
+    Vec2f windowDimensions = { 75.0f, 75.0f };
+    Vec2f doorDimensions = { 80.0f, 100.0f };
+    Vec2f roofDimensions = { wallDimensions.x, 100.0f };
 
     CG::Rectangle wall(
         { CG::Window::WindowSize().x / 2, CG::Window::WindowSize().y / 2 },

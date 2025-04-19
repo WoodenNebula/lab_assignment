@@ -5,8 +5,11 @@
 #include "Window.h"
 #include "Polygon.h"
 #include "Utility.h"
+#include "Maths.h"
 
-static CG::Vec2f center;
+using namespace CG::Maths;
+
+static Vec2f center;
 
 void drawFunc() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

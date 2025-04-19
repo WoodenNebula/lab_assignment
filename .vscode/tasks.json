@@ -11,6 +11,9 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "${workspaceFolder}\\src\\CG\\impl\\Graphics.cpp",
+                "${workspaceFolder}\\src\\CG\\impl\\Window.cpp",
+                "${workspaceFolder}\\src\\CG\\impl\\Utility.cpp",
                 "-o",
                 "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
                 "-lfreeglut",
@@ -20,7 +23,9 @@
                 "-lcomdlg32",
                 "-luuid",
                 "-loleaut32",
-                "-lole32"
+                "-lole32",
+                "-I",
+                "${workspaceFolder}\\src\\CG"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

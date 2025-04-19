@@ -3,53 +3,29 @@
 #include <GL/glut.h>
 #include "Utility.h"
 
+namespace CG { namespace Maths {} }
+
 namespace CG
 {
 class Window {
 public:
-    Window(const char* title, const CG::Vec2f& winDim = WindowSize(), const CG::Vec2f& winPos = WindowMidPosition()) {
-        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-        glutInitWindowSize(winDim.x, winDim.y);
-        glutInitWindowPosition(winPos.x, winPos.y);
-        m_windowID = glutCreateWindow(title);
-        glClearColor(0.27f, 0.27f, 0.27f, 1.0f);
-
-        glLoadIdentity();
-        glMatrixMode(GL_PROJECTION);
-        glutKeyboardFunc(keyCallback);
-    }
-    ~Window() { glutDestroyWindow(m_windowID); }
+    Window(const char* title,
+        const CG::Maths::Vec2f& winDim = Window::WindowSize(),
+        const CG::Maths::Vec2f& winPos = Window::WindowMidPosition());
+    ~Window();
 
     /// @brief  Takes a function pointer to the display function, registers it as cb and runs main loop.
     /// @param displayFunc display function with signature `void displayFunc(void)`
-    void run(void (*displayFunc)(void)) const {
-        glutDisplayFunc(displayFunc);
-        glutMainLoop();
-    }
+    void run(void (*displayFunc)(void)) const;
 
-    int getWindowID() const { return m_windowID; }
+    int getWindowID() const;
 
-    static Vec2f NormalizeToViewport(const Vec2f& point) {
-        float x = (point.x / (float)WindowSize().x) * 2.0f - 1.0f;
-        float y = (point.y / (float)WindowSize().y) * 2.0f - 1.0f;
-        return { x, y };
-    }
-public:
-    static CG::Vec2f  WindowSize() { return { 800.0f, 800.0f }; }
-    static CG::Vec2f  WindowMidPosition() {
-        const float displayScale = 1.25f;
-        const Vec2f screenSize = { 1920.0f, 1080.0f };
-        const Vec2f windowSize = WindowSize();
-
-        return ((screenSize * 0.5f) * (1.0f / displayScale) - windowSize * 0.5f);
-    }
+    static CG::Maths::Vec2f NormalizeToViewport(const CG::Maths::Vec2f& point);
+    static CG::Maths::Vec2f  WindowSize();
+    static CG::Maths::Vec2f  WindowMidPosition();
 
 private:
-    static void keyCallback(unsigned char key, int x, int y) {
-        if (key == 27) { // ESC key
-            glutDestroyWindow(glutGetWindow());
-        }
-    }
+    static void keyCallback(unsigned char key, int x, int y);
 private:
     int m_windowID;
 };

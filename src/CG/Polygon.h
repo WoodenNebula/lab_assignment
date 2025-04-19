@@ -1,23 +1,23 @@
 #pragma once
 #include <GL/glut.h>
 #include <vector>
-#include "Window.h"
 #include "Utility.h"
+#include "Maths.h"
 
 namespace CG
 {
 class Polygon {
 public:
     Polygon() {};
-    Polygon(const CG::Vec2f& center, const CG::Vec2f& dimensions, const CG::Vec3f& color)
+    Polygon(const CG::Maths::Vec2f& center, const CG::Maths::Vec2f& dimensions, const CG::Maths::Vec3f& color)
         : center(center), dimensions(dimensions), color(color) {
-        CG::Vec2f bottomLeft = Window::NormalizeToViewport(center - dimensions * 0.5f);
-        CG::Vec2f topRight = Window::NormalizeToViewport(center + dimensions * 0.5f);
+        CG::Maths::Vec2f bottomLeft = Window::NormalizeToViewport(center - dimensions * 0.5f);
+        CG::Maths::Vec2f topRight = Window::NormalizeToViewport(center + dimensions * 0.5f);
 
         vertices.push_back(bottomLeft);
-        vertices.push_back(CG::Vec2f{ topRight.x, bottomLeft.y });
+        vertices.push_back(CG::Maths::Vec2f{ topRight.x, bottomLeft.y });
         vertices.push_back(topRight);
-        vertices.push_back(CG::Vec2f{ bottomLeft.x, topRight.y });
+        vertices.push_back(CG::Maths::Vec2f{ bottomLeft.x, topRight.y });
     }
 
     void DrawFill() const {
@@ -29,7 +29,7 @@ public:
         glEnd();
     }
 
-    void DrawOutline(float lineWidth = 1.0f, const CG::Vec3f& color = { 0.0f, 0.0f, 0.0f }) const {
+    void DrawOutline(float lineWidth = 1.0f, const CG::Maths::Vec3f& color = { 0.0f, 0.0f, 0.0f }) const {
         glBegin(GL_LINE_LOOP);
         glLineWidth(lineWidth);
         glColor3f(color.r, color.g, color.b);
@@ -40,24 +40,24 @@ public:
         glEnd();
     }
 public:
-    CG::Vec2f center;
-    CG::Vec2f dimensions;
-    CG::Vec3f color;
-    std::vector<CG::Vec2f> vertices;
+    CG::Maths::Vec2f center;
+    CG::Maths::Vec2f dimensions;
+    CG::Maths::Vec3f color;
+    std::vector<CG::Maths::Vec2f> vertices;
 };
 
 
 class Triangle : public Polygon {
 public:
-    Triangle(const CG::Vec2f& _center, const CG::Vec2f& _dimensions, const CG::Vec3f& _color)
+    Triangle(const CG::Maths::Vec2f& _center, const CG::Maths::Vec2f& _dimensions, const CG::Maths::Vec3f& _color)
         : Polygon() {
         center = _center;
         dimensions = _dimensions;
         color = _color;
 
-        CG::Vec2f bottomLeft = CG::Window::NormalizeToViewport({ center.x - dimensions.x * 0.5f, center.y - dimensions.y * 0.5f });
-        CG::Vec2f bottomRight = CG::Window::NormalizeToViewport({ center.x + dimensions.x * 0.5f, center.y - dimensions.y * 0.5f });
-        CG::Vec2f top = CG::Window::NormalizeToViewport({ center.x, center.y + dimensions.y * 0.5f });
+        CG::Maths::Vec2f bottomLeft = CG::Window::NormalizeToViewport({ center.x - dimensions.x * 0.5f, center.y - dimensions.y * 0.5f });
+        CG::Maths::Vec2f bottomRight = CG::Window::NormalizeToViewport({ center.x + dimensions.x * 0.5f, center.y - dimensions.y * 0.5f });
+        CG::Maths::Vec2f top = CG::Window::NormalizeToViewport({ center.x, center.y + dimensions.y * 0.5f });
 
         vertices.push_back(bottomLeft);
         vertices.push_back(bottomRight);
@@ -79,7 +79,7 @@ public:
 
 class Rectangle : public Polygon {
 public:
-    Rectangle(const CG::Vec2f& center, const CG::Vec2f& dimensions, const CG::Vec3f& color)
+    Rectangle(const CG::Maths::Vec2f& center, const CG::Maths::Vec2f& dimensions, const CG::Maths::Vec3f& color)
         : Polygon(center, dimensions, color) {}
 };
 }// namespace CG

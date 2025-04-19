@@ -3,8 +3,11 @@
 
 #include "Window.h"
 #include "Utility.h"
+#include "Maths.h"
 
-CG::Vec2f lineStart, lineEnd;
+using namespace CG::Maths;
+
+Vec2f lineStart, lineEnd;
 
 void drawFunc() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

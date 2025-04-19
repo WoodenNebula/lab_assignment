@@ -5,16 +5,19 @@
 
 #include "Window.h"
 #include "Utility.h"
+#include "Maths.h"
 
-CG::Vec2f lineStart, lineEnd;
-std::vector<CG::Vec2f> points;
+using namespace CG::Maths;
 
-void ddaLine(const CG::Vec2f& start, const CG::Vec2f& end) {
-    CG::Vec2f d = end - start;
+Vec2f lineStart, lineEnd;
+std::vector<Vec2f> points;
+
+void ddaLine(const Vec2f& start, const Vec2f& end) {
+    Vec2f d = end - start;
     int steps = abs(d.x) > abs(d.y) ? abs(d.x) : abs(d.y);
     float xIncrement = d.x / (float)steps;
     float yIncrement = d.y / (float)steps;
-    CG::Vec2f p = start;
+    Vec2f p = start;
     for (int i = 0; i <= steps; i++) {
         points.push_back(CG::Window::NormalizeToViewport(p));
         p.x += xIncrement;
