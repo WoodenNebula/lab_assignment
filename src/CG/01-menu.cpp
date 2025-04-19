@@ -1,17 +1,8 @@
 #include <iostream>
-#include <limits>
 #include <GL/gl.h>
+#include "Utility.h"
 #include "graphics/graphics.h"
 
-struct Vec2 {
-    int x;
-    int y;
-};
-
-void ignoreLine() {
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
 
 enum E_MenuOptions {
     None = -1,
@@ -33,25 +24,25 @@ void printMenu() {
 }
 
 void initGraphics() {
-    Vec2 windowSize{ 800, 800 };
+    CG::Vec2i windowSize{ 800, 800 };
     int window = initwindow(windowSize.x, windowSize.y, "Graphics", 0, 0, false, false);
     setcurrentwindow(window);
 }
 
 void shutdownGraphics() {
-    ignoreLine();
+    CG::flush();
     getch();
     closegraph();
 }
 
 
 void drawLine() {
-    Vec2 p1, p2;
+    CG::Vec2i p1, p2;
     std::cout << "Enter (x1, y1): ";
-    std::cin >> p1.x >> p1.y;
+    std::cin >> p1;
 
     std::cout << "Enter (x2, y2): ";
-    std::cin >> p2.x >> p2.y;
+    std::cin >> p2;
 
     initGraphics();
      // Draw a line
@@ -63,17 +54,17 @@ void drawLine() {
 }
 
 void drawTriangle() {
-    Vec2 top, left, right;
+    CG::Vec2i top, left, right;
     std::cout << "Enter coordinates of triangle:\n";
 
     std::cout << "Top (x1, y1): ";
-    std::cin >> top.x >> top.y;
+    std::cin >> top;
 
     std::cout << "Down Left (x2, y2): ";
-    std::cin >> left.x >> left.y;
+    std::cin >> left;
 
     std::cout << "Down Right (x3, y3): ";
-    std::cin >> right.x >> right.y;
+    std::cin >> right;
 
     initGraphics();
     line(left.x, left.y, right.x, right.y);
@@ -85,13 +76,13 @@ void drawTriangle() {
 }
 
 void drawRectangle() {
-    Vec2 bottomLeft, topRight;
+    CG::Vec2i bottomLeft, topRight;
 
     std::cout << "Down Left (x2, y2): ";
-    std::cin >> bottomLeft.x >> bottomLeft.y;
+    std::cin >> bottomLeft;
 
     std::cout << "Top Right (x3, y3): ";
-    std::cin >> topRight.x >> topRight.y;
+    std::cin >> topRight;
 
     initGraphics();
     rectangle(bottomLeft.x, topRight.y, topRight.x, bottomLeft.y);
@@ -99,25 +90,25 @@ void drawRectangle() {
 }
 
 void drawHexagon() {
-    Vec2 topLeft, topRight, left, bottomLeft, bottomRight, right;
+    CG::Vec2i topLeft, topRight, left, bottomLeft, bottomRight, right;
 
     std::cout << "Top Left: ";
-    std::cin >> topLeft.x >> topLeft.y;
+    std::cin >> topLeft;
 
     std::cout << "Mid Left: ";
-    std::cin >> left.x >> left.y;
+    std::cin >> left;
 
     std::cout << "Bottom Left: ";
-    std::cin >> bottomLeft.x >> bottomLeft.y;
+    std::cin >> bottomLeft;
 
     std::cout << "Bottom Right: ";
-    std::cin >> bottomRight.x >> bottomRight.y;
+    std::cin >> bottomRight;
 
     std::cout << "Mid Right: ";
-    std::cin >> right.x >> right.y;
+    std::cin >> right;
 
     std::cout << "Top Right: ";
-    std::cin >> topRight.x >> topRight.y;
+    std::cin >> topRight;
 
     initGraphics();
     line(topLeft.x, topLeft.y, left.x, left.y);
@@ -157,7 +148,7 @@ E_MenuOptions processInput(E_MenuOptions input) {
         return E_MenuOptions::Quit;
     default:
         std::cerr << "Bad option!\n";
-        ignoreLine();
+        CG::flush();
         std::cin.get();
     }
     return E_MenuOptions::None;
@@ -176,5 +167,6 @@ int main() {
         shouldQuit = processInput((E_MenuOptions)input) == E_MenuOptions::Quit;
     }
 
-    system("pause");
+    CG::pause();
+    CG::footer();
 }
