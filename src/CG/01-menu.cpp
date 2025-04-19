@@ -3,6 +3,11 @@
 #include <GL/gl.h>
 #include "graphics/graphics.h"
 
+struct Vec2 {
+    int x;
+    int y;
+};
+
 void ignoreLine() {
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -28,7 +33,8 @@ void printMenu() {
 }
 
 void initGraphics() {
-    int window = initwindow(800, 600, "Graphics", 0, 0, 0, 0);
+    Vec2 windowSize{ 800, 800 };
+    int window = initwindow(windowSize.x, windowSize.y, "Graphics", 0, 0, false, false);
     setcurrentwindow(window);
 }
 
@@ -38,14 +44,14 @@ void shutdownGraphics() {
     closegraph();
 }
 
-struct Vec2 {
-    int x;
-    int y;
-};
 
 void drawLine() {
-    Vec2 p1{ 100, 200 };
-    Vec2 p2{ 300, 300 };
+    Vec2 p1, p2;
+    std::cout << "Enter (x1, y1): ";
+    std::cin >> p1.x >> p1.y;
+
+    std::cout << "Enter (x2, y2): ";
+    std::cin >> p2.x >> p2.y;
 
     initGraphics();
      // Draw a line
@@ -57,10 +63,17 @@ void drawLine() {
 }
 
 void drawTriangle() {
-    Vec2 top{ 300, 400 };
-    Vec2 left{ 100, 100 };
-    Vec2 right{ 600, 100 };
+    Vec2 top, left, right;
+    std::cout << "Enter coordinates of triangle:\n";
 
+    std::cout << "Top (x1, y1): ";
+    std::cin >> top.x >> top.y;
+
+    std::cout << "Down Left (x2, y2): ";
+    std::cin >> left.x >> left.y;
+
+    std::cout << "Down Right (x3, y3): ";
+    std::cin >> right.x >> right.y;
 
     initGraphics();
     line(left.x, left.y, right.x, right.y);
@@ -72,20 +85,39 @@ void drawTriangle() {
 }
 
 void drawRectangle() {
-    Vec2 leftBottom{ 200, 100 };
-    Vec2 rightTop{ 400, 300 };
+    Vec2 bottomLeft, topRight;
+
+    std::cout << "Down Left (x2, y2): ";
+    std::cin >> bottomLeft.x >> bottomLeft.y;
+
+    std::cout << "Top Right (x3, y3): ";
+    std::cin >> topRight.x >> topRight.y;
 
     initGraphics();
-    rectangle(leftBottom.x, rightTop.y, rightTop.x, leftBottom.x);
+    rectangle(bottomLeft.x, topRight.y, topRight.x, bottomLeft.y);
     shutdownGraphics();
 }
+
 void drawHexagon() {
-    Vec2 topLeft{ 300, 100 };
-    Vec2 topRight{ 500, 100 };
-    Vec2 left{ 200, 200 };
-    Vec2 bottomLeft{ 300, 300 };
-    Vec2 bottomRight{ 500, 300 };
-    Vec2 right{ 600, 200 };
+    Vec2 topLeft, topRight, left, bottomLeft, bottomRight, right;
+
+    std::cout << "Top Left: ";
+    std::cin >> topLeft.x >> topLeft.y;
+
+    std::cout << "Mid Left: ";
+    std::cin >> left.x >> left.y;
+
+    std::cout << "Bottom Left: ";
+    std::cin >> bottomLeft.x >> bottomLeft.y;
+
+    std::cout << "Bottom Right: ";
+    std::cin >> bottomRight.x >> bottomRight.y;
+
+    std::cout << "Mid Right: ";
+    std::cin >> right.x >> right.y;
+
+    std::cout << "Top Right: ";
+    std::cin >> topRight.x >> topRight.y;
 
     initGraphics();
     line(topLeft.x, topLeft.y, left.x, left.y);
