@@ -7,7 +7,7 @@ namespace CG
 {
 class Window {
 public:
-    Window(const char* title, const CG::Vec2f& winDim = WindowSize(), const CG::Vec2f& winPos = { 0.0f, 0.0f }) {
+    Window(const char* title, const CG::Vec2f& winDim = WindowSize(), const CG::Vec2f& winPos = WindowMidPosition()) {
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(winDim.x, winDim.y);
         glutInitWindowPosition(winPos.x, winPos.y);
@@ -35,7 +35,14 @@ public:
         return { x, y };
     }
 public:
-    static CG::Vec2f  WindowSize() { return { 800.0f, 600.0f }; }
+    static CG::Vec2f  WindowSize() { return { 800.0f, 800.0f }; }
+    static CG::Vec2f  WindowMidPosition() {
+        const float displayScale = 1.25f;
+        const Vec2f screenSize = { 1920.0f, 1080.0f };
+        const Vec2f windowSize = WindowSize();
+
+        return ((screenSize * 0.5f) * (1.0f / displayScale) - windowSize * 0.5f);
+    }
 
 private:
     static void keyCallback(unsigned char key, int x, int y) {
