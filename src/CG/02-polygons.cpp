@@ -47,9 +47,6 @@ void drawFunc() {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
 
-    CG::Vec2i windowSize{ 800, 600 };
-    CG::Vec2i windowPos{ 0, 0 };
-
-    CG::Window window(windowSize, windowPos, "Polygon");
+    CG::Window window("Polygon");
     window.run(drawFunc);
 }

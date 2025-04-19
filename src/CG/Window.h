@@ -4,9 +4,11 @@
 
 namespace CG
 {
+static CG::Vec2i windowSize{ 800, 600 };
+static CG::Vec2i windowPos{ 0, 0 };
 class Window {
 public:
-    Window(const CG::Vec2i& winDim, const CG::Vec2i& winPos, const char* title) {
+    Window(const char* title, const CG::Vec2i& winDim = windowSize, const CG::Vec2i& winPos = windowPos) {
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(winDim.x, winDim.y);
         glutInitWindowPosition(winPos.x, winPos.y);
