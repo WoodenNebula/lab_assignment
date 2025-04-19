@@ -47,6 +47,11 @@ namespace CG
 using Vec2f = CG::Math::Vec2<float>;
 using Vec3f = CG::Math::Vec3<float>;
 
+Vec3f getRandomColor() {
+    srand(static_cast<unsigned int>(time(0)));
+    return { static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX };
+};
+
 void flush() {
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
