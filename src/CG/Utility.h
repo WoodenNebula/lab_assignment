@@ -8,14 +8,14 @@ template <typename T>
 struct Vec2 {
     T x, y;
     Vec2(T x = 0, T y = 0) : x(x), y(y) {}
-    Vec2 operator+(const Vec2& other) const { return Vec2(x + other.x, y + other.y); }
-    Vec2 operator-(const Vec2& other) const { return Vec2(x - other.x, y - other.y); }
-    Vec2 operator*(float scalar) const { return Vec2(x * scalar, y * scalar); }
-    friend std::ostream& operator<<(std::ostream& os, const Vec2& vec) {
+    Vec2<T> operator+(const Vec2<T>& other) const { return { x + other.x, y + other.y }; }
+    Vec2<T> operator-(const Vec2<T>& other) const { return { x - other.x, y - other.y }; }
+    Vec2<T> operator*(float scalar) const { return { x * scalar, y * scalar }; }
+    friend std::ostream& operator<<(std::ostream& os, const Vec2<T>& vec) {
         os << "(" << vec.x << ", " << vec.y << ")";
         return os;
     }
-    friend std::istream& operator>>(std::istream& is, Vec2& vec) {
+    friend std::istream& operator>>(std::istream& is, Vec2<T>& vec) {
         is >> vec.x >> vec.y;
         return is;
     }
@@ -44,10 +44,7 @@ struct Vec3 {
 
 namespace CG
 {
-using Vec2i = CG::Math::Vec2<int>;
 using Vec2f = CG::Math::Vec2<float>;
-
-using Vec3i = CG::Math::Vec3<int>;
 using Vec3f = CG::Math::Vec3<float>;
 
 void flush() {

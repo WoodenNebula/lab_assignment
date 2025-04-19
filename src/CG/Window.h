@@ -4,11 +4,9 @@
 
 namespace CG
 {
-static CG::Vec2i windowSize{ 800, 600 };
-static CG::Vec2i windowPos{ 0, 0 };
 class Window {
 public:
-    Window(const char* title, const CG::Vec2i& winDim = windowSize, const CG::Vec2i& winPos = windowPos) {
+    Window(const char* title, const CG::Vec2f& winDim = WindowSize(), const CG::Vec2f& winPos = { 0.0f, 0.0f }) {
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(winDim.x, winDim.y);
         glutInitWindowPosition(winPos.x, winPos.y);
@@ -27,6 +25,15 @@ public:
     }
 
     int getWindowID() const { return m_windowID; }
+
+    static Vec2f NormalizeToViewport(const Vec2f& point) {
+        float x = (point.x / (float)WindowSize().x) * 2.0f - 1.0f;
+        float y = (point.y / (float)WindowSize().y) * 2.0f - 1.0f;
+        return { x, y };
+    }
+public:
+    static CG::Vec2f  WindowSize() { return { 800.0f, 600.0f }; }
+
 private:
     static void keyCallback(unsigned char key, int x, int y) {
         if (key == 27) { // ESC key
