@@ -2,7 +2,7 @@
     "configurations": [
         {
             "name": "Win32",
-            "compilerPath": "C:\\Program Files\\msys64\\ucrt64\\bin\\g++.exe",
+            "compilerPath": "C:/Program Files/msys64/mingw64/bin/g++.exe",
             "includePath": [
                 "${workspaceFolder}/src/**"
             ],

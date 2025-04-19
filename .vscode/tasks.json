@@ -13,6 +13,7 @@
                 "${file}",
                 "-o",
                 "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "-lfreeglut",
                 "-lopengl32",
                 "-lbgi",
                 "-lgdi32",
@@ -31,12 +32,12 @@
                 "kind": "build"
             },
             "presentation": {
-                "close": true,
-                "revealProblems": "never",
+                "close": false,
                 "showReuseMessage": false,
-                "echo": true,
+                "echo": false,
                 "reveal": "silent",
-                "focus": false,
+                "revealProblems": "never",
+                "focus": true,
                 "panel": "shared",
                 "clear": true
             },
