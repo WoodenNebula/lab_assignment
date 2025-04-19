@@ -26,7 +26,6 @@ static CG::Vec2f center;
 void drawFunc() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    float speed = 0.15f;
     drawSquare(center, 50.0f);
 
     glutSwapBuffers();
