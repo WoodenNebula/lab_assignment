@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 namespace CG::Maths
 {
 template <typename T>

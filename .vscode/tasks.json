@@ -18,6 +18,7 @@
                 "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
                 "-lfreeglut",
                 "-lopengl32",
+                "-lglu32",
                 "-lbgi",
                 "-lgdi32",
                 "-lcomdlg32",

@@ -9,10 +9,25 @@ namespace CG
 class Polygon {
 public:
     Polygon() {};
+    Polygon& operator=(const CG::Polygon& other) {
+        if (this != &other) {
+            center = other.center;
+            dimensions = other.dimensions;
+            color = other.color;
+            vertices = other.vertices;
+        }
+        return *this;
+    }
+    Polygon(const CG::Polygon& other) {
+        center = other.center;
+        dimensions = other.dimensions;
+        color = other.color;
+        vertices = other.vertices;
+    }
     Polygon(const CG::Maths::Vec2f& center, const CG::Maths::Vec2f& dimensions, const CG::Maths::Vec3f& color)
         : center(center), dimensions(dimensions), color(color) {
-        CG::Maths::Vec2f bottomLeft = Window::NormalizeToViewport(center - dimensions * 0.5f);
-        CG::Maths::Vec2f topRight = Window::NormalizeToViewport(center + dimensions * 0.5f);
+        CG::Maths::Vec2f bottomLeft = center - dimensions * 0.5f;
+        CG::Maths::Vec2f topRight = center + dimensions * 0.5f;
 
         vertices.push_back(bottomLeft);
         vertices.push_back(CG::Maths::Vec2f{ topRight.x, bottomLeft.y });
@@ -24,7 +39,8 @@ public:
         glBegin(GL_POLYGON);
         glColor3f(color.r, color.g, color.b);
         for (const auto& vertex : vertices) {
-            glVertex2fv(&vertex.x);
+            auto normalizedVertex = CG::Window::NormalizeToViewport(vertex);
+            glVertex2fv(&normalizedVertex.x);
         }
         glEnd();
     }
@@ -35,10 +51,12 @@ public:
         glColor3f(color.r, color.g, color.b);
 
         for (const auto& vertex : vertices) {
-            glVertex2fv(&vertex.x);
+            auto normalizedVertex = CG::Window::NormalizeToViewport(vertex);
+            glVertex2fv(&normalizedVertex.x);
         }
         glEnd();
     }
+
 public:
     CG::Maths::Vec2f center;
     CG::Maths::Vec2f dimensions;
@@ -55,9 +73,9 @@ public:
         dimensions = _dimensions;
         color = _color;
 
-        CG::Maths::Vec2f bottomLeft = CG::Window::NormalizeToViewport({ center.x - dimensions.x * 0.5f, center.y - dimensions.y * 0.5f });
-        CG::Maths::Vec2f bottomRight = CG::Window::NormalizeToViewport({ center.x + dimensions.x * 0.5f, center.y - dimensions.y * 0.5f });
-        CG::Maths::Vec2f top = CG::Window::NormalizeToViewport({ center.x, center.y + dimensions.y * 0.5f });
+        CG::Maths::Vec2f bottomLeft = { center.x - dimensions.x * 0.5f, center.y - dimensions.y * 0.5f };
+        CG::Maths::Vec2f bottomRight = { center.x + dimensions.x * 0.5f, center.y - dimensions.y * 0.5f };
+        CG::Maths::Vec2f top = { center.x, center.y + dimensions.y * 0.5f };
 
         vertices.push_back(bottomLeft);
         vertices.push_back(bottomRight);
@@ -69,8 +87,8 @@ public:
         glColor3f(color.r, color.g, color.b);
 
         for (const auto& vertex : vertices) {
-            std::cout << vertex << std::endl;
-            glVertex2fv(&vertex.x);
+            auto normalizedVertex = CG::Window::NormalizeToViewport(vertex);
+            glVertex2fv(&normalizedVertex.x);
         }
         glEnd();
     }
@@ -79,7 +97,7 @@ public:
 
 class Rectangle : public Polygon {
 public:
-    Rectangle(const CG::Maths::Vec2f& center, const CG::Maths::Vec2f& dimensions, const CG::Maths::Vec3f& color)
+    Rectangle(const CG::Maths::Vec2f& center, const CG::Maths::Vec2f& dimensions, const CG::Maths::Vec3f& color = { 1.0f, 1.0f, 1.0f })
         : Polygon(center, dimensions, color) {}
 };
 }// namespace CG

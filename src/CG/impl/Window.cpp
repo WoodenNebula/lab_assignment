@@ -23,8 +23,9 @@ Window::Window(const char* title, const Maths::Vec2f& winDim, const Maths::Vec2f
     m_windowID = glutCreateWindow(title);
     glClearColor(0.27f, 0.27f, 0.27f, 1.0f);
 
-    glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    // gluOrtho2D(0.0, winDim.y, 0.0, winDim.x);
     glutKeyboardFunc(keyCallback);
 }
 Window::~Window() { glutDestroyWindow(m_windowID); }
