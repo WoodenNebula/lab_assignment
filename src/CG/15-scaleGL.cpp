@@ -10,17 +10,19 @@ using namespace CG::Maths;
 
 void drawFunc() {
     glClear(GL_COLOR_BUFFER_BIT);
+    int dt = 750;
 
     Vec2f center = { 300.0f, 325.0f };
     Vec2f dimensions = { 200.0f, 50.0f };
 
-    glPushMatrix();
     CG::Rectangle rectangle(center, dimensions, { .5f, .0f, .4f });
     rectangle.DrawFill();
-    glRotatef(30.0f, 0.0f, 0.0f, 1.0f);
+    glPushMatrix();
+
+    glScalef(2.0f, 2.0f, 1.0f);
 
     rectangle.color = { 0.0f, 1.0f, 0.0f };
-    rectangle.DrawFill();
+    rectangle.DrawOutline(20.0f, rectangle.color);
     glPopMatrix();
 
     glutSwapBuffers();
@@ -28,7 +30,7 @@ void drawFunc() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    CG::Window window("Rotating Rectangle(GL)");
+    CG::Window window("Scaled Rectangle(GL)");
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
