@@ -1,0 +1,52 @@
+dir
+ls
+ls -a
+ls -l
+ls -lh
+ls -F
+ls -r
+ls -R
+ls -ltr
+ls -i
+ls --version
+ls --help
+ls -n
+clear
+ls
+mkdir os
+ls
+cd os
+ls
+touch linux.txt
+ls
+nvim linux.txt # type "this is the lab 1 of Operating System class" > linux.txt
+cat linux.txt
+touch unix.txt
+cat > unix.txt # input needed
+cat unix.txt
+touch fedora.txt arch.txt debian.txt red_hat.txt
+ls
+cp linux.txt fedora.txt
+cat fedora.txt
+cd ..
+mkdir arch-btw
+ls
+pwd
+cp ~/Dev/lab_assignment/src/OS/os/fedora.txt ~/Dev/lab_assignment/src/OS/arch-btw
+ls ~/Dev/lab_assignment/src/OS/arch-btw
+cat ~/Dev/lab_assignment/src/OS/arch-btw/fedora.txt
+mv ~/Dev/lab_assignment/src/OS/os/debian.txt ~/Dev/lab_assignment/src/OS/arch-btw
+cd os
+ls 
+rm fedora.txt
+ls 
+rm arch.txt linux.txt
+ls
+rm *.txt
+ls
+cd ..
+rmdir os
+ls
+rmdir arch-btw
+rm -rf arch-btw
+ls
