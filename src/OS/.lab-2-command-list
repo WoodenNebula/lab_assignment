@@ -1,0 +1,63 @@
+# cd Dev/lab_assignment/src/OS
+# while read line; do clear; zsh -i -c 'print -P "$PROMPT"'; echo "$line"; eval "$line"; read -k1 ;done < .lab-2-command-list
+# while read -r line; do  clear; cmd=$(echo "$line" | sed -E 's/^sudo //; s/ .*//'); read -k1 -p "$cmd"; man "$cmd"; done < .lab-2-command-list
+
+lscpu
+lshw
+sudo lshw
+hwinfo
+hwinfo –-short
+lspci
+lsscsi
+lsusb
+inxi
+inxi -fx
+# inxi -Fx
+lsblk
+df
+pydf
+sudo fdisk -l
+free
+sudo dmidecode -t processor
+sudo dmidecode -t memory
+sudo dmidecode -t bios
+cat /proc/cpuinfo
+cat /proc/meminfo
+cat /proc/version
+hdparm -i /dev/nvme0
+uname
+uname -n
+uname -v
+uname -r
+uname -m
+uname -a
+sudo lshw -html>lshw.html
+factor 69420
+echo ‘3*9’| bc
+echo ‘(6*5)-8’| bc
+id
+lsusb | tee lsusb.txt
+cat lsusb.txt
+# shutdown
+# shutdown now
+# shutdown 13:20
+# shutdown 10
+# shutdown -r +10
+# shutdown -c
+ping -w 3 google.com
+netstat
+netstat -r
+netstat -p
+sudo tcpdump -c 100
+host google.com
+tracepath achsnepal.edu.np
+ifconfig
+route
+nslookup achsnepal.edu.np
+whois brainyquote.com
+# sudo pacman -Syyu
+# sudo pacman -S sl
+sl
+sudo -s
+exit
+
