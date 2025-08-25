@@ -14,7 +14,11 @@
 
 void footer() {
   printf("\nSurab Parajuli\nSection: A, Roll: 34\n");
+#ifdef __linux__
+  // system("read -p \"Press any key to continue...\"");
+#else
   system("pause");
+#endif
 }
 
 #ifdef MISC
@@ -227,23 +231,6 @@ Metrics inputMetrics() {
   // initialize first waiting time to be zero
   m.waitTime[0] = 0;
   return m;
-}
-
-AvgMetrics processMetrics(Metrics *m) {
-  AvgMetrics avg = {0, 0};
-
-  // calculate waiting and burst time for all processes
-  for (int i = 1; i < m->count; i++) {
-    m->waitTime[i] = m->waitTime[i - 1] + m->burstTime[i - 1];
-    avg.waitTime += m->waitTime[i - 1];
-
-    m->turnAroundTime[i - 1] = m->waitTime[i - 1] + m->burstTime[i - 1];
-    avg.turnAroundTime += m->turnAroundTime[i - 1];
-  }
-
-  avg.waitTime /= m->count;
-  avg.turnAroundTime /= m->count;
-  return avg;
 }
 
 void printMetrics(const Metrics *m, const AvgMetrics *avg) {
