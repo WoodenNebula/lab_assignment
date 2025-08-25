@@ -4,3 +4,5 @@ bin
 settings.json
 **/test**
 src/CG/Ref/
+.cache
+compile_commands.json
