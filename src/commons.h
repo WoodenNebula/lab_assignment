@@ -183,6 +183,7 @@ typedef struct {
   int *burstTime;
   int *waitTime;
   int *turnAroundTime;
+  int *remainingTime;
 } Metrics;
 
 typedef struct {
@@ -196,6 +197,7 @@ Metrics init(int processCount) {
   m.burstTime = (int *)malloc(sizeof(int) * processCount);
   m.waitTime = (int *)malloc(sizeof(int) * processCount);
   m.turnAroundTime = (int *)malloc(sizeof(int) * processCount);
+  m.remainingTime = (int *)malloc(sizeof(int) * processCount);
 
   LOG("Initialized Metric struct");
   return m;
@@ -211,6 +213,7 @@ void deinit(Metrics *m) {
   free(m->burstTime);
   free(m->waitTime);
   free(m->turnAroundTime);
+  free(m->remainingTime);
 
   LOG("Cleaned up Metric struct");
 }
@@ -243,4 +246,17 @@ void printMetrics(const Metrics *m, const AvgMetrics *avg) {
   printf("Average Waiting Time = %f, Average Turn Around Time = %f",
          avg->waitTime, avg->turnAroundTime);
 }
+
+AvgMetrics calculateAverageMetrics(const Metrics *m) {
+  AvgMetrics avg = {0, 0};
+  for (int i = 0; i < m->count; i++) {
+    avg.turnAroundTime += m->turnAroundTime[i];
+    avg.waitTime += m->waitTime[i];
+  }
+
+  avg.waitTime /= m->count;
+  avg.turnAroundTime /= m->count;
+  return avg;
+}
+
 #endif // SURAB_OS
