@@ -19,7 +19,6 @@ AvgMetrics FCFS(Metrics *m) {
 }
 
 int main() {
-  int n, i;
   Metrics m = inputMetrics();
   AvgMetrics avg = FCFS(&m);
   printMetrics(&m, &avg);
