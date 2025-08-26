@@ -1,23 +1,26 @@
 #define SURAB_OS
 #include "src/commons.h"
 
-void FCFS(Metrics *m) {
-
-  // calculate waiting and burst time for all processes
-  for (int i = 1; i < m->count; i++) {
-    m->waitTime[i] = m->waitTime[i - 1] + m->burstTime[i - 1];
-    m->turnAroundTime[i - 1] = m->waitTime[i - 1] + m->burstTime[i - 1];
+void FCFS(Processes *p) {
+  // calculate waiting time
+  for (int i = 1; i < p->count; i++) {
+    p->m[i].waitTime = p->m[i - 1].waitTime + p->m[i - 1].burstTime;
   }
-  m->turnAroundTime[m->count - 1] =
-      m->waitTime[m->count - 1] + m->burstTime[m->count - 1];
+
+  // and turn around time for all processes
+  for (int i = 0; i < p->count; i++) {
+    p->m[i].turnAroundTime = p->m[i].waitTime + p->m[i].burstTime;
+  }
 }
 
 int main() {
-  Metrics m = inputMetrics();
-  FCFS(&m);
-  AvgMetrics avg = calculateAverageMetrics(&m);
-  printMetrics(&m, &avg);
-  deinit(&m);
+  Processes p = inputMetrics();
+
+  FCFS(&p);
+  AvgMetrics avg = calculateAverageMetrics(&p);
+
+  printProcesses(&p, &avg);
+  deinit(&p);
   footer();
   return 0;
 }

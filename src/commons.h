@@ -175,87 +175,82 @@ float f(Coeff coeff, float x) {
 
 /// OS related stuffs
 #ifdef SURAB_OS
+typedef struct {
+  int burstTime;
+  int waitTime;
+  int turnAroundTime;
+  int remainingTime;
+} Metrics;
 
 typedef struct {
+  Metrics *m;
   int count;
-  int *burstTime;
-  int *waitTime;
-  int *turnAroundTime;
-  int *remainingTime;
-} Metrics;
+} Processes;
 
 typedef struct {
   float waitTime;
   float turnAroundTime;
 } AvgMetrics;
 
-Metrics init(int processCount) {
-  Metrics m;
-  m.count = processCount;
-  m.burstTime = (int *)malloc(sizeof(int) * processCount);
-  m.waitTime = (int *)malloc(sizeof(int) * processCount);
-  m.turnAroundTime = (int *)malloc(sizeof(int) * processCount);
-  m.remainingTime = (int *)malloc(sizeof(int) * processCount);
-
-  LOG("Initialized Metric struct");
-  return m;
-}
-
-void deinit(Metrics *m) {
-  if (m->count <= 0) {
-    printf("ERROR: Metric not initialized");
+void init(Processes *p) {
+  if (!p) {
+    printf("CANT INITIALIZE NULL PROCESS");
     return;
   }
 
-  m->count = -1;
-  free(m->burstTime);
-  free(m->waitTime);
-  free(m->turnAroundTime);
-  free(m->remainingTime);
-
-  LOG("Cleaned up Metric struct");
+  p->m = (Metrics *)malloc(sizeof(Metrics) * p->count);
+  LOG("Initialized Process struct");
 }
 
-Metrics inputMetrics() {
-  int n;
-  printf("Enter number of processes: ");
-  scanf("%d", &n);
+void deinit(Processes *p) {
+  if (!p) {
+    printf("CANT DE-INITIALIZE NULL PROCESS");
+    return;
+  }
 
-  Metrics m = init(n);
+  free(p->m);
+  LOG("De-Initialized Process struct");
+}
+
+Processes inputMetrics() {
+  Processes p;
+  printf("Enter number of processes: ");
+  scanf("%d", &p.count);
+  init(&p);
 
   printf("Enter burst time for each process:\n");
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < p.count; i++) {
     printf("P[%d]: ", i + 1);
-    scanf("%d", m.burstTime + i);
-    m.remainingTime[i] = m.burstTime[i];
+    scanf("%d", &p.m[i].burstTime);
+    p.m[i].remainingTime = p.m[i].burstTime;
   }
 
   LOG("Input Complete");
   // initialize first waiting time to be zero
-  m.waitTime[0] = 0;
-  return m;
+  p.m[0].waitTime = 0;
+  return p;
 }
 
-void printMetrics(const Metrics *m, const AvgMetrics *avg) {
+void printProcesses(const Processes *p, const AvgMetrics *avg) {
   // formatted output
   printf("\nProcess\tBT\tWT\tTAT\n");
-  for (int i = 0; i < m->count; i++) {
-    printf("P%d\t%d\t%d\t%d\n", i + 1, m->burstTime[i], m->waitTime[i],
-           m->turnAroundTime[i]);
+  for (int i = 0; i < p->count; i++) {
+    printf("P%d\t%d\t%d\t%d\n", i + 1, p->m[i].burstTime, p->m[i].waitTime,
+           p->m[i].turnAroundTime);
   }
   printf("Average Waiting Time = %f, Average Turn Around Time = %f",
          avg->waitTime, avg->turnAroundTime);
 }
 
-AvgMetrics calculateAverageMetrics(const Metrics *m) {
+AvgMetrics calculateAverageMetrics(const Processes *p) {
   AvgMetrics avg = {0, 0};
-  for (int i = 0; i < m->count; i++) {
-    avg.turnAroundTime += m->turnAroundTime[i];
-    avg.waitTime += m->waitTime[i];
+  for (int i = 0; i < p->count; i++) {
+    avg.turnAroundTime += p->m[i].turnAroundTime;
+    avg.waitTime += p->m[i].waitTime;
   }
 
-  avg.waitTime /= m->count;
-  avg.turnAroundTime /= m->count;
+  avg.waitTime /= p->count;
+  avg.turnAroundTime /= p->count;
   return avg;
 }
 
