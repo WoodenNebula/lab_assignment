@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LOG_LEVEL 0
-
 #if (LOG_LEVEL == 1)
 #define LOG(x) printf("\n[LOG] : %s\n", x)
 #else
@@ -229,8 +227,10 @@ Metrics inputMetrics() {
   for (int i = 0; i < n; i++) {
     printf("P[%d]: ", i + 1);
     scanf("%d", m.burstTime + i);
+    m.remainingTime[i] = m.burstTime[i];
   }
 
+  LOG("Input Complete");
   // initialize first waiting time to be zero
   m.waitTime[0] = 0;
   return m;
