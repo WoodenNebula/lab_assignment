@@ -6,6 +6,8 @@
 int main() {
   Array blocks = promptArray("Enter number of memory blocks:",
                              "Enter size of each block:");
+  Array blockState = {NULL, blocks.size};
+  array_init(&blockState);
   Array processes = promptArray("Enter number of processes:",
                                 "Enter size of each processes:");
 
@@ -18,8 +20,13 @@ int main() {
   // First Fit allocation
   for (int i = 0; i < processes.size; i++) {
     for (int j = 0; j < blocks.size; j++) {
+      if (blockState.arr[j]) {
+        // block is already allocated, skip it
+        continue;
+      }
       if (blocks.arr[j] >= processes.arr[i]) {
         allocation.arr[i] = j;
+        blockState.arr[j] = 1;
         blocks.arr[j] -= processes.arr[i];
         break;
       }
@@ -36,6 +43,7 @@ int main() {
   }
 
   array_deinit(&blocks);
+  array_deinit(&blockState);
   array_deinit(&processes);
   array_deinit(&allocation);
   footer();

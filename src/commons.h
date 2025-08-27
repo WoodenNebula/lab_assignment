@@ -42,6 +42,9 @@ void array_init(Array *arr) {
   if (arr->arr == NULL) {
     abortOnError("Memory allocation failed\n");
   }
+  for (size_t i = 0; i < arr->size; i++) {
+    arr->arr[i] = 0;
+  }
   LOG("Initialized ARRAY");
 }
 
