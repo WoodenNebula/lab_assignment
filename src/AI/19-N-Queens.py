@@ -64,7 +64,6 @@ def main() -> None:
     else:
         print(f"No solution exists for N={N}")
 
-    # Footer
     print("\nLab:", os.path.basename(__file__))
     print("Surab Parajuli\tSection: A\nRoll: 34\tSymbol: 80010139")
 

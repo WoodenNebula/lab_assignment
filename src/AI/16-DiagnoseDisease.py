@@ -48,7 +48,6 @@ def main() -> None:
         print("Diagnosis:", diagnose(symptoms))
         print("-" * 40)
 
-    # Footer
     print("\nLab:", os.path.basename(__file__))
     print("Surab Parajuli\tSection: A\nRoll: 34\tSymbol: 80010139")
 

@@ -82,7 +82,6 @@ def main() -> None:
     for i, x in enumerate(test_cases, 1):
         print(f"Test case {i}: Input {x} -> Output {nn.forward(x):.4f}")
 
-    # Footer
     print("\nLab:", os.path.basename(__file__))
     print("Surab Parajuli\tSection: A\nRoll: 34\tSymbol: 80010139")
 

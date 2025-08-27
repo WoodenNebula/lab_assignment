@@ -50,7 +50,6 @@ def main() -> None:
         print(f"NOT {x} = {NOT_gate(x)}")
     print("-" * 40)
 
-    # Footer
     print("\nLab:", os.path.basename(__file__))
     print("Surab Parajuli\tSection: A\nRoll: 34\tSymbol: 80010139")
 
