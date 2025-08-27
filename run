@@ -1,1 +1,1 @@
-./src/OS/syscalls/run.sh
+src/run.sh
