@@ -23,7 +23,7 @@ void footer() {
 
 void abortOnError(const char *msg) {
   printf("\e[1;91m");
-  printf(msg);
+  puts(msg);
   printf("\e[0m");
   footer();
   exit(EXIT_FAILURE);
@@ -35,18 +35,38 @@ typedef struct {
   size_t size;
 } Array;
 
-Array promptArray() {
-  Array array = {NULL, 0};
-  printf("Size of Array: ");
-  scanf("%zu", &array.size);
-
-  array.arr = (int *)malloc(array.size * sizeof(int));
-  if (array.arr == NULL) {
-    printf("Memory allocation failed\n");
-    exit(1);
+void array_init(Array *arr) {
+  if (!arr) {
+    abortOnError("CANT INITIALIZE NULL ARRAY");
   }
 
-  printf("Enter %zu elements:\n", array.size);
+  arr->arr = (int *)malloc(arr->size * sizeof(int));
+  if (arr->arr == NULL) {
+    abortOnError("Memory allocation failed\n");
+  }
+  LOG("Initialized ARRAY");
+}
+
+void array_deinit(Array *arr) {
+  if (arr->arr) {
+    free(arr->arr);
+  }
+  arr->size = -1;
+}
+
+Array promptArray(const char *arraySizeMsg, const char *arrayElemMsg) {
+  Array array = {NULL, 0};
+  printf(arraySizeMsg);
+  printf("\n");
+  scanf("%zu", &array.size);
+
+  array_init(&array);
+
+  if (arrayElemMsg) {
+    printf("%s:\n", arrayElemMsg);
+  } else {
+    printf("Enter %zu elements:\n", array.size);
+  }
   for (size_t i = 0; i < array.size; i++) {
     scanf("%d", &array.arr[i]);
   }
@@ -197,7 +217,7 @@ typedef struct {
   float turnAroundTime;
 } AvgMetrics;
 
-void init(Processes *p) {
+void processes_init(Processes *p) {
   if (!p) {
     printf("CANT INITIALIZE NULL PROCESS");
     return;
@@ -207,7 +227,7 @@ void init(Processes *p) {
   LOG("Initialized Process struct");
 }
 
-void deinit(Processes *p) {
+void processes_deinit(Processes *p) {
   if (!p) {
     printf("CANT DE-INITIALIZE NULL PROCESS");
     return;
@@ -221,7 +241,7 @@ Processes inputMetrics() {
   Processes p;
   printf("Enter number of processes: ");
   scanf("%d", &p.count);
-  init(&p);
+  processes_init(&p);
 
   printf("Enter burst time for each process:\n");
   for (int i = 0; i < p.count; i++) {

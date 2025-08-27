@@ -48,7 +48,7 @@ int main() {
   AvgMetrics avg = calculateAverageMetrics(&p);
 
   printProcesses(&p, &avg);
-  deinit(&p);
+  processes_deinit(&p);
   footer();
   return 0;
 }
