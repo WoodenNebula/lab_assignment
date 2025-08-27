@@ -19,10 +19,17 @@ void footer() {
 #endif
 }
 
-#ifdef MISC
 #define MAX_SIZE 100
-#define FLOAT_TOLERANCE 0.000001
 
+void abortOnError(const char *msg) {
+  printf("\e[1;91m");
+  printf(msg);
+  printf("\e[0m");
+  footer();
+  exit(EXIT_FAILURE);
+}
+
+#ifdef SURAB_ARRAY
 typedef struct {
   int *arr;
   size_t size;
@@ -54,15 +61,10 @@ void printArray(const Array *array) {
   }
   printf("%d }\n", array->arr[array->size - 1]);
 }
+#endif // SURAB_ARRAY
 
-void abortOnError(const char *msg) {
-  printf("\e[1;91m");
-  printf(msg);
-  printf("\e[0m");
-  footer();
-  exit(EXIT_FAILURE);
-}
-
+#ifdef SURAB_MATRIX
+#define FLOAT_TOLERANCE 0.000001
 typedef struct {
   int row;
   int col;
@@ -100,8 +102,11 @@ void printMatrix(const Matrix *matrix, const char *msg) {
   }
   printf("\n");
 }
+#endif // SURAB_MATRIX
 
-/// Numerical Method
+#ifdef SURAB_NM
+
+// /// Numerical Method
 // Assuming a cubic equation i.e. f(x) = ax³ + bx² + cx + d
 typedef struct {
   int a;
@@ -171,7 +176,7 @@ float f(Coeff coeff, float x) {
   // printf("____(%d, %f)____\n", x, y);
   return y;
 }
-#endif // MISC
+#endif // SURAB_NM
 
 /// OS related stuffs
 #ifdef SURAB_OS
@@ -253,5 +258,4 @@ AvgMetrics calculateAverageMetrics(const Processes *p) {
   avg.turnAroundTime /= p->count;
   return avg;
 }
-
 #endif // SURAB_OS
