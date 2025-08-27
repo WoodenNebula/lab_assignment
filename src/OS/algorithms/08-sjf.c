@@ -42,17 +42,10 @@ void SortByBT(Processes *p) {
   for (int i = 0; i < p->count; i++) {
     for (int j = i + 1; j < p->count; j++) {
       if (p->m[j].burstTime < p->m[i].burstTime) {
-        printf("Before swap: (b, w, ta, r) = (%d, %d, %d, %d)",
-               p->m[i].burstTime, p->m[i].waitTime, p->m[i].turnAroundTime,
-               p->m[i].remainingTime);
         // swap
         Metrics tmp = p->m[j];
         p->m[j] = p->m[i];
         p->m[i] = tmp;
-
-        printf("After swap: (b, w, ta, r) = (%d, %d, %d, %d)",
-               p->m[i].burstTime, p->m[i].waitTime, p->m[i].turnAroundTime,
-               p->m[i].remainingTime);
       }
     }
   }
