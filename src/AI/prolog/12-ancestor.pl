@@ -26,18 +26,13 @@ ancestor(X, Y) :-
     parent(X, Z), 
     ancestor(Z, Y).
 
-% queries 
 run_queries :-
-    % list of queries in prolog, TestQueries is var since it starts with upper case
     TestQueries = [ancestor(john, alice), ancestor(mary, bob), ancestor(john, bob)],
-    % for loop, assigns member of TestQueries to Q and runs following commands
-    % call(Q)->runs the Query, and choses true or the false statement (assigned to Result var)
     forall(member(Q, TestQueries),
            (
              (call(Q) -> Result = true ; Result = false),
-    % format('') is printf, ~w is %s, ~n is \n, values are in list instead of open vars 
              (format('~w -> ~w~n', [Q, Result]))
             )
     ).
-% Initialization ensures run_tests is executed automatically on load
+
 :- initialization(run_queries).
