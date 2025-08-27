@@ -22,6 +22,10 @@ from nltk.stem import PorterStemmer
 
 def main() -> None:
     nltk.download('wordnet')
+    nltk.download('punkt_tab')
+    nltk.download('stopwords')
+    nltk.download('averaged_perceptron_tagger_eng')
+    
     text = ("Natural Language Processing (NLP) is a field of Artificial Intelligence. "
             "It enables machines to understand and interpret human language.")
 
