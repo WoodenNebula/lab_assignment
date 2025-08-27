@@ -1,6 +1,4 @@
 #pragma once
-#include <locale.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -125,7 +123,8 @@ void printMatrix(const Matrix *matrix, const char *msg) {
 #endif // SURAB_MATRIX
 
 #ifdef SURAB_NM
-
+#include <locale.h>
+#include <math.h>
 // /// Numerical Method
 // Assuming a cubic equation i.e. f(x) = ax³ + bx² + cx + d
 typedef struct {
