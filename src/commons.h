@@ -63,7 +63,7 @@ Array promptArray(const char *arraySizeMsg, const char *arrayElemMsg) {
   array_init(&array);
 
   if (arrayElemMsg) {
-    printf("%s:\n", arrayElemMsg);
+    printf("%s\n", arrayElemMsg);
   } else {
     printf("Enter %zu elements:\n", array.size);
   }
