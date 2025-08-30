@@ -9,7 +9,7 @@
 #endif
 
 void footer() {
-  printf("\nSurab Parajuli\nSection: A, Roll: 34\n");
+  printf("\nSurab Parajuli\nSection: A, Roll: 34\nSymbol No.: 80010139");
 #ifdef __linux__
   // system("read -p \"Press any key to continue...\"");
 #else
