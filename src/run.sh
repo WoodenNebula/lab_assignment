@@ -25,7 +25,7 @@ make_src_path() {
   fi
 }
 
-compile_and_run() {
+compile() {
     local src="$1"
     local bin="$2"
     local isC=$3
@@ -36,10 +36,8 @@ compile_and_run() {
     else
       bear -- g++ -g -I. $src -o $bin
     fi
-    # run
+
     chmod u+x $bin
-    $bin
-    echo
 }             
 
 run()  {
@@ -70,8 +68,11 @@ run()  {
       isC=false
     fi
 
-    compile_and_run $src $bin $isC
+    compile $src $bin $isC 
+    # run by passing remaining arguements 
+    $bin "${@:2}"
+    echo
   fi
 }
 
-run $file
+run "$@"

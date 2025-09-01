@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define RED "\033[91m"
+#define GREEN "\033[92m"
+#define RESET "\033[0m"
+
 #if (LOG_LEVEL == 1)
 #define LOG(x) printf("\n[LOG] : %s\n", x)
 #else
@@ -9,10 +13,10 @@
 #endif
 
 void footer() {
-  printf("\nSurab Parajuli\nSection: A, Roll: 34\nSymbol No.: 80010139");
-#ifdef __linux__
-  // system("read -p \"Press any key to continue...\"");
-#else
+  printf(
+      "\nSurab Parajuli\nSection: A, 4th-Sem\nRoll: 34, Symbol No.: 80010139");
+#ifndef __linux
+  // syst("read -p \"Press any key to continue...\"");
   system("pause");
 #endif
 }
@@ -20,9 +24,9 @@ void footer() {
 #define MAX_SIZE 100
 
 void abortOnError(const char *msg) {
-  printf("\e[1;91m");
+  printf(RED);
   puts(msg);
-  printf("\e[0m");
+  printf(RESET);
   footer();
   exit(EXIT_FAILURE);
 }
