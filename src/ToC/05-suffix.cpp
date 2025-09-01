@@ -8,10 +8,10 @@ int main(int argc, char *argv[]) {
   std::string parentString = "AbcDe";
   std::cout << "Parent String = " << parentString << "\n";
 
-  std::reverse(parentString.begin(), parentString.end());
   int count = 1;
-  while (count <= parentString.length()) {
-    std::cout << parentString.substr(0, count) << "\n";
+  for (int pos = parentString.length() - 1; pos >= 0; pos--) {
+    std::cout << "count=" << count << ", pos=" << pos << std::endl;
+    std::cout << parentString.substr(pos, count) << "\n";
     count++;
   }
 
