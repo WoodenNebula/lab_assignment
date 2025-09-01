@@ -12,14 +12,20 @@ void verdict() {
   std::cout << RESET << std::endl;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   std::cout << "==========\n";
   std::cout << "DFA That accepts strings ending at b from {a,b}\n";
   std::cout << "==========\n";
 
   std::string string;
-  std::cout << "Enter a string: ";
-  std::cin >> string;
+  if (argc > 1) {
+    string = argv[1];
+  } else {
+    std::cout << "Enter a string: ";
+    std::cin >> string;
+  }
+
+  std::cout << "Input:" << string << std::endl;
 
   std::set<char> alphabet = {'a', 'b'};
 
