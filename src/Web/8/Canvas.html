@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Canvas and SVG</title>
+    <style>
+      section,
+      canvas,
+      svg {
+        text-align: center;
+        border: 1px solid black;
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <figure>
+        <canvas id="canvas" width="400" height="200"> Not Supported</canvas>
+        <figcaption><strong>Canvas</strong></figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <figure>
+        <svg width="400" height="200" viewBox="0 0 400 200">
+          <!-- Rectangle -->
+          <rect x="50" y="50" width="100" height="80" fill="skyblue" stroke="black" stroke-width="2" />
+          <!-- Circle -->
+          <circle cx="250" cy="90" r="40" fill="orange" stroke="black" stroke-width="2" />
+          <!-- Line -->
+          <line x1="0" y1="0" x2="400" y2="200" stroke="red" stroke-width="2" />
+        </svg>
+        <figcaption><strong>SVG</strong></figcaption>
+      </figure>
+    </section>
+
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "lightgreen";
+      ctx.fillRect(50, 50, 100, 80);
+
+      // draw circle
+      ctx.beginPath();
+      ctx.arc(250, 90, 40, 0, 2 * Math.PI);
+      ctx.fillStyle = "purple";
+      ctx.fill();
+      ctx.stroke();
+    </script>
+  </body>
+  <footer style="background-color: #f0f0f0; padding: 10px; text-align: left">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
