@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Form</title>
+  </head>
+  <body>
+    <div style="background-color: #f0f0f0ff; padding: 0px 10px">
+      <form class="form">
+        <fieldset class="fieldset">
+          <legend>Form:</legend>
+          <label class="label" id="label-name">Name:</label>
+          <input class="input-field" id="input-name" type="text" name="name" placeholder="John Doe" required />
+          <br />
+
+          <label class="label" id="label-email">Email:</label>
+          <input class="input-field" id="input-email" type="text" name="email" placeholder="example@example.com" required />
+          <br />
+
+          <label class="label" id="label-phone">Phone number:</label>
+          <input class="input-field" id="input-phone" type="text" name="phone" placeholder="1234567890" required />
+          <br />
+
+          <label class="label" id="label-country">Country: </label>
+          <select class="select-field" id="select-country" name="country" required>
+            <option class="select-option" value="" hidden disabled selected>Select your country</option>
+            <option class="select-option" value="nepal">Nepal</option>
+            <option class="select-option" value="india">India</option>
+            <option class="select-option" value="russia">Russia</option>
+            <option class="select-option" value="usa">USA</option>
+          </select>
+          <br />
+
+          <label class="label" id="label-gender">Gender: </label>
+          <input class="input-radio" type="radio" name="gender" value="male" required />
+          <label>Male</label>
+          <input class="input-radio" type="radio" name="gender" value="female" />
+          <label>Female</label>
+          <input class="input-radio" type="radio" name="gender" value="other" />
+          <label>Other</label>
+          <br />
+
+          <br />
+          <label class="label" id="label-terms">I agree to the terms and conditions</label>
+          <input class="input-checkbox" type="checkbox" name="terms" required />
+          <br />
+
+          <input class="button" type="submit" value="Submit" />
+        </fieldset>
+      </form>
+    </div>
+
+    <br />
+
+    <div style="background-color: #f0f0f0ff; padding: 10px">
+      <fieldset class="fieldset">
+        <legend>Response Form:</legend>
+        <form class="form">
+          <textarea class="input-field" id="input-response" name="response" placeholder="Enter your response here..." rows="5" cols="40"></textarea>
+          <br />
+
+          <label class="label" id="label-form-type">Response type: </label>
+          <select class="select-field" id="select-form-type" name="response-type" required>
+            <option class="select-option" value="" hidden disabled selected>Select response type</option>
+            <optgroup label="Comment">
+              <option class="select-option" value="normal">Normal</option>
+              <option class="select-option" value="chat">Chat</option>
+            </optgroup>
+            <optgroup label="Feedback">
+              <option class="select-option" value="dislike">Dislike</option>
+              <option class="select-option" value="hate">Hate</option>
+            </optgroup>
+          </select>
+          <br />
+
+          <label class="label" id="label-rate-us">Rate us: </label>
+          <br />
+          <input
+            class="input-range"
+            id="input-rate-us"
+            type="range"
+            name="rate-us"
+            min="1"
+            max="5"
+            value="3"
+            list="datalist-rate-us"
+            oninput="document.getElementById('output-rate-us').value = value"
+          />
+          <datalist id="datalist-rate-us">
+            <option value="0" label="0"></option>
+            <option value="1" label="1"></option>
+            <option value="2" label="2"></option>
+            <option value="3" label="3"></option>
+            <option value="4" label="4"></option>
+            <option value="5" label="5"></option>
+          </datalist>
+          <output class="output" id="output-rate-us" name="output-rate-us">3</output>
+          <br />
+
+          <br />
+          <button class="button" id="button-clear" type="reset" name="clear">Clear</button>
+          <button class="button" id="button-submit" type="submit" value="submit">Submit</button>
+        </form>
+      </fieldset>
+    </div>
+    <br />
+    <div style="background-color: #f0f0f0ff; padding: 10px">
+      <form class="form">
+        <fieldset class="fieldset">
+          <legend>Form:</legend>
+
+          <fieldset class="fieldset">
+            <legend>Texts:</legend>
+            <label class="label" id="label-name-2">Name:</label>
+            <input class="input-field" id="input-name" type="text" name="name" placeholder="John Doe" required />
+            <br />
+
+            <label class="label" id="label-email-2">Email:</label>
+            <input class="input-field" id="input-email" type="email" name="email" placeholder="example@example.com" required />
+            <br />
+
+            <label class="label" id="label-password">Password:</label>
+            <input class="input-field" id="input-password" type="password" name="password" placeholder="Enter your password" required />
+            <br />
+
+            <label class="label" id="label-phone">Phone number:</label>
+            <input class="input-field" id="input-phone" type="tel" name="phone" placeholder="1234567890" required />
+            <br />
+
+            <label class="label" id="label-url">Personal Website:</label>
+            <input class="input-field" id="input-url" type="url" name="url" placeholder="https://example.com" />
+            <br />
+
+            <label class="label" id="label-country">Select: </label>
+            <input class="select-field" id="select-country" type="select" name="country" list="datalist-country" required />
+            <datalist id="datalist-country">
+              <option label="Nepal">Nepal</option>
+              <option label="India">India</option>
+              <option label="Russia">Russia</option>
+              <option label="USA">USA</option>
+            </datalist>
+            <br />
+
+            <label class="label" id="label-number">Numbers: </label>
+            <input class="input-number" id="input-number" type="number" name="number" min="1" max="10" value="5" />
+            <br />
+
+            <label class="label" id="label-search">Search:</label>
+            <input type="search" name="search" placeholder="Search..." required />
+            <br />
+          </fieldset>
+
+          <br />
+          <fieldset class="fieldset">
+            <legend>Date & Time:</legend>
+            <label class="label" id="label-date">Date:</label>
+            <input class="input-field" id="input-date" type="date" name="date" required />
+            <br />
+            <label class="label" id="label-time">Time:</label>
+            <input class="input-field" id="input-time" type="time" name="time" required />
+            <br />
+            <label class="label" id="label-dob-time-local">Date Time(Local):</label>
+            <input class="input-field" id="input-dob-time-local" type="datetime-local" name="dob-time-local" required />
+            <br />
+            <label class="label" id="label-month">Month:</label>
+            <input class="input-field" id="input-month" type="month" name="month" />
+            <br />
+            <label class="label" id="label-week">Week:</label>
+            <input class="input-field" id="input-week" type="week" name="week" />
+            <br />
+          </fieldset>
+          <br />
+          <fieldset class="fieldset">
+            <legend>Button Like:</legend>
+
+            <label class="label" id="label-gender">Gender: </label>
+            <input class="input-radio" type="radio" name="gender" value="male" required />
+            <label>Male</label>
+            <input class="input-radio" type="radio" name="gender" value="female" />
+            <label>Female</label>
+            <input class="input-radio" type="radio" name="gender" value="other" />
+            <label>Other</label>
+            <br />
+
+            <label class="label" id="label-terms">Checkbox: </label>
+            <input class="input-checkbox" type="checkbox" name="terms" required />
+            <br />
+
+            <label class="label" id="label-color">Color:</label>
+            <input class="input-field" id="input-color" type="color" name="color" required />
+            <br />
+
+            <button class="button" id="button-clear-2" type="reset" name="clear">Clear</button>
+            <input class="button" type="submit" value="Submit" />
+            <input class="input-field" id="input-image" type="image" name="image" src="../assets/images/not_sus.jpg" width="40" height="25" />
+          </fieldset>
+
+          <br />
+          <fieldset class="fieldset">
+            <legend>Other Inputs:</legend>
+            <label class="label" id="label-range">Range:</label>
+            <input
+              class="input-field"
+              id="input-range"
+              type="range"
+              name="range"
+              min="0"
+              max="100"
+              value="50"
+              oninput="document.getElementById('output-range').value = this.value"
+            />
+            <output class="output" id="output-range" name="output-range">50</output>
+            <br />
+            <label class="label" id="label-file">File:</label>
+            <input class="input-field" id="input-file" type="file" name="file" />
+            <br />
+            <label class="label" id="label-hidden">Hidden:</label>
+            <input class="input-field" id="input-hidden" type="hidden" name="hidden" value="This is hidden input" />
+            <br />
+          </fieldset>
+        </fieldset>
+      </form>
+      <br />
+    </div>
+  </body>
+
+  <br />
+
+  <footer style="background-color: #f0f0f0ff; padding: 10px">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
