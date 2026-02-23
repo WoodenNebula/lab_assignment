@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Text and Font</title>
+    <style>
+      .divs {
+        background-color: #f0f0f0;
+        margin: 10px 5px;
+        padding: 10px;
+      }
+
+      .heading {
+        color: blueviolet;
+        text-align: center;
+        text-shadow: 3px 3px 5px #808080;
+        text-transform: uppercase;
+      }
+
+      #text-arial {
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        text-align: left;
+      }
+
+      #text-times {
+        font-family: "Times New Roman", serif;
+        font-size: 20px;
+        text-align: right;
+      }
+
+      #decorated {
+        font-family: Georgia, serif;
+        font-size: 18px;
+        text-align: center;
+        text-decoration: underline;
+        text-transform: uppercase;
+      }
+
+      .paragraph {
+        background-color: #d0d0d0;
+        padding: 10px;
+        font-family: sans-serif;
+        text-align: justify;
+        line-height: 1.8;
+        letter-spacing: 2px;
+      }
+
+      #underline {
+        text-decoration: underline;
+      }
+
+      #overline {
+        text-decoration: overline;
+      }
+
+      #line-through {
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="divs">
+      <h1 class="heading">Text Formatting Using CSS</h1>
+    </div>
+
+    <div class="divs">
+      <p id="text-arial">This paragraph is styled with Arial font, larger text size, and left alignment.</p>
+      <p id="text-times">This paragraph uses Times New Roman font, different text size, and right alignment.</p>
+      <p id="decorated">this text is transformed to uppercase and underlined using css</p>
+    </div>
+
+    <div class="divs">
+      <p class="paragraph">
+        This paragraph demonstrates custom alignment, increased line height, and letter spacing. It also contains examples of <span id="underline">underline</span>,
+        <span id="overline">overline</span>, and <span id="line-through">line-through</span> text decorations.
+      </p>
+    </div>
+  </body>
+  <footer style="background-color: #f0f0f0; padding: 10px; margin-top: 10%">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
