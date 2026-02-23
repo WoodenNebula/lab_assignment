@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Colors</title>
+    <style>
+      .divs {
+        background-color: #f0f0f0;
+        margin: 10px 5px;
+        padding: 10px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .headings {
+        color: blueviolet;
+        padding: 20px;
+        border: #000000 solid 2px;
+        border-width: 2px;
+        font-family: cursive;
+        font-size: xx-large;
+        text-align: left;
+      }
+      .paragraph {
+        background-color: #d0d0d0;
+        padding: 5px;
+        font-family: sans-serif;
+        text-transform: initial;
+      }
+      #div-image {
+        width: 20svh;
+        height: 20svw;
+        padding: 30px;
+        margin: auto;
+        margin-top: 10%;
+        margin-bottom: 10%;
+        background-image: url("../assets/images/profile.jpg");
+        background-size: cover;
+        background-color: aqua;
+        border: 2px solid black;
+        border-radius: 35%;
+        box-shadow: #01171f 5px 5px 15px;
+      }
+
+      #text-hex {
+        color: #ff5733;
+      }
+      #text-rgb {
+        color: rgb(60, 179, 113);
+      }
+      #text-preset {
+        color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="divs">
+      <p class="paragraph">
+        This is a <span id="text-hex">text styled using hex</span>, this <span id="text-rgb">text styled using rgb</span>, this
+        <span id="text-preset">text styled using preset color</span>
+        <br />
+      </p>
+    </div>
+    <p class="paragraph">Rounded Corner, Box Shadow, Background Image, Background Color</p>
+    <div class="divs" id="div-image">r</div>
+    <div class="divs">
+      <div class="divs" id="div-dotted" style="border: 5px dotted black">Dotted</div>
+      <div class="divs" id="div-dashed" style="border: 5px dashed black">Dashed</div>
+      <div class="divs" id="div-solid" style="border: 5px solid black">Solid</div>
+      <div class="divs" id="div-double" style="border: 5px double black">Double</div>
+      <div class="divs" id="div-groove" style="border: 5px groove black">Groove</div>
+      <div class="divs" id="div-ridge" style="border: 5px ridge black">Ridge</div>
+      <div class="divs" id="div-inset" style="border: 5px inset black">Inset</div>
+      <div class="divs" id="div-outset" style="border: 5px outset black">Outset</div>
+      <div class="divs" id="div-none" style="border: 5px none black">None</div>
+      <div class="divs" id="div-hidden" style="border: 5px hidden black">Hidden</div>
+    </div>
+  </body>
+  <footer style="background-color: #f0f0f0; padding: 10px; margin-top: 10%">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
