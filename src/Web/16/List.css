@@ -1,0 +1,95 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: #ffffff;
+  font-family: sans-serif;
+  padding: 10px;
+}
+
+.container {
+  background-color: #f0f0f0;
+  margin: 10px 10px;
+  padding: 30px;
+  border: 2px solid #000000;
+}
+
+.box {
+  background-color: #d0d0d0;
+  padding: 8px;
+  margin-top: 8px;
+}
+
+h2,
+h3 {
+  color: blueviolet;
+}
+
+#list-image {
+  list-style-image: url("../assets/images/sus-marker.jpg");
+  list-style-position: outside;
+}
+#list-square {
+  list-style-type: square;
+  list-style-position: inside;
+}
+#list-square li::marker {
+  color: #b30000;
+  font-size: 32px;
+}
+
+#list-roman {
+  list-style-type: upper-roman;
+  list-style-position: inside;
+}
+
+#list-letter {
+  list-style-type: lower-alpha;
+  list-style-position: inside;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table caption {
+  font-size: 18px;
+  font-weight: bold;
+  color: blueviolet;
+  padding: 10px;
+  text-align: left;
+}
+
+thead {
+  background-color: #5f2d8c;
+  color: #ffffff;
+}
+
+thead th {
+  padding: 12px 15px;
+  border: 2px solid #333333;
+  text-align: left;
+  font-weight: bold;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #b9c1c1;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+tbody td {
+  padding: 10px 15px;
+  border: 1px solid #cccccc;
+}
+
+tbody tr:hover {
+  background-color: #d6e8f5;
+  cursor: no-drop;
+}
