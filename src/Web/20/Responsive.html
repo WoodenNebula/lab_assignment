@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Layout</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 10px;
+        font-family: sans-serif;
+      }
+
+      .container {
+        margin: 15px 10px;
+        padding: 20px;
+        border: 3px solid black;
+        background-color: #f0f0f0;
+      }
+
+      .mini-box {
+        padding: 10px;
+        border: 2px solid black;
+        background-color: #d0d0d0;
+        text-align: center;
+        margin: 8px;
+      }
+
+      #relative-moved {
+        position: relative;
+        text-align: justify;
+        background-color: #b6d7ff;
+      }
+
+      .float {
+        float: left;
+      }
+
+      #float-layout {
+        overflow: auto;
+      }
+
+      .relative-parent {
+        position: relative;
+        min-height: 160px;
+        border: 2px dashed #555555;
+        background-color: #ffffff;
+        padding: 10px;
+      }
+
+      .absolute-child {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        text-align: center;
+        border: 2px solid black;
+        background-color: #ffe5a8;
+      }
+
+      .display-inline {
+        display: inline;
+        border: 2px solid #222222;
+        padding: 8px;
+        background-color: #e2f0d9;
+      }
+
+      .display-block {
+        display: block;
+        border: 2px solid #222222;
+        padding: 8px;
+        background-color: #f9d5d3;
+        margin-top: 10px;
+      }
+
+      .display-inline-block {
+        display: inline-block;
+        border: 2px solid #222222;
+        padding: 8px;
+        background-color: #d9e2f3;
+        margin-top: 10px;
+      }
+
+      /* Effective when Screen width < 600px */
+      @media (max-width: 599px) {
+        body {
+          background-color: #ffe6e6;
+          font-size: 14px;
+        }
+
+        h3 {
+          font-size: 18px;
+        }
+
+        .container {
+          margin: 10px 0;
+          padding: 15px;
+        }
+
+        .mini-box {
+          width: 100%;
+          display: block;
+          float: none !important;
+          margin: 8px 0;
+        }
+
+        #relative-moved {
+          left: 0;
+          width: 100%;
+        }
+
+        .display-inline-block,
+        .display-block {
+          width: 100%;
+        }
+
+        #float-layout .mini-box {
+          float: none !important;
+        }
+      }
+
+      /* Effective when Screen width >= 600px */
+      @media (min-width: 600px) {
+        body {
+          background-color: #e6f7ff;
+          font-size: 16px;
+        }
+
+        h3 {
+          font-size: 22px;
+        }
+
+        .mini-box {
+          width: 120px;
+          height: 70px;
+          display: inline-block;
+        }
+
+        #relative-moved {
+          left: 50px;
+          width: 350px;
+          height: 100px;
+        }
+
+        .display-block {
+          width: 220px;
+        }
+
+        .display-inline-block {
+          width: 180px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Relative Positioning</h3>
+      <div class="mini-box">Normal Box</div>
+      <div class="mini-box" id="relative-moved">Relative Box</div>
+      <div class="mini-box">Normal Box</div>
+    </div>
+
+    <div class="container" id="float-layout">
+      <h3>Float Layout</h3>
+      <div class="mini-box float">Float 1</div>
+      <div class="mini-box float">Float 2</div>
+    </div>
+  </body>
+  <footer style="background-color: #f0f0f0; padding: 10px; margin-top: 1%">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
