@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Layouts</title>
+    <style>
+      .container {
+        margin: 15px 10px;
+        padding: 20px;
+        border: 3px solid black;
+        background-color: #f0f0f0;
+      }
+
+      .mini-box {
+        width: 120px;
+        height: 50px;
+        padding: 10px;
+        border: 2px solid black;
+        background-color: #d0d0d0;
+        text-align: end;
+        align-content: center;
+        margin: 8px;
+      }
+
+      #relative-moved {
+        position: relative;
+        left: 15%;
+        text-align: justify;
+        height: 100px;
+        width: 350px;
+        margin: -8px;
+        background-color: #b6d7ff;
+      }
+
+      .float-right {
+        float: right;
+      }
+
+      #float-layout {
+        overflow: auto;
+      }
+
+      .relative-parent {
+        position: relative;
+        height: 160px;
+        border: 2px dashed #555555;
+        background-color: #ffffff;
+      }
+
+      .absolute-child {
+        position: absolute;
+        right: 20%;
+        bottom: 30%;
+        text-align: center;
+        border: 2px solid black;
+        background-color: #ffe5a8;
+      }
+
+      .display-inline {
+        display: inline;
+        border: 2px solid #222222;
+        padding: 8px;
+        background-color: #e2f0d9;
+      }
+
+      .display-block {
+        display: block;
+        width: 220px;
+        border: 2px solid #222222;
+        padding: 8px;
+        background-color: #f9d5d3;
+        margin-top: 10px;
+      }
+
+      .display-inline-block {
+        display: inline-block;
+        width: 180px;
+        border: 2px solid #222222;
+        padding: 8px;
+        background-color: #d9e2f3;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Relative Positioning</h3>
+      <div class="mini-box">Normal Box</div>
+      <div class="mini-box" id="relative-moved">Relative Box</div>
+      <div class="mini-box">Normal Box</div>
+    </div>
+
+    <div class="container" id="float-layout">
+      <h3>Float Layout</h3>
+      <div class="mini-box">Normal Box</div>
+      <div class="mini-box float-right">Float 1</div>
+      <div class="mini-box float-right">Float 2</div>
+      <div class="mini-box float-right">Float 3</div>
+    </div>
+
+    <div class="container">
+      <h3>Relative Parent and Absolute Child</h3>
+      <div class="relative-parent">
+        Parent div with position relative
+        <div class="mini-box absolute-child">Absolute Child</div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h3>Display Property</h3>
+      <span class="display-inline">Inline Box</span>
+      <span class="display-inline">Inline Box 2</span>
+      <div class="display-block">Block Box</div>
+      <span class="display-inline-block">Inline-Block Box</span>
+      <span class="display-inline-block">Inline-Block Box 2</span>
+    </div>
+  </body>
+  <footer style="background-color: #f0f0f0; padding: 10px; margin-top: 10%">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
