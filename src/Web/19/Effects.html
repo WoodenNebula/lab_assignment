@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Effects</title>
+    <style>
+      .divs {
+        background-color: #f0f0f0;
+        margin: 10px 5px;
+        padding: 10px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .container {
+        margin: 15px 10px;
+        padding: 20px;
+        border: 3px solid black;
+        background-color: #f0f0f0;
+      }
+
+      #div-image {
+        width: 20svh;
+        height: 20svw;
+        padding: 30px;
+        margin: auto;
+        margin-top: 10%;
+        margin-bottom: 10%;
+        background-image: url("../assets/images/profile.jpg");
+        background-size: cover;
+        background-color: aqua;
+        border: 2px solid black;
+        border-radius: 35%;
+        box-shadow: #066384 5px 15px 25px;
+      }
+
+      #gradient-border {
+        border: 5px solid;
+        border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1;
+      }
+
+      .texts {
+        text-shadow: #073163 2px 2px 8px;
+        width: 130px;
+      }
+      #text-wrapping {
+        text-wrap-mode: wrap;
+        text-wrap-style: stable;
+      }
+      #text-overflow {
+        text-wrap-mode: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Rounded Corner, border-image & Box Shadow</h3>
+      <div class="divs" id="div-image">r</div>
+    </div>
+    <div class="container">
+      <h3>Gradient Border</h3>
+      <div class="divs" id="gradient-border">Gradient Border</div>
+    </div>
+    <div class="container">
+      <h3>Text Formatting</h3>
+      <div class="container divs texts" id="text-wrapping">Text Shadow & Word Wrapping</div>
+      <div class="container divs texts" id="text-overflow">Overflow Text Example</div>
+    </div>
+  </body>
+  <footer style="background-color: #f0f0f0; padding: 10px; margin-top: 10%">
+    <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank" title="Source Code">Surab Parajuli</a></h3>
+    <ul type="circle">
+      <li>'A' - 34</li>
+      <li>80010139</li>
+    </ul>
+  </footer>
+</html>
