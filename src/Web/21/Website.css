@@ -484,11 +484,46 @@ section {
   }
 
   .project-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-items: center;
+  }
+
+  .project-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .project-icon {
+    font-size: 32px;
+  }
+  .project-card p {
+    display: none;
+  }
+  .project-card h4 {
+    margin-bottom: 5px;
   }
 
   .skills-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skill-card {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+  .skill-icon {
+    font-size: 28px;
+    margin: auto 0px;
+  }
+  .skill-card p {
+    display: none;
+  }
+  .skill-card h4 {
+    margin: auto 0px;
+    text-align: center;
+    font-size: 18px;
   }
 
   .contact-info {
