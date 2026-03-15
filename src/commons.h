@@ -14,9 +14,9 @@
 
 void footer() {
   printf(
-      "\nSurab Parajuli\nSection: A, 4th-Sem\nRoll: 34, Symbol No.: 80010139");
+      "\nSurab Parajuli\nSection: A, 5th-Sem\nRoll: 34, Symbol No.: 80010139");
 #ifndef __linux
-  // syst("read -p \"Press any key to continue...\"");
+  //  syst("read -p \"Press any key to continue...\"");
   system("pause");
 #endif
 }
