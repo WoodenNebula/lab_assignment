@@ -4,25 +4,25 @@ src=""
 bin=""
 fileName=""
 
-
 make_src_path() {
-  local inputFile=$1
+    local inputFile=$1
 
-  if [[ "$inputFile" = *.* ]]; then
-    src="$inputFile"
-    fileName="$(basename -a $inputFile)"
-  else
-    fileNamePrefix="$(basename "$inputFile")"
-    fileDir="$(dirname "$inputFile")"
-    fileName="$(ls "$fileDir" | grep "${fileNamePrefix}" )"
-    
-    if [[ -z "$fileName" ]]; then
-      echo "File '$input' doesn't exist"
-      exit 1
+    if [[ "$inputFile" = *.* ]]; then
+        src="$inputFile"
+        fileName="$(basename -a $inputFile)"
+        fileName="${fileName%.*}"
+    else
+        fileNamePrefix="$(basename "$inputFile")"
+        fileDir="$(dirname "$inputFile")"
+        fileName="$(ls "$fileDir" | grep "${fileNamePrefix}")"
+
+        if [[ -z "$fileName" ]]; then
+            echo "File '$input' doesn't exist"
+            exit 1
+        fi
+
+        src="$fileDir/$fileName"
     fi
-
-    src="$fileDir/$fileName"
-  fi
 }
 
 compile() {
@@ -32,47 +32,49 @@ compile() {
 
     # compile c/c++ file
     if $isC; then
-      bear -- gcc -g -I. $src -o $bin
+        bear -- gcc -g -I. $src -o $bin
     else
-      bear -- g++ -g -I. $src -o $bin
+        bear -- g++ -g -I. $src -o $bin
     fi
+
+    echo "Output to $bin"
 
     chmod u+x $bin
-}             
+}
 
-run()  {
-  if [ $# = 0 ]; then
-    echo "File path required!!!"
-  else
-    file=${file#./}
-    make_src_path "$file"
-    
-    # extract extension
-    ext="${src##*.}"
+run() {
+    if [ $# = 0 ]; then
+        echo "File path required!!!"
+    else
+        file=${file#./}
+        make_src_path "$file"
 
-    # make output folder
-    fdir="$(dirname "$src")"
+        # extract extension
+        ext="${src##*.}"
 
-    binDir="${fdir#src/}"
-    binDir="./bin/$binDir"
+        # make output folder
+        fdir="$(dirname "$src")"
 
-    bin="$binDir/$fileName"
+        binDir="${fdir#src/}"
+        binDir="./bin/$binDir"
 
-    mkdir -p "$binDir"
+        bin="$binDir/$fileName"
 
-    # file type
-    isC=false
-    if [[ "$ext" == "c" ]]; then
-      isC=true
-    else 
-      isC=false
+        mkdir -p "$binDir"
+
+        # file type
+        isC=false
+        if [[ "$ext" == "c" ]]; then
+            isC=true
+        else
+            isC=false
+        fi
+
+        compile $src $bin $isC
+        # run by passing remaining arguements
+        $bin "${@:2}"
+        echo
     fi
-
-    compile $src $bin $isC 
-    # run by passing remaining arguements 
-    $bin "${@:2}"
-    echo
-  fi
 }
 
 run "$@"
