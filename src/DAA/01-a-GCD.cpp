@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "src/commons.h"
+#include "src/commons.hpp"
 
 int GCD(int x, int y) {
     while (y > 0) {
@@ -15,6 +15,7 @@ int GCD(int x, int y) {
 }
 
 int main() {
+    Header("GCD");
     int x, y;
 
     std::cout << "Enter two numbers to find their GCD: ";
@@ -22,7 +23,7 @@ int main() {
 
     std::cout << "GCD(" << x << ", " << y << ") : " << GCD(x, y) << std::endl;
 
-    footer();
+    Footer();
 
     return 0;
 }
