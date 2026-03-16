@@ -20,7 +20,7 @@ int main() {
     std::cout << "Enter two numbers to find their GCD: ";
     std::cin >> x >> y;
 
-    std::cout << GCD(x, y) << std::endl;
+    std::cout << "GCD(" << x << ", " << y << ") : " << GCD(x, y) << std::endl;
 
     footer();
 
