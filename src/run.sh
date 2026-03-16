@@ -37,8 +37,6 @@ compile() {
         bear -- g++ -g -I. $src -o $bin
     fi
 
-    echo "Output to $bin"
-
     chmod u+x $bin
 }
 
