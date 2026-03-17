@@ -1,0 +1,21 @@
+1. Write a program to generate the Caesar cipher text of given plain text and also decrypt the generated cipher text. Also give the user the facility to change the value of key.
+Testing Data:
+    Plain Text :- MEET ME AFTER THE TOGA PARTY
+    Cipher Text :- PHHW PH DIWHU WKH WRJD SDUWB (n = 3)
+2. Illustrate the concept to encrypt the given plaintext to Playfair cipher text using keyword “MONARCHY”.
+Test for following data too:-
+    Plaintext - THE IMITATION GAME
+    Key: ALAN TURING
+3. Write a program to illustrate the Rail Fence cipher.
+4. Write a program to simulate the modular arithmetic operation.
+5. Write a program to implement vigenere and vernam cipher.
+6. Encrypt the given text using Hill cipher.
+7. Write a program to find whether the given positive integer is prime or composite using Lucas Lehmer test.
+8. Write a program to find the GCD of given two positive integers using Euclidean algorithm.
+9. Use the program [5] to find whether the given two integers are co-prime or not.
+10. Illustrate the Euler totient function.
+11. Write a function that takes two integers as parameter and find out whether the first parameter is primitive root of second parameter or not.
+12. Write a program to show how RSA generates the private and public key.
+13. Write a program to illustrate the Diffie Hellman Key exchange protocol.
+14. Write a program to find the multiplicative inverse using extended Euclidean algorithm.
+15. Write a program to implement the Elgamal cryptosystem.
