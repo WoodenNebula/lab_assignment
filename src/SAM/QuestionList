@@ -1,0 +1,27 @@
+1. WAP in C/C++ to implement different methods of random number generation.
+a) Using rand() and srand( ) function.
+b) Using Linear Congruential Method (LCM).
+c) Using Multiplicative Congruential Method.
+d) Using Mid-Square Method.
+
+2. Simulate a game of dice that generates discrete random variate using random number generation.
+3. Simulate a performance evaluation of single server queuing system.
+4. WAP in C/C++ to implement possion s process.
+5. WAP in C/C++ to make prediction using markov process.
+6. Simulate monte Carlo simulation method to determine the value of PI.
+7. Use Excel to Perform Uniformity test using Chi-square test.
+8. Use Excel to Perform Uniformity test using K-S test.
+
+9. Let us consider a scenario representing a machine tool in a manufacturing shop which is turning out parts at the rate of every 5 minutes. The parts are then examined by the inspector who takes 4+(-)3 minutes for each part and rejects about 10% of the parts. We can represent each part by one transaction, and the time unit selected for the problem will be 1 minute. Develop A block diagram representing the system and write a GPSS program along with it's output.
+
+10. Develop a model and write a GPSS program to simulate a barber shop for a day where a customer enters the shop every 10 + (-) 2 minutes and a barber takes 13 + (-2) minutes for a haircut.
+
+11. Assume the following parameters for a drive-in window at a bank.
+a. Customers arrival rate from 1 to 3 minutes.
+b. Time required to drive from entrance to drive-in window queue, 1 minute.
+c. Tellers processing rate, from 1 to 5 minutes per customer.
+d. Length of simulation, 250 customers.
+Develop a model for the above parameters and also write a GPSS program for that.
+
+12. Parts are being made at the rate of one every 10 minutes. They are of two types, A and B.  And are mixed randomly with about 10% being type B. A separate inspector is assigned to examine each part. Inspection of part A takes 6±2 minutes while B takes 10±2 minutes. Both inspectors reject 10% of parts they inspect. Draw GPSS block diagram to simulate the above problem for 100 parts.
+13. A machine tool in a manufacturing shop is turning out parts at the rate of every 5 minutes. When they are finished, the parts are sent to an inspector, who takes 4±3 minutes to examine each one and rejects 15% of the parts. Draw and explain a block diagram and write a GPSS program to simulate using the concept of facility.
