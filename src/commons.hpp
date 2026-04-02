@@ -21,10 +21,10 @@ void Header(std::string_view Title) {
 
 void Footer() {
     std::cout << "\n====================\n"
-              << "Surab Parajuli\n"
-              << "Section: A, 5th-Sem\n"
-              << "Roll: 34, Symbol No.: 80010139\n"
-              << "====================\n";
+        << "Surab Parajuli\n"
+        << "Section: A, 5th-Sem\n"
+        << "Roll: 34, Symbol No.: 80010139\n"
+        << "====================\n";
 #ifndef __linux
     //  syst("read -p \"Press any key to continue...\"");
     system("pause");
@@ -51,7 +51,13 @@ void abortOnError(std::string_view msg) {
 //     return containerStr;
 // }
 
-std::string ToString(const std::vector<int>& Container) {
+
+namespace Surab
+{
+using Mat = std::vector<std::vector<double>>;
+
+template <class ContainerType>
+std::string ToString(const ContainerType& Container) {
     std::string containerStr = "[ ";
     for (const auto x : Container) {
         containerStr += std::to_string(x) + ", ";
@@ -63,44 +69,22 @@ std::string ToString(const std::vector<int>& Container) {
 
     return containerStr;
 }
-
-#ifdef SURAB_MATRIX
-#define FLOAT_TOLERANCE 0.000001
-typedef struct {
-    int row;
-    int col;
-    double data[10][10];
-} Matrix;
-
-void inputMatrixDimensions(Matrix* o_mat, const char* msg) {
-    printf(msg);
-    printf("\n");
-    scanf("%d%d", &(o_mat->row), &(o_mat->col));
-    printf("\n");
 }
 
-void inputMatrix(Matrix* o_mat, const char* msg) {
-    printf(msg);
-    printf("\n");
-    for (int r = 0; r < o_mat->row; r++) {
-        printf("  row[%d] <- ", r + 1);
-        for (int c = 0; c < o_mat->col; c++) {
-            scanf("%lf", &(o_mat->data)[r][c]);
+std::istream& operator>>(std::istream& in, Surab::Mat& matrix) {
+    for (size_t row = 0; row < matrix.size(); row++) {
+        std::cout << "  row[" << row + 1 << "] <- ";
+        for (size_t col = 0; col < matrix[row].size(); col++) {
+            in >> matrix[row][col];
         }
     }
-    printf("\n");
+    std::cout << "\n";
+    return in;
 }
 
-void printMatrix(const Matrix* matrix, const char* msg) {
-    printf(msg);
-    printf("\n");
-    for (int r = 0; r < matrix->row; r++) {
-        printf("| ");
-        for (int c = 0; c < matrix->col; c++) {
-            printf("%.4lf ", (matrix->data)[r][c]);
-        }
-        printf("|\n");
+std::ostream& operator<<(std::ostream& out, const Surab::Mat& matrix) {
+    for (size_t row = 0; row < matrix.size(); row++) {
+        out << "\t" << Surab::ToString(matrix[row]) << "\n";
     }
-    printf("\n");
+    return out;
 }
-#endif  // SURAB_MATRIX
