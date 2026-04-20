@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>25 - Event Handling</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+        #adOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        #adBox {
+            background: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 460px;
+            text-align: center;
+        }
+
+        #adBox img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        #eventArea {
+            border: 2px dashed #4d5e73;
+            padding: 14px;
+            min-height: 100px;
+            background: #f6fbff;
+        }
+
+        #mousemoveBox {
+            height: 120px;
+        }
+
+        #hoverImg {
+            width: 220px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="adOverlay">
+        <div id="adBox">
+            <h2>Click Me!!!</h2>
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ" target="_blank">
+                <img src="assets/images/sus.jpg" alt="Advertisement" />
+            </a>
+            <button onclick="closeAd()">Close Advertisement</button>
+        </div>
+    </div>
+    <div class="page" hidden id="mainPage">
+        <div class="container">
+            <h2>Event Registration</h2>
+            <div class="inline-buttons">
+                <button onclick="inlineHandler()">Inline Event</button>
+                <button id="propBtn">Element Property</button>
+                <button id="listenerBtn">addEventListener</button>
+            </div>
+            <div id="registerEventOutput" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Two Numbers with Add/Subtract/Multiply</h2>
+            <input id="calcA" type="number" placeholder="First number" />
+            <input id="calcB" type="number" placeholder="Second number" />
+            <div class="inline-buttons">
+                <button onclick="calcEvent('+')">Add</button>
+                <button onclick="calcEvent('-')">Subtract</button>
+                <button onclick="calcEvent('*')">Multiply</button>
+            </div>
+        </div>
+
+        <div class="container grid-2">
+            <div>
+                <h2>Mouse Events</h2>
+                <div id="eventArea">Use mouse here for click, over, out, down, up.</div>
+                <div id="mousemoveBox" class="container">Move mouse here (mousemove demo)</div>
+            </div>
+            <div>
+                <h2>Keyboard / Form / Window Events</h2>
+                <input id="keyInput" type="text" placeholder="Type here for keydown/keyup" />
+                <form id="miniForm">
+                    <input id="focusBlurInput" type="text" placeholder="Focus and blur me" />
+                    <select id="changeSelect">
+                        <option value="">Select</option>
+                        <option>HTML</option>
+                        <option>CSS</option>
+                        <option>JS</option>
+                    </select>
+                    <button type="submit">Submit Form</button>
+                </form>
+                <div id="eventLog" class="output">
+                </div>
+                <button class="inline-buttons" onclick="eventLog.textContent = ''">Clear Log</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Highlight Words Longer Than 8 Characters</h2>
+            <p id="longText">
+                Write a JavaScript program to highlight all of the words over eight characters long in the paragraph
+                text (with yellow background) when a button below the paragraph is clicked.
+            </p>
+            <button onclick="highlightLongWords()">Highlight</button>
+        </div>
+
+        <div class="container grid-2">
+            <div>
+                <h2>Radio Color Changer</h2>
+                <label style="color:#fad130">Yellow <input type="radio" name="bgColor" value="#fad130" /> </label>
+                <label style="color:#3384ee">Blue <input type="radio" name="bgColor" value="#3384ee" /> </label>
+                <label style="color:#2ae66c">Green <input type="radio" name="bgColor" value="#2ae66c" /> </label>
+            </div>
+            <div>
+                <h2>Image Description on Hover</h2>
+                <img id="hoverImg" src="assets/images/not_sus.jpg" alt="Picture of Not Sus" />
+                <p id="imgDesc" class="output"></p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        // a. Event Registration
+        {
+            function inlineHandler() {
+                document.getElementById("registerEventOutput").textContent = "Inline click executed.";
+            }
+
+            document.getElementById("propBtn").onclick = function () {
+                document.getElementById("registerEventOutput").textContent = "Event via element.onclick executed.";
+            };
+
+            document.getElementById("listenerBtn").addEventListener("click", function () {
+                document.getElementById("registerEventOutput").textContent = "Event via addEventListener executed.";
+            });
+        }
+
+        // b. Event based calc
+        function calcEvent(type) {
+            const a = parseFloat(document.getElementById("calcA").value);
+            const b = parseFloat(document.getElementById("calcB").value);
+            if (Number.isNaN(a) || Number.isNaN(b)) {
+                alert("Enter valid numbers");
+                return;
+            }
+            let result = 0;
+            switch (type) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+            }
+            alert(`Result: ${result}`);
+        }
+
+        // Event Handling
+        {
+            function logEvent(msg) {
+                const box = document.getElementById("eventLog");
+                box.textContent = `${msg}\n${box.textContent}`.trim();
+            }
+
+            // c. Mouse Events
+            {
+                const eventArea = document.getElementById("eventArea");
+                eventArea.addEventListener("click", () => logEvent("Mouse Click"));
+                eventArea.addEventListener("mouseover", () => logEvent("Mouse Over"));
+                eventArea.addEventListener("mouseout", () => logEvent("Mouse Out"));
+                eventArea.addEventListener("mousedown", () => logEvent("Mouse Down"));
+                eventArea.addEventListener("mouseup", () => logEvent("Mouse Up"));
+                document.getElementById("mousemoveBox").addEventListener("mousemove", () => logEvent("Mouse Move"));
+            }
+
+            // d. Keyboard Events
+            {
+                const keyInput = document.getElementById("keyInput");
+                keyInput.addEventListener("keydown", (e) => logEvent(`Key Down: ${e.key}`));
+                keyInput.addEventListener("keyup", (e) => logEvent(`Key Up: ${e.key}`));
+            }
+
+            // e. Form Events
+            {
+                const focusBlurInput = document.getElementById("focusBlurInput");
+
+                focusBlurInput.addEventListener("focus", () => logEvent("Focus event"));
+                focusBlurInput.addEventListener("blur", () => logEvent("Blur event"));
+
+                document.getElementById("changeSelect").addEventListener("change", (e) => logEvent(`Change event: ${e.target.value}`));
+                document.getElementById("miniForm").addEventListener("submit", (e) => { e.preventDefault(); logEvent("Submit event"); });
+            }
+
+            // f. Window Events
+            {
+                window.addEventListener("load", () => logEvent("Window load event"));
+                window.addEventListener("resize", () => logEvent("Window resize event"));
+                window.addEventListener("beforeunload", () => logEvent("Window beforeunload event"));
+            }
+        }
+
+        // g. Ad Overlay
+        function closeAd() {
+            let classList = document.getElementById("adOverlay").style.display = "none";
+            document.getElementById("mainPage").hidden = false;
+        }
+
+        // h. Highlight long words
+        function highlightLongWords() {
+            const p = document.getElementById("longText");
+            const words = p.textContent.split(' ');
+            p.innerHTML = words
+                .map((w) => {
+                    const clean = w.replace(/[^a-zA-Z]/g, "");
+                    if (clean.length > 8) {
+                        return `<span style='background-color: yellow;'>${w}</span>`;
+                    }
+                    return w;
+                })
+                .join(" ");
+        }
+
+        // i-1. BackGround color change
+        {
+            document.querySelectorAll("input[name='bgColor']").forEach((radio) => {
+                radio.addEventListener("change", (e) => {
+                    document.body.style.backgroundColor = e.target.value;
+                });
+            });
+        }
+
+        // i-2. Image description on hover
+        {
+            const hoverImg = document.getElementById("hoverImg");
+            const imgDesc = document.getElementById("imgDesc");
+            hoverImg.addEventListener("mouseover", () => {
+                imgDesc.textContent = "This image is definitely not sus. Totally fine image. Nothing suspicious at all... \n\nAMOGOS";
+            });
+            hoverImg.addEventListener("mouseout", () => {
+                imgDesc.textContent = "";
+            });
+        }
+    </script>
+</body>
+
+</html>
