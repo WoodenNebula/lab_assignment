@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01 - Core JavaScript</title>
+    <link rel="stylesheet" href="common.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>22 - Core JavaScript</h1>
+            <p class="small">Arrays, loops, functions, objects, if-else/switch and error handling
+            </p>
+            <div class="inline-buttons">
+                <ol type="a">
+                    <li> <button onclick="runArrayTasks()">Array Tasks</button> </li>
+                    <li> <button onclick="runFunctionDemo()">Function Styles</button> </li>
+                    <li> <button onclick="runObjectDemo()">Object Styles</button> </li>
+                    <li> <button onclick="checkDigitType()">Digit Category</button> </li>
+                    <li> <button onclick="switchCalc()">Switch Calculator </button> </li>
+                    <li> <button onclick="errorHandlingDemo()">Error Handling</button> </li>
+                </ol>
+            </div>
+
+            <footer class="footer">
+                <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                        title="Source Code">Surab Parajuli</a></h3>
+                <ul type="circle">
+                    <li>'A' - 34</li>
+                    <li>80010139</li>
+                </ul>
+            </footer>
+        </div>
+
+        <script>
+
+            function runArrayTasks() {
+                // a-1. Create array1 with 10 integers, array2 with 10 floating-point numbers from user input, and an empty array3.
+                const array1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                console.log("a-1: array1:", array1);
+
+                const array2 = [];
+                for (let i = 0; i < 10; i++) {
+                    const val = parseFloat(prompt(`Enter floating number ${i + 1}/10`, String(i + 0.5)));
+                    array2.push(Number.isNaN(val) ? 0.0 : val);
+                }
+                console.log("a-1: array2:", array2);
+
+                const array3 = [];
+                console.log("a-1: array3:", array3);
+
+                // a-2. Sum of array1 and check divisibility by 7
+                const sum = array1.reduce((acc, n) => acc + n, 0);
+                const divisible = sum % 7 === 0 ? "is" : "is not";
+                alert(`a-2: Sum of array1 is ${sum} and it ${divisible} divisible by 7.`);
+                console.log(`a-2: Sum of array1 is ${sum} and it ${divisible} divisible by 7.`);
+
+                // a-3. Add two elements to array2, delete first element, and show before/after states
+                console.log("a-3: array2 before operations:", array2);
+                array2.push(69);
+                array2.push(67);
+
+                console.log("a-3: array2 after adding two elements:", array2);
+
+                array2.shift();
+                console.log("a-3: array2 after deleting first element:", array2);
+
+                // a-4. Sum of digits
+                sumDigitsPrompt();
+
+                // a-5. Sum numbers with do-while
+                sumNumbersDoWhile();
+
+                // a-6. ArrayOperations demo
+                arrayOperations(array1);
+
+                // a-7. Loop through array2 using forEach
+                array2.forEach((v, i) => console.log(`a-7: forEach array2[${i}] = ${v}`));
+
+                // a-8. Loop through array1 using for-of and for-in
+                for (const value of array1) { console.log("a-8-i: for-of value:", value); }
+                for (const key in array1) { console.log("a-8-ii: for-in index:", key, "value:", array1[key]); }
+            }
+
+            // a-4. Prompt user for an integer, sum its digits, and show the process (e.g. (1+4+5+7) = 17)
+            function sumDigitsPrompt() {
+                let num = parseInt(prompt("Enter an integer", "1457"), 10);
+                if (Number.isNaN(num)) {
+                    alert("Invalid number");
+                    return;
+                }
+                num = Math.abs(num);
+                let temp = num;
+                let sum = 0;
+                const parts = [];
+                while (temp > 0) {
+                    const d = temp % 10;
+                    parts.unshift(d);
+                    sum += d;
+                    temp = Math.floor(temp / 10);
+                }
+                alert(`a-4: (${parts.join("+")}) = ${sum}`);
+                console.log(`a-4: (${parts.join("+")}) = ${sum}`);
+            }
+
+            // a-5. Use a do-while loop to keep prompting the user for numbers until they choose to stop, then show the total sum.
+            function sumNumbersDoWhile() {
+                let total = 0;
+                let shouldKeepGoing = false;
+                do {
+                    const val = parseFloat(prompt("Enter number"));
+                    total += Number.isNaN(val) ? 0 : val;
+                    shouldKeepGoing = confirm("Do you want to add another number?");
+                } while (shouldKeepGoing);
+                alert(`a-5: Total sum is ${total}`);
+                console.log(`a-5: Total sum is ${total}`);
+            }
+
+            // a-6. Array operations
+            function arrayOperations(array3) {
+                console.log(`a-6: [Array3 operations]: ${JSON.stringify(array3)}`)
+
+                array3.push("a", "b", "c");
+                console.log(`a-6: [.push("a", "b", "c")]: ${JSON.stringify(array3)}`)
+
+                array3.unshift("start");
+                console.log(`a-6: [.unshift("start")]: ${JSON.stringify(array3)}`)
+
+                array3.pop();
+                console.log(`a-6: [.pop()]: ${JSON.stringify(array3)}`)
+
+                array3.splice(1, 0, "mid");
+                console.log(`a-6: [.splice(1, 0, "mid")]: ${JSON.stringify(array3)}`)
+
+                const found = array3.includes("a");
+                console.log(`a-6: [.includes('a')]: ${found}`)
+
+                const index = array3.indexOf("a");
+                console.log(`a-6: [.indexOf('a')]: ${index}`)
+
+                const sliced = array3.slice(0, 2);
+                console.log(`a-6: [.slice(0, 2)]: sliced: ${JSON.stringify(sliced)}`)
+
+                const filtered = array3.filter((x) => x % 2 === 0);
+                console.log(`a-6: [.filter(x % 2 === 0)]: filtered even: ${JSON.stringify(filtered)}`)
+
+                const reduced = array3.reduce((a, b) => a + b);
+                console.log(`a-6: [.reduce(a + b)]: reduced sum: ${reduced}`)
+
+                const sorted = [...array3].sort((a, b) => a - b);
+                console.log(`a-6: [.sort()]: sorted array3: ${JSON.stringify(sorted)}`)
+
+                const mapped = array3.map((x) => x * 2);
+                console.log(`a-6: [.map(x*2)]: mapped: ${JSON.stringify(mapped)}`)
+            }
+
+            // b. Function Demo
+            function runFunctionDemo() {
+                // Normal function declaration
+                function normalFunction(greeting) { return `Normal Function: ${greeting}`; }
+                // Function expression
+                const expressionFunction = function (name) { return `Function Expression: ${name}`; };
+                // Arrow function
+                const arrowFunction = (surname) => `Arrow Function: ${surname}`;
+
+                const lines = [];
+                lines.push(normalFunction("Hello"));
+                lines.push(expressionFunction("Surab"));
+                lines.push(arrowFunction("Parajuli"));
+
+                console.log(`b. Function Demo: ${lines.join(" | ")}`);
+            }
+
+            // c. Object Demo
+            function runObjectDemo() {
+                // c-1. Object literal
+                const student = {
+                    name: "Surab Parajuli",
+                    level: "Bachelor",
+                    greet() {
+                        return `${this.name} says hello!`;
+                    }
+                };
+
+                const objectOutputs = []
+                objectOutputs.push(`c-1: Object literal Constructions: ${student}`);
+                objectOutputs.push(`c-1: [Read]: student.name = ${student.name}, student.level = ${student.level}`);
+                objectOutputs.push(`c-1: [Method Call]: student.greet() = ${student.greet()}`);
+
+                student.level = "Bachelor in CSIT";
+                objectOutputs.push(`c-1: [Update]: student.level = ${student.level}`);
+
+                delete student.level;
+                objectOutputs.push(`c-1: [Delete]: student.level = ${student.level}`);
+
+
+                // c-2. Object constructor
+                const teacher = new Object();
+                teacher.name = "Sita";
+                teacher.subject = "Web";
+
+                objectOutputs.push(`c-2: Object constructor: ${teacher}`);
+
+                // c-3. Constructor function
+                function Device(brand, model) {
+                    this.brand = brand;
+                    this.model = model;
+                }
+                const laptop = new Device("Dell", "G15");
+                objectOutputs.push(`c-3: Constructor function: ${laptop}`);
+
+
+                console.log(`c. Object Demo:\n${objectOutputs.join("\n")}`);
+            }
+
+            // d. If-else-if
+            function checkDigitType() {
+                const value = Math.abs(parseInt(prompt("Enter a number:", 10), 10));
+                if (Number.isNaN(value)) {
+                    alert("Invalid number");
+                    return;
+                }
+                let type;
+                if (value < 10) {
+                    type = "Single digit";
+                } else if (value < 100) {
+                    type = "Double digit";
+                } else if (value < 1000) {
+                    type = "Triple digit";
+                } else {
+                    type = "Multi digit";
+                }
+                console.log(`d. ${value} is a ${type} number.`);
+            }
+
+            // e. Switch-case calculator
+            function switchCalc() {
+                const a = parseFloat(prompt("Enter first number:", 6));
+                const b = parseFloat(prompt("Enter second number:", 9));
+                const op = prompt("Enter operator (+, -, *, /, %):", "+").trim();
+                let result;
+
+                if (Number.isNaN(a) || Number.isNaN(b)) {
+                    alert("Invalid number");
+                    return;
+                }
+
+                switch (op) {
+                    case "+":
+                        result = a + b;
+                        break;
+                    case "-":
+                        result = a - b;
+                        break;
+                    case "*":
+                        result = a * b;
+                        break;
+                    case "/":
+                        result = b === 0 ? "Division by zero not allowed" : a / b;
+                        break;
+                    case "%":
+                        result = b === 0 ? "Modulo by zero not allowed" : a % b;
+                        break;
+                    default:
+                        result = "Invalid operator";
+                }
+
+                alert(`e. Switch-case calculation: ${a} ${op} ${b} = ${result}`);
+                console.log(`e. Switch-case calculation: ${a} ${op} ${b} = ${result}`);
+            }
+
+            // f. Error handling
+            function errorHandlingDemo() {
+                const out = ["f. Error Handling Demo:"];
+                try {
+                    const val = prompt("Enter age (>=18)", "16");
+                    const age = parseInt(val, 10);
+                    if (Number.isNaN(age)) {
+                        throw new Error("Age must be numeric.");
+                    }
+                    if (age < 18) {
+                        throw new Error("Age must be at least 18.");
+                    }
+                    out.push(`Accepted age: ${age}`);
+                } catch (err) {
+                    out.push(`Caught error: ${err.message}`);
+                } finally {
+                    out.push("'Finally' block executed");
+                }
+                console.log(out.join("\n"));
+            }
+        </script>
+</body>
+
+</html>

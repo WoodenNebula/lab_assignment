@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01 - Core JavaScript</title>
+    <link rel="stylesheet" href="common.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>23 - Built-in JavaScript Objects</h1>
+            <div class="inline-buttons">
+                <ol type="a">
+                    <li> <button onclick="runBuiltInDemo()">Built-in Objects Demo</button> </li>
+                </ol>
+            </div>
+
+            <footer class="footer">
+                <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                        title="Source Code">Surab Parajuli</a></h3>
+                <ul type="circle">
+                    <li>'A' - 34</li>
+                    <li>80010139</li>
+                </ul>
+            </footer>
+        </div>
+
+        <script>
+            function runBuiltInDemo() {
+                const text = "Web Technology";
+                const obj = { a: 1, b: 2 };
+                const boolVal = Boolean(1);
+                const arr = [5, 2, 9, 1];
+
+                const fn = function (x) {
+                    return x * x;
+                };
+
+                console.log(`Math: PI=${Math.PI.toFixed(4)}, E=${Math.E.toFixed(4)}, floor(4.9)=${Math.floor(4.9)}, ceil(4.1)=${Math.ceil(4.1)}, sqrt(81)=${Math.sqrt(81)}, round(6.6)=${Math.round(6.6)}, pow(2,8)=${Math.pow(2, 8)}`)
+                console.log(`String: length=${text.length}, upper=${text.toUpperCase()}, slice=${text.slice(0, 3)}`)
+                console.log(`Number: toFixed=${(12.3456).toFixed(2)}, isInteger(7)=${Number.isInteger(7)}`)
+                console.log(`Object: keys=${Object.keys(obj).join(", ")}, hasOwn(a)=${Object.hasOwn(obj, "a")}`)
+                console.log(`Function: fn(9)=${fn(9)}, name=${fn.name || "anonymous"}`)
+                console.log(`Error: ${new Error("Sample error object").message}`)
+                console.log(`Boolean: value=${boolVal}, Boolean(0)=${Boolean(0)}`)
+                console.log(`Array: original=${arr.join(",")}, sorted=${JSON.stringify([...arr].sort((a, b) => a - b))}, joined=${arr.join("-")}`)
+            }
+        </script>
+</body>
+
+</html>
