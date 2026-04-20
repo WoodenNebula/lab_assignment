@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>24 - Date</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+        .clock {
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page" id="mainPage">
+        <div class="container">
+            <h1>24 - Date Object</h1>
+        </div>
+
+        <div class="container">
+            <h2>Date Object Demonstration</h2>
+            <div class="inline-buttons">
+                <button onclick="showDateCreationWays()">Different Date Creation Ways</button>
+                <button onclick="showGetterSetterDemo()">4 Getters + 4 Setters</button>
+            </div>
+            <div id="dateOutput" class="output"></div>
+        </div>
+
+        <div class="container grid-2">
+            <div>
+                <h2>Age Calculator</h2>
+                <label for="dob">Date of Birth</label>
+                <input id="dob" type="date" />
+                <button onclick="calculateAge()">Calculate Age</button>
+                <div id="ageOutput" class="output"></div>
+            </div>
+            <div>
+                <h2>Date Before / After</h2>
+                <label for="baseDate">Base Date/Time</label>
+                <input id="baseDate" type="datetime-local" />
+                <label for="daysOffset">Days Offset</label>
+                <input id="daysOffset" type="number" value="5" />
+                <label for="hoursOffset">Hours Offset</label>
+                <input id="hoursOffset" type="number" value="10" />
+                <button onclick="dateBeforeAfter()">Show Before/After</button>
+                <div id="beforeAfterOutput" class="output"></div>
+            </div>
+        </div>
+
+        <div class="container grid-2">
+            <div>
+                <h2>Digital Clock + Date</h2>
+                <div id="clock" class="clock">00:00:00</div>
+                <div id="todayDate" class="output"></div>
+            </div>
+            <div>
+                <h2>Stopwatch</h2>
+                <div id="stopwatchDisplay" class="clock">00:00:00</div>
+                <div class="inline-buttons">
+                    <button id="startButton" onclick="startStopwatch()">Start</button>
+                    <button id="pauseButton" onclick="pauseStopwatch()" disabled>Pause</button>
+                    <button id="resetButton" onclick="resetStopwatch()" disabled>Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        // a. Date Creation Ways
+        function showDateCreationWays() {
+            const d1 = new Date();
+            const d2 = new Date("2026-4-20");
+            const d3 = new Date(2025, 4, 20, 10, 30, 0);
+            const d4 = new Date(1706969006969);
+            const outputs = [
+                `a. Date Creation Ways:`,
+                `new Date() => ${d1}`,
+                `new Date('2026-4-20') => ${d2}`,
+                `new Date(2025,4,20,10,30,0) => ${d3}`,
+                `new Date(milliseconds) => ${d4}`
+            ];
+            console.log(outputs.join("\n"));
+            document.getElementById("dateOutput").textContent = outputs.join("\n");
+        }
+
+        // b. Getters and Setters
+        function showGetterSetterDemo() {
+            const d = new Date();
+            const outputs = [];
+            outputs.push(`b. Getters: getFullYear=${d.getFullYear()}, getMonth=${d.getMonth() + 1}, getDate=${d.getDate()}, getHours=${d.getHours()}`);
+            d.setFullYear(d.getFullYear() + 1);
+            outputs.push(`b. After setFullYear(+1): ${d}`);
+            d.setMonth(5);
+            outputs.push(`b. After setMonth(5): ${d}`);
+            d.setDate(10);
+            outputs.push(`b. After setDate(10): ${d}`);
+            d.setHours(9);
+            outputs.push(`b. After setHours(9): ${d}`);
+
+            console.log(outputs.join("\n"));
+            document.getElementById("dateOutput").textContent = outputs.join("\n");
+        }
+
+        // c. Age Calculator
+        function calculateAge() {
+            const dobValue = document.getElementById("dob").value;
+            if (!dobValue) {
+                document.getElementById("ageOutput").textContent = "Please select DOB.";
+                return;
+            }
+            const dob = new Date(dobValue);
+            const now = new Date();
+
+            let years = now.getFullYear() - dob.getFullYear();
+            let months = now.getMonth() - dob.getMonth();
+            let days = now.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months -= 1;
+                const prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+                days += prevMonthLastDay;
+            }
+            if (months < 0) {
+                years -= 1;
+                months += 12;
+            }
+
+            document.getElementById("ageOutput").textContent = `Age in years: ${years}\n`
+            document.getElementById("ageOutput").textContent += `Age in years, months, days: ${years} years ${months} months ${days} days`;
+
+            console.log(`c. DoB = ${dobValue} -> Full Age: ${years} years, ${months} months, ${days} days`);
+        }
+
+
+
+        function zeroPad(v, amount = 2) {
+            return String(v).padStart(amount, "0");
+        }
+
+        // d. Clock
+        function updateClock() {
+            const now = new Date();
+            const h = zeroPad(now.getHours());
+            const m = zeroPad(now.getMinutes());
+            const s = zeroPad(now.getSeconds());
+            const blink = now.getSeconds() % 2 === 0 ? ":" : " ";
+            document.getElementById("clock").textContent = `${h}${blink}${m}${blink}${s}`;
+            document.getElementById("todayDate").textContent = now.toDateString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // e. Date Before/After
+        function dateBeforeAfter() {
+            const baseValue = document.getElementById("baseDate").value;
+            const daysOffset = parseInt(document.getElementById("daysOffset").value, 10) || 0;
+            const hoursOffset = parseInt(document.getElementById("hoursOffset").value, 10) || 0;
+
+            if (!baseValue) {
+                document.getElementById("beforeAfterOutput").textContent = "Select base date/time.";
+                return;
+            }
+
+            const base = new Date(baseValue);
+            const beforeDays = new Date(base.getTime() - daysOffset * 24 * 60 * 60 * 1000);
+            const afterDays = new Date(base.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+            const beforeHours = new Date(base.getTime() - hoursOffset * 60 * 60 * 1000);
+            const afterHours = new Date(base.getTime() + hoursOffset * 60 * 60 * 1000);
+
+            const output = [
+                `Base: ${base}\n` +
+                `Before ${daysOffset} days: ${beforeDays}`,
+                `After ${daysOffset} days: ${afterDays}`,
+                `Before ${hoursOffset} hours: ${beforeHours}`,
+                `After ${hoursOffset} hours: ${afterHours}`,
+            ]
+
+            document.getElementById("beforeAfterOutput").textContent = output.join("\n");
+            console.log(`d. ${output.join("\n")}`);
+        }
+
+        // f. Stopwatch
+        const stopWatch = {
+            interval: null,
+            milliSeconds: 0,
+            render() {
+                const ms = zeroPad(Math.floor(this.milliSeconds % 100));
+                const s = zeroPad(Math.floor((this.milliSeconds % (60 * 100)) / 100));
+                const m = zeroPad(Math.floor((this.milliSeconds % (60 * 60 * 100)) / (60 * 100)));
+                let hr = zeroPad(Math.floor((this.milliSeconds % (60 * 60 * 60 * 100)) / (60 * 60 * 100)));
+                hr = hr === "00" ? "" : hr + ":";
+
+                document.getElementById("stopwatchDisplay").textContent = `${hr}${m}:${s}.${ms}`;
+            },
+            start() {
+                if (this.interval) return;
+                this.interval = setInterval(() => {
+                    this.milliSeconds += 1;
+                    this.render();
+                }, 10);
+            },
+            pause() {
+                clearInterval(this.interval);
+                this.interval = null;
+            },
+            reset() {
+                this.pause();
+                this.milliSeconds = 0;
+                this.render();
+            }
+        }
+        function startStopwatch() {
+            stopWatch.start();
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("pauseButton").disabled = false;
+            document.getElementById("resetButton").disabled = false;
+        }
+
+        function pauseStopwatch() {
+            stopWatch.pause();
+            document.getElementById("startButton").disabled = false;
+            document.getElementById("pauseButton").disabled = true;
+            document.getElementById("resetButton").disabled = false;
+        }
+        function resetStopwatch() {
+            stopWatch.reset();
+            document.getElementById("startButton").disabled = false;
+            document.getElementById("pauseButton").disabled = true;
+            document.getElementById("resetButton").disabled = true;
+        }
+    </script>
+</body>
+
+</html>
