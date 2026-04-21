@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>26 - DOM Manipulation</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+        .bookLabel {
+            display: inline-block;
+            width: auto;
+        }
+
+        .bookInput {
+            width: auto;
+        }
+
+        #bookEntries {
+            display: flex;
+            flex-direction: column;
+            row-gap: 20px;
+        }
+
+        .bookEntry {
+            display: flex;
+            padding: 8px;
+            column-gap: 20px;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+
+        #bookId {
+            field-sizing: content;
+        }
+
+        #bookButton {
+            display: inline-block;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>26 - DOM Manipulation</h1>
+        </div>
+
+        <div class="container">
+            <h2>Node Properties</h2>
+            <div id="nodeDemo">
+                <p class="demoClass" name="demoName">Sample <b>DOM</b> paragraph</p>
+            </div>
+            <button onclick="showNodeProperties()">Show node properties</button>
+            <div id="nodeOutput" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Element Selection Methods</h2>
+            <input id="byIdSample" value="ID element" />
+            <input name="sampleName" value="Name 1" />
+            <input name="sampleName" value="Name 2" />
+            <span class="selClass">Class span A</span>
+            <span class="selClass">Class span B</span>
+            <button onclick="runSelectionDemo()">Run Selection Demo</button>
+            <div id="selectionOutput" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Node Creation / Insertion / Replacement / Removal</h2>
+            <div id="parentNode" class="output">Initial child 1</div>
+            <div class="inline-buttons">
+                <button onclick="createAndAppend()">appendChild()</button>
+                <button onclick="insertBeforeDemo()">insertBefore()</button>
+                <button onclick="replaceChildDemo()">replaceChild()</button>
+                <button onclick="removeChildDemo()">removeChild()</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Attribute Methods</h2>
+            <img id="attrImg" src="assets/images/profile.jpg" alt="profile" width="120" />
+            <div class="inline-buttons">
+                <button onclick="getAttr()">getAttribute()</button>
+                <button onclick="setAttr()">setAttribute()</button>
+                <button onclick="hasAttr()">hasAttribute()</button>
+                <button onclick="removeAttr()">removeAttribute()</button>
+            </div>
+            <div id="attrOutput" class="output"></div>
+        </div>
+
+        <div class="container" id="bookForm">
+            <h2>Add Book Records</h2>
+            <div class="container" id="bookEntries">
+                <div class="bookEntry" id="bookEntryRef">
+                    <label class="bookLabel">Book Id: <input class="bookInput" type="text" id="bookId" value="100"
+                            readonly disabled /></label>
+                    <label class="bookLabel">Title: <input class="bookInput" type="text" id="bookTitle" /></label>
+                    <label class="bookLabel">Author: <input class="bookInput" type="text" id="bookAuthor" /></label>
+                    <label class="bookLabel">Price: <input class="bookInput" type="text" id="bookPrice" /></label>
+                    <button class="inline-buttons" id="bookButton" onclick="addBookRow()">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>District List in UL using DOM</h2>
+            <button onclick="showDistricts()">Display Districts</button>
+            <ul id="districtList"></ul>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        // a. Node Props
+        function showNodeProperties() {
+            const p = document.querySelector("#nodeDemo p");
+            const output = [
+                `nodeName: ${p.nodeName}`,
+                `nodeType: ${p.nodeType}`,
+                `nodeValue: ${p.nodeValue}`,
+                `parentNode: ${p.parentNode.nodeName}`,
+                `firstChild: ${p.firstChild.nodeName}`,
+                `lastChild: ${p.lastChild.nodeName}`,
+                `nextSibling: ${p.nextSibling ? p.nextSibling.nodeName : "null"}`,
+                `previousSibling: ${p.previousSibling ? p.previousSibling.nodeName : "null"}`,
+                `childNodes length: ${p.childNodes.length}`
+            ];
+            document.getElementById("nodeOutput").textContent = output.join("\n");
+        }
+
+        // b. Element Selectors
+        function runSelectionDemo() {
+            const output = [];
+            const byId = document.getElementById("byIdSample").value;
+            output.push(`By ID: ${byId}`);
+
+            const byName = Array.from(document.getElementsByName("sampleName")).map((el) => el.value).join(", ");
+            output.push(`By Name: ${byName}`);
+
+            const byTag = document.getElementsByTagName("span").length;
+            output.push(`By Tag (span count): ${byTag}`);
+
+            const byClass = document.getElementsByClassName("selClass").length;
+            output.push(`By Class (count): ${byClass}`);
+
+            const byQuery = document.querySelector(".selClass").textContent;
+            output.push(`querySelector: ${byQuery}`);
+
+            const byQueryAll = document.querySelectorAll(".selClass").length;
+            output.push(`querySelectorAll (count): ${byQueryAll}`);
+
+            document.getElementById("selectionOutput").textContent = output.join("\n");
+        }
+
+        // c. Node Manipulation
+        {
+            const parentNode = document.getElementById("parentNode");
+            function createAndAppend() {
+                const n = document.createElement("div");
+                n.textContent = "Appended node";
+                parentNode.appendChild(n);
+            }
+
+            function insertBeforeDemo() {
+                const n = document.createElement("div");
+                n.textContent = "Inserted before first child";
+                parentNode.insertBefore(n, parentNode.firstChild);
+            }
+
+            function replaceChildDemo() {
+                if (!parentNode.firstChild) return;
+                const n = document.createElement("div");
+                n.textContent = "Replaced first child node";
+                parentNode.replaceChild(n, parentNode.firstChild);
+            }
+
+            function removeChildDemo() {
+                if (parentNode.lastChild) {
+                    parentNode.removeChild(parentNode.lastChild);
+                }
+            }
+        }
+
+        // d. Attribute Methods
+        {
+            function getAttr() {
+                document.getElementById("attrOutput").textContent = `hidden = ${document.getElementById("attrImg").getAttribute("hidden")}`;
+            }
+            function setAttr() {
+                document.getElementById("attrImg").setAttribute("hidden", "true");
+                document.getElementById("attrOutput").textContent = "hidden attribute set.";
+            }
+            function hasAttr() {
+                document.getElementById("attrOutput").textContent = `has hidden? ${document.getElementById("attrImg").hasAttribute("hidden")}`;
+            }
+            function removeAttr() {
+                document.getElementById("attrImg").removeAttribute("hidden");
+                document.getElementById("attrOutput").textContent = "hidden attribute removed.";
+            }
+        }
+
+        // e. Book Record Form
+        {
+            let currentBookId = 100;
+            function addBookRow() {
+                currentBookId += 1;
+                const referenceEntry = document.getElementById("bookEntryRef");
+
+                const row = document.createElement("div");
+                row.innerHTML = referenceEntry.innerHTML
+                row.classList = referenceEntry.classList;
+
+                row.querySelector("#bookId").value = currentBookId;
+
+                document.getElementById("bookEntries").appendChild(row);
+            }
+        }
+
+        // f. District List
+        function showDistricts() {
+            const districts = ["Kathmandu", "Lalitpur", "Bhaktapur", "Pokhara", "Chitwan", "Biratnagar", "Janakpur", "Nepalgunj", "Dhangadhi", "Butwal"];
+            const ul = document.getElementById("districtList");
+            ul.innerHTML = "";
+            let index = 0;
+
+            // add districts one by one every second
+            setInterval(() => {
+                if (index < districts.length) {
+                    const li = document.createElement("li");
+                    li.textContent = districts[index];
+                    ul.appendChild(li);
+                    index++;
+                } else {
+                    clearInterval(this);
+                }
+            }, 1000);
+
+        }
+    </script>
+</body>
+
+</html>
