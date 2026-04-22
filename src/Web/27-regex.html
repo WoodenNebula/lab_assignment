@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>27 - Regular Expressions</title>
+    <link rel="stylesheet" href="common.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>27 - Regular Expressions in JavaScript</h1>
+            <br>
+            <div class="container">
+                <h2>Regex Creation + Methods</h2>
+                <label for="regexInput">Input Text</label>
+                <input id="regexInput" type="text" value="Nepal_2026? Hello-nepal test@example.edu.np" />
+                <button onclick="runRegexMethods()">Run Regex Methods</button>
+                <div id="methodOutput" class="output"></div>
+            </div>
+
+            <div class="container">
+                <h2>Pattern Tests</h2>
+                <label for="patternInput">Test Value</label>
+                <input id="patternInput" type="text" value="BCA-TU-12345" />
+                <button onclick="runPatternChecks()">Check All Patterns</button>
+                <div id="patternOutput" class="output"></div>
+            </div>
+
+            <footer class="footer">
+                <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                        title="Source Code">Surab Parajuli</a></h3>
+                <ul type="circle">
+                    <li>'A' - 34</li>
+                    <li>80010139</li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function runRegexMethods() {
+            const text = document.getElementById("regexInput").value;
+
+            // a. Creating regex using literal and constructor
+            const r1 = /nepal/gi;
+            const r2 = new RegExp("[A-Za-z]+", "g");
+
+            const out = [];
+            out.push(`Pattern literal: ${r1}`);
+            out.push(`Pattern constructor: ${r2}`);
+
+            out.push(`- r2.exec(): ${JSON.stringify(r2.exec(text))}`);
+            out.push(`- r1.test(): ${r1.test(text)}`);
+            out.push(`- match(/[A-Za-z]+/g): ${JSON.stringify(text.match(/[A-Za-z]+/g))}`);
+
+            const all = Array.from(text.matchAll(/[A-Za-z]+/g)).map((m) => m[0]);
+            out.push(`- matchAll(/[A-Za-z]+/g): ${JSON.stringify(all)}`);
+            out.push(`- search(/@/): ${text.search(/@/)}`);
+            out.push(`- replace(/nepal/i): ${text.replace(/nepal/i, "NEPAL")}`);
+            out.push(`- replaceAll(/-/g): ${text.replaceAll(/-/g, "_")}`);
+            out.push(`- split(/\s+/): ${JSON.stringify(text.split(/\s+/))}`);
+
+            document.getElementById("methodOutput").textContent = out.join("\n");
+        }
+
+        function runPatternChecks() {
+            const v = document.getElementById("patternInput").value;
+
+            const checks = [
+                ["i. First char uppercase", /^[A-Z]/],
+                ["ii. Contains ?, - and _", /(?=.*\?)(?=.*-)(?=.*_)/],
+                ["iii. Starts with A/a and ends with . or !", /^[Aa].*[.!]$/],
+                ["iv. Contains only one blank space", /^(?:\S+\s\S+)$/],
+                ["v. Must not contain digits", /^\D+$/],
+                ["vi. Contains at least one symbol from given group", /[,@$_%!&*^~\-+(){}\[\].:]/],
+                ["vii. No special chars and digits", /^[A-Za-z\s]+$/],
+                ["viii. Contains @ between words", /^\w+@\w+$/],
+                ["ix. Must not start with digit", /^\D/],
+                ["x. Starts with _ or alphabet", /^[_A-Za-z]/],
+                ["xi. Starts with BCA-TU- then digits", /^BCA-TU-\d+$/],
+                ["xii. Email format", /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/],
+                ["xiii. Contains at least one vowel", /[aeiouAEIOU]/],
+                ["xiv. Ten digits, first not 0", /^[1-9]\d{9}$/],
+                ["xv. Email ending with edu.np", /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*edu\.np$/],
+                ["xvi. Email with gmail or yahoo", /^[A-Za-z0-9._%+-]+@(gmail|yahoo)\.[A-Za-z.]+$/],
+                ["xvii. Contains 'nepal' case-insensitive", /nepal/i]
+            ];
+
+            const lines = checks.map(([name, reg]) => `${name}: ${reg.test(v) ? "<span style='color: green;'>PASS</span>" : "<span style='color: red;'>FAIL</span>"}`);
+            document.getElementById("patternOutput").innerHTML = lines.join("\n");
+        }
+    </script>
+</body>
+
+</html>
