@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>31 - jQuery Tasks</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+        #eventOutput {
+            height: 120px;
+            white-space: pre-line;
+            overflow: auto;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>31 - Working with jQuery</h1>
+        </div>
+
+        <div class="container">
+            <h2>jQuery Selectors</h2>
+            <p id="selId">This is ID paragraph.</p>
+            <p class="selClass">This is class paragraph A.</p>
+            <p class="selClass">This is class paragraph B.</p>
+            <button id="selectorBtn">Run Selector Demo</button>
+        </div>
+
+        <div class="container">
+            <h2>Signup Form Validation (jQuery)</h2>
+            <form id="jqForm">
+                <input id="jqName" type="text" placeholder="Name" />
+                <input id="jqEmail" type="email" placeholder="Email" />
+                <div class="grid-3">
+                    <label><input type="radio" name="jqGender" value="Male" /> Male</label>
+                    <label><input type="radio" name="jqGender" value="Female" /> Female</label>
+                    <label><input type="radio" name="jqGender" value="Other" /> Other</label>
+                </div>
+                <select id="jqCourse">
+                    <option value="">Select course</option>
+                    <option>Web</option>
+                    <option>AI</option>
+                </select>
+                <label><input id="jqTerms" type="checkbox" /> I agree to the Terms & Conditions</label>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="jqFormOutput" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Five jQuery Events</h2>
+            <input id="eventInput" type="text" placeholder="Focus / keyup" />
+            <button id="clickEventBtn">Click Event</button>
+            <div id="hoverBox" class="output">Hover over me</div>
+            <div id="eventOutput" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Five DOM Manipulation Tasks</h2>
+            <ul id="domList">
+                <li>Item 1</li>
+            </ul>
+            <div class="inline-buttons">
+                <button id="appendBtn">append()</button>
+                <button id="prependBtn">prepend()</button>
+                <button id="beforeBtn">before()</button>
+                <button id="afterBtn">after()</button>
+                <button id="removeBtn">remove()</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Hide / Unhide / Toggle Image</h2>
+            <img id="jqImage" src="assets/images/sus.jpg" alt="Among Us" width="160" />
+            <div class="inline-buttons">
+                <button id="hideImg">Hide</button>
+                <button id="showImg">Unhide</button>
+                <button id="toggleImg">Toggle</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Other Five jQuery Effects</h2>
+            <div id="fxBox" class="output">Effect target box</div>
+            <div class="inline-buttons">
+                <button id="fadeInBtn">fadeIn</button>
+                <button id="fadeOutBtn">fadeOut</button>
+                <button id="slideUpBtn">slideUp</button>
+                <button id="slideDownBtn">slideDown</button>
+                <button id="animateBtn">animate</button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        $(function () {
+            // a. Selector
+            $("#selectorBtn").on("click", function () {
+                $("#selId").css("color", "#b11212");
+                $(".selClass").css("fontWeight", "bold");
+                $("p").first().append(" [selected by tag]");
+            });
+
+            // b. Form Validation
+            $("#jqForm").on("submit", function (e) {
+                e.preventDefault();
+                const name = $("#jqName").val().trim();
+                const email = $("#jqEmail").val().trim();
+                const gender = $("input[name='jqGender']:checked").val();
+                const terms = $("#jqTerms").is(":checked");
+                const course = $("#jqCourse").val();
+
+                if (!name || !email || !gender || !terms || !course) {
+                    $("#jqFormOutput").text("Please fill all fields and accept terms.");
+                    return;
+                }
+                $("#jqFormOutput").text("Form validated successfully with jQuery.");
+            });
+
+            // c. Event Examples
+            $("#clickEventBtn").on("click", () => $("#eventOutput").prepend("Click event triggered\n"));
+            $("#hoverBox").on("mouseover", () => $("#eventOutput").prepend("Mouseover event triggered\n"));
+            $("#hoverBox").on("mouseout", () => $("#eventOutput").prepend("Mouseout event triggered\n"));
+            $("#eventInput").on("focus", () => $("#eventOutput").prepend("Focus event triggered\n"));
+            $("#eventInput").on("keyup", () => $("#eventOutput").prepend("Keyup event triggered\n"));
+
+            // d. DOM Manipulation
+            $("#appendBtn").on("click", () => $("#domList").append("<li>Appended item</li>"));
+            $("#prependBtn").on("click", () => $("#domList").prepend("<li>Prepended item</li>"));
+            $("#beforeBtn").on("click", () => $("#domList").before("<p>Inserted before list</p>"));
+            $("#afterBtn").on("click", () => $("#domList").after("<p>Inserted after list</p>"));
+            $("#removeBtn").on("click", () => $("#domList li:last").remove());
+
+            // e. Hide / Unhide / Toggle Image
+            $("#hideImg").on("click", () => $("#jqImage").hide());
+            $("#showImg").on("click", () => $("#jqImage").show());
+            $("#toggleImg").on("click", () => $("#jqImage").toggle());
+
+            // f. Other Effects
+            $("#fadeInBtn").on("click", () => $("#fxBox").fadeIn());
+            $("#fadeOutBtn").on("click", () => $("#fxBox").fadeOut());
+            $("#slideUpBtn").on("click", () => $("#fxBox").slideUp());
+            $("#slideDownBtn").on("click", () => $("#fxBox").slideDown());
+            $("#animateBtn").on("click", () => $("#fxBox").animate({ width: "80%", opacity: 0.6 }, 500).animate({ width: "100%", opacity: 1 }, 500));
+        });
+    </script>
+</body>
+
+</html>
