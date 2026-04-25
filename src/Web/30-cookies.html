@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>30 - Cookies</title>
+    <link rel="stylesheet" href="common.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>30 - Cookies</h1>
+
+            <div class="container">
+                <label for="cookieName">Cookie Name</label>
+                <input id="cookieName" type="text" value="Name" />
+                <label for="cookieValue">Cookie Value</label>
+                <input id="cookieValue" type="text" value="Value" />
+                <label for="cookieDays">Expiry Days</label>
+                <input id="cookieDays" type="number" value="7" />
+
+                <div class="inline-buttons">
+                    <button onclick="createCookieWithExpires()">Create (expires format)</button>
+                    <button onclick="createCookieWithMaxAge()">Create (max-age format)</button>
+                    <button onclick="readCookie()">Read Cookie</button>
+                    <button onclick="changeCookie()">Change Cookie</button>
+                    <button onclick="deleteCookie()">Delete Cookie</button>
+                </div>
+
+                <div id="cookieOutput" class="output"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        function getInputs() {
+            return {
+                name: document.getElementById("cookieName").value.trim(),
+                value: document.getElementById("cookieValue").value.trim(),
+                days: parseInt(document.getElementById("cookieDays").value, 10) || 1
+            };
+        }
+
+        function createCookieWithExpires() {
+            const { name, value, days } = getInputs();
+            const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+            const cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+            console.log("Setting cookie:", cookie);
+            document.cookie = cookie;
+            show(`Created cookie using expires.\n${document.cookie}`);
+        }
+
+        function createCookieWithMaxAge() {
+            const { name, value, days } = getInputs();
+            document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${days * 24 * 60 * 60}; path=/`;
+            show(`Created cookie using max-age.\n${document.cookie}`);
+        }
+
+        function readCookie() {
+            const { name } = getInputs();
+            const decodedCookies = decodeURIComponent(document.cookie);
+            console.log("All Cookies:", decodedCookies);
+            const target = decodedCookies.split("; ").find((c) => c.startsWith(`${name}=`));
+            show(target ? `Read cookie: ${decodeURIComponent(target.split("=")[0])}:${decodeURIComponent(target.split("=")[1])}` : "Cookie not found");
+        }
+
+        function changeCookie() {
+            const { name } = getInputs();
+            const newValue = prompt("Enter new cookie value", "UpdatedValue");
+            document.cookie = `${name}=${encodeURIComponent(newValue || "")}; max-age=${7 * 24 * 60 * 60}; path=/`;
+            show(`Changed cookie.\n${document.cookie}`);
+        }
+
+        function deleteCookie() {
+            const { name } = getInputs();
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+            show(`Deleted cookie ${name}.\n${document.cookie}`);
+        }
+
+        function show(text) {
+            document.getElementById("cookieOutput").textContent = text;
+        }
+    </script>
+</body>
+
+</html>
