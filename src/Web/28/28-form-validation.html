@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>28 - Form Validation</title>
+    <link rel="stylesheet" href="../common.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>28 - Client-side Form Validation</h1>
+
+            <div class="container">
+                <h2>document.forms Demonstration</h2>
+                <button id="formsBtn" type="button">Highlight Forms</button>
+            </div>
+
+            <div class="container">
+                <h2>Registration Form</h2>
+                <form id="registrationForm" novalidate>
+                    <div class="grid-2">
+                        <div>
+                            <label for="firstName">First Name *</label>
+                            <input id="firstName" name="firstName" type="text" />
+                            <div class="error" id="firstNameErr"></div>
+                        </div>
+                        <div>
+                            <label for="lastName">Last Nae</label>
+                            <input id="lastName" name="lastName" type="text" />
+                            <div class="error" id="lastNameErr"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <label for="dob">Date of Birth *</label>
+                            <input id="dob" name="dob" type="date" />
+                            <div class="error" id="dobErr"></div>
+                        </div>
+                        <div>
+                            <label for="gender">Gender *</label>
+                            <select id="gender" name="gender">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="error" id="genderErr"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <label for="province">Province *</label>
+                            <select id="province" name="province">
+                                <option value="">Select province</option>
+                            </select>
+                            <div class="error" id="provinceErr"></div>
+                        </div>
+                        <div>
+                            <label for="district">District *</label>
+                            <select id="district" name="district">
+                                <option value="">Select district</option>
+                            </select>
+                            <div class="error" id="districtErr"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <label for="phone">Cell Phone *</label>
+                            <input id="phone" name="phone" type="text" />
+                            <div class="error" id="phoneErr"></div>
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div>
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" />
+                            <div class="error" id="emailErr"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div>
+                            <label for="username">User Name *</label>
+                            <input id="username" name="username" type="text" />
+                            <div class="error" id="usernameErr"></div>
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div>
+                            <label for="password">Password *</label>
+                            <input id="password" name="password" type="password" />
+                            <div class="error" id="passwordErr"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div>
+                            <label for="confirmPassword">Confirm Password *</label>
+                            <input id="confirmPassword" name="confirmPassword" type="password" />
+                            <div class="error" id="confirmPasswordErr"></div>
+                        </div>
+                    </div>
+                    <button type="submit">Register</button>
+                    <div id="submitMessage" class="output"></div>
+                </form>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script src="28-form-validation.js"></script>
+</body>
+
+</html>
