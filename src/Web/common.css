@@ -1,0 +1,164 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #eef3f8;
+  color: #1d2a39;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 16px auto;
+  padding: 12px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 8px 0;
+}
+
+.container {
+  margin: 14px 0;
+  padding: 14px;
+  border: 2px solid #0f1d2e;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+input,
+select,
+textarea,
+button {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #6a7a8f;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 6px;
+}
+
+button {
+  background: #0f5ea8;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0b4b86;
+}
+
+.output {
+  min-height: 100px;
+  /* height: 150px; */
+  padding: 8px;
+  border: 1px dashed #4a5b70;
+  border-radius: 6px;
+  background: #f5f9ff;
+  white-space: pre-wrap;
+  /* overflow: auto; */
+}
+
+.inline-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inline-buttons button {
+  width: auto;
+  min-width: 110px;
+}
+
+button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #90a0b4;
+  padding: 8px;
+  text-align: left;
+}
+
+.note {
+  background: #fff6e9;
+  border-left: 4px solid #d48b09;
+  padding: 8px;
+}
+
+.error {
+  color: #c21717;
+  font-size: 12px;
+  min-height: 24px;
+}
+
+.good {
+  color: #0c7a1f;
+  font-weight: bold;
+}
+
+.bad {
+  color: #b11212;
+  font-weight: bold;
+}
+
+.footer {
+  background: #f0f0f0;
+  padding: 10px;
+  margin-top: 10%;
+}
+
+.footer h3 {
+  margin: 0 0 8px;
+}
+
+.small {
+  font-size: 13px;
+  color: #4d5e73;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
