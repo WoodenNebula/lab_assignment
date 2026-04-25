@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>32 - JSON</title>
+    <link rel="stylesheet" href="common.css" />
+</head>
+
+<body>
+    <div class="page">
+        <div class="container">
+            <h1>32 - Working with JSON</h1>
+        </div>
+
+        <div class="container">
+            <h2>Create JSON Object and Convert to String</h2>
+            <button onclick="showStudentJSONString()">Create and Stringify</button>
+            <div id="jsonOut" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Read Data from JSON File</h2>
+            <p class="small">Use provided sample file or any custom JSON file.</p>
+            <input id="jsonFileInput" type="file" accept=".json,application/json" />
+            <button onclick="readJSONFile()">Read Selected File</button>
+            <div id="jsonReadOut" class="output"></div>
+        </div>
+
+        <div class="container">
+            <h2>Write Data to JSON File</h2>
+            <button onclick="downloadJSON()">Generate and Download JSON</button>
+            <div id="jsonWriteOut" class="output"></div>
+        </div>
+
+        <footer class="footer">
+            <h3>&COPY; <a href="https://github.com/WoodenNebula/lab_assignment" target="_blank"
+                    title="Source Code">Surab Parajuli</a></h3>
+            <ul type="circle">
+                <li>'A' - 34</li>
+                <li>80010139</li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        const student = {
+            name: "Surab",
+            age: 21,
+            grade: "A",
+            subjects: ["Web", "AI", "DSA"],
+            contact_detail: {
+                email: "surab@example.com",
+                phone: "9812345678"
+            }
+        };
+        function showStudentJSONString() {
+            const jsonString = JSON.stringify(student, null, 2);
+            document.getElementById("jsonOut").textContent = jsonString;
+        }
+
+        function readJSONFile() {
+            const fileInput = document.getElementById("jsonFileInput");
+            const file = fileInput.files[0];
+            if (!file) {
+                document.getElementById("jsonReadOut").textContent = "Select a JSON file first.";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    document.getElementById("jsonReadOut").textContent = JSON.stringify(data, null, 2);
+                } catch {
+                    document.getElementById("jsonReadOut").textContent = "Invalid JSON file content.";
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function downloadJSON() {
+            const blob = new Blob([JSON.stringify(student, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "output-data.json";
+            a.click();
+            URL.revokeObjectURL(url);
+            document.getElementById("jsonWriteOut").textContent = "JSON file generated and downloaded.";
+        }
+    </script>
+</body>
+
+</html>
