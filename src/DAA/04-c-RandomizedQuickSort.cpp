@@ -29,25 +29,26 @@
 
 #include "src/commons.hpp"
 
-int lomutoPartition(std::vector<int>& arr, int low, int high) {
-    int pivot = arr[high];
-    int i     = low - 1;
+int partition(std::vector<int>& arr, int low, int high) {
+    int left = low, right = high;
+    int pivot = arr[low];
 
-    for (int j = low; j < high; j++) {
-        if (arr[j] <= pivot) {
-            i++;
-            std::swap(arr[i], arr[j]);
-        }
+    while (left < right) {
+        while (arr[left] <= pivot && left < right) left++;
+        while (arr[right] > pivot) right--;
+
+        if (left < right) std::swap(arr[left], arr[right]);
     }
 
-    std::swap(arr[i + 1], arr[high]);
-    return i + 1;
+    std::swap(arr[low], arr[right]);
+    return right;
 }
+
 
 int randomizedPartition(std::vector<int>& arr, int low, int high) {
     int r = low + rand() % (high - low + 1);
-    std::swap(arr[r], arr[high]);
-    return lomutoPartition(arr, low, high);
+    std::swap(arr[r], arr[low]);
+    return partition(arr, low, high);
 }
 
 void randomizedQuickSort(std::vector<int>& arr, int low, int high) {
@@ -64,9 +65,9 @@ int main() {
     Header("RANDOMIZED QUICK SORT");
     std::vector<int> array = { 10, 7, 8, 9, 1, 5 };
 
-    std::cout << "Original Array: " << ToString(array) << std::endl;
+    std::cout << "Original Array: " << Surab::ToString(array) << std::endl;
     randomizedQuickSort(array, 0, (int)array.size() - 1);
-    std::cout << "Sorted Array:   " << ToString(array) << std::endl;
+    std::cout << "Sorted Array:   " << Surab::ToString(array) << std::endl;
 
     Footer();
     return 0;

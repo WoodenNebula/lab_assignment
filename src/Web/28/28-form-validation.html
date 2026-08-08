@@ -23,12 +23,12 @@
                 <form id="registrationForm" novalidate>
                     <div class="grid-2">
                         <div>
-                            <label for="firstName">First Name *</label>
+                            <label for="firstName">First Name<span style="color: red">*</span></label>
                             <input id="firstName" name="firstName" type="text" />
                             <div class="error" id="firstNameErr"></div>
                         </div>
                         <div>
-                            <label for="lastName">Last Nae</label>
+                            <label for="lastName">Last Name</label>
                             <input id="lastName" name="lastName" type="text" />
                             <div class="error" id="lastNameErr"></div>
                         </div>
@@ -36,32 +36,29 @@
 
                     <div class="grid-2">
                         <div>
-                            <label for="dob">Date of Birth *</label>
+                            <label for="dob">Date of Birth<span style="color: red">*</span></label>
                             <input id="dob" name="dob" type="date" />
                             <div class="error" id="dobErr"></div>
                         </div>
-                        <div>
-                            <label for="gender">Gender *</label>
-                            <select id="gender" name="gender">
-                                <option value="">Select gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
+                        <div style="margin: auto 0; padding-top: 20px; ">
+                            <label for="gender" style="display: inline">Gender<span style="color: red">*</span>:</label>
+                            <input name="gender" type="radio" value="Male" required />Male
+                            <input name="gender" type="radio" value="Female"/>Female
+                            <input name="gender" type="radio" value="Others"/>Others
                             <div class="error" id="genderErr"></div>
                         </div>
                     </div>
 
                     <div class="grid-2">
                         <div>
-                            <label for="province">Province *</label>
+                            <label for="province">Province<span style="color: red">*</span></label>
                             <select id="province" name="province">
-                                <option value="">Select province</option>
+                                <option value="" hidden>Select province</option>
                             </select>
                             <div class="error" id="provinceErr"></div>
                         </div>
                         <div>
-                            <label for="district">District *</label>
+                            <label for="district">District<span style="color: red">*</span></label>
                             <select id="district" name="district">
                                 <option value="">Select district</option>
                             </select>
@@ -71,7 +68,7 @@
 
                     <div class="grid-2">
                         <div>
-                            <label for="phone">Cell Phone *</label>
+                            <label for="phone">Cell Phone<span style="color: red">*</span></label>
                             <input id="phone" name="phone" type="text" />
                             <div class="error" id="phoneErr"></div>
                         </div>
@@ -86,14 +83,14 @@
 
                     <div class="grid-3">
                         <div>
-                            <label for="username">User Name *</label>
+                            <label for="username">User Name<span style="color: red">*</span></label>
                             <input id="username" name="username" type="text" />
                             <div class="error" id="usernameErr"></div>
                         </div>
                     </div>
                     <div class="grid-3">
                         <div>
-                            <label for="password">Password *</label>
+                            <label for="password">Password<span style="color: red">*</span></label>
                             <input id="password" name="password" type="password" />
                             <div class="error" id="passwordErr"></div>
                         </div>
@@ -101,11 +98,16 @@
 
                     <div class="grid-3">
                         <div>
-                            <label for="confirmPassword">Confirm Password *</label>
+                            <label for="confirmPassword">Confirm Password<span style="color: red">*</span></label>
                             <input id="confirmPassword" name="confirmPassword" type="password" />
                             <div class="error" id="confirmPasswordErr"></div>
                         </div>
+                        <div>
+                            <label for="checkMark"> I accept </label>
+                            <input id="checkMark" name="checkMark" type="checkbox" value="Accept"/>
+                        </div>
                     </div>
+
                     <button type="submit">Register</button>
                     <div id="submitMessage" class="output"></div>
                 </form>

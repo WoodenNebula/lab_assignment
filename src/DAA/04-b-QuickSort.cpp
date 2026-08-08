@@ -24,18 +24,18 @@
 #include "src/commons.hpp"
 
 int partition(std::vector<int>& arr, int low, int high) {
-    int pivot = arr[high];
-    int i     = low - 1;
+    int left = low, right = high;
+    int pivot = arr[low];
 
-    for (int j = low; j < high; j++) {
-        if (arr[j] <= pivot) {
-            i++;
-            std::swap(arr[i], arr[j]);
-        }
+    while (left < right) {
+        while (arr[left] <= pivot && left < right) left++;
+        while (arr[right] > pivot) right--;
+
+        if (left < right) std::swap(arr[left], arr[right]);
     }
 
-    std::swap(arr[i + 1], arr[high]);
-    return i + 1;
+    std::swap(arr[low], arr[right]);
+    return right;
 }
 
 void quickSort(std::vector<int>& arr, int low, int high) {
@@ -50,9 +50,9 @@ int main() {
     Header("QUICK SORT");
     std::vector<int> array = { 10, 7, 8, 9, 1, 5 };
 
-    std::cout << "Original Array: " << ToString(array) << std::endl;
+    std::cout << "Original Array: " << Surab::ToString(array) << std::endl;
     quickSort(array, 0, (int)array.size() - 1);
-    std::cout << "Sorted Array:   " << ToString(array) << std::endl;
+    std::cout << "Sorted Array:   " << Surab::ToString(array) << std::endl;
 
     Footer();
     return 0;

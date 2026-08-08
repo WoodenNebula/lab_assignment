@@ -26,17 +26,17 @@
 
 #include "src/commons.hpp"
 
-void heapify(std::vector<int>& arr, int n, int i) {
+void heapify(std::vector<int>& arr, int size, int i) {
     int largest = i;
-    int left    = 2 * i + 1;
-    int right   = 2 * i + 2;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
 
-    if (left  < n && arr[left]  > arr[largest]) largest = left;
-    if (right < n && arr[right] > arr[largest]) largest = right;
+    if (left < size && arr[left] > arr[largest]) largest = left;
+    if (right < size && arr[right] > arr[largest]) largest = right;
 
     if (largest != i) {
         std::swap(arr[i], arr[largest]);
-        heapify(arr, n, largest);
+        heapify(arr, size, largest);
     }
 }
 
@@ -44,8 +44,7 @@ void heapSort(std::vector<int>& arr) {
     int n = (int)arr.size();
 
     // Build max-heap
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(arr, n, i);
+    for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
 
     // Extract elements from heap one by one
     for (int i = n - 1; i > 0; i--) {
@@ -56,11 +55,11 @@ void heapSort(std::vector<int>& arr) {
 
 int main() {
     Header("HEAP SORT");
-    std::vector<int> array = { 12, 11, 13, 5, 6, 7 };
+    std::vector<int> array = {12, 11, 13, 5, 6, 7};
 
-    std::cout << "Original Array: " << ToString(array) << std::endl;
+    std::cout << "Original Array: " << Surab::ToString(array) << std::endl;
     heapSort(array);
-    std::cout << "Sorted Array:   " << ToString(array) << std::endl;
+    std::cout << "Sorted Array:   " << Surab::ToString(array) << std::endl;
 
     Footer();
     return 0;

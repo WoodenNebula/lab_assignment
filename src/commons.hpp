@@ -1,6 +1,8 @@
 #pragma once
 #include <ios>
 #include <iostream>
+#include <print>
+#include <ranges>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -15,50 +17,37 @@
 #define LOG(x)
 #endif
 
-void Header(std::string_view Title) {
+static void Header(std::string_view Title) {
     std::cout << "=== " << std::uppercase << Title << " ===" << std::endl;
 }
 
-void Footer() {
+static void Footer() {
     std::cout << "\n====================\n"
-        << "Surab Parajuli\n"
-        << "Section: A, 5th-Sem\n"
-        << "Roll: 34, Symbol No.: 80010139\n"
-        << "====================\n";
+              << "Surab Parajuli\n"
+              << "Section: A, 5th-Sem\n"
+              << "Roll: 34, Symbol No.: 80010139\n"
+              << "====================\n";
 #ifndef __linux
     //  syst("read -p \"Press any key to continue...\"");
     system("pause");
 #endif
 }
 
-void abortOnError(std::string_view msg) {
+static void abortOnError(std::string_view msg) {
     std::cout << RED << msg << RESET;
     Footer();
     exit(EXIT_FAILURE);
 }
 
-// template <class ContainerType>
-// std::string ToString(ContainerType Container) {
-//     std::string containerStr = "[ ";
-//     for (const auto x : Container) {
-//         containerStr += x + ", ";
-//     }
-//
-//     containerStr.pop_back();
-//     containerStr.pop_back();
-//     containerStr += " ]";
-//
-//     return containerStr;
-// }
-
-
-namespace Surab
-{
+namespace Surab {
 using Mat = std::vector<std::vector<double>>;
 
-template <class ContainerType>
+template <std::ranges::sized_range ContainerType>
 std::string ToString(const ContainerType& Container) {
+    if (Container.size() == 0) return "[ ]";
+
     std::string containerStr = "[ ";
+
     for (const auto x : Container) {
         containerStr += std::to_string(x) + ", ";
     }
@@ -69,9 +58,9 @@ std::string ToString(const ContainerType& Container) {
 
     return containerStr;
 }
-}
+}  // namespace Surab
 
-std::istream& operator>>(std::istream& in, Surab::Mat& matrix) {
+static std::istream& operator>>(std::istream& in, Surab::Mat& matrix) {
     for (size_t row = 0; row < matrix.size(); row++) {
         std::cout << "  row[" << row + 1 << "] <- ";
         for (size_t col = 0; col < matrix[row].size(); col++) {
@@ -82,7 +71,7 @@ std::istream& operator>>(std::istream& in, Surab::Mat& matrix) {
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const Surab::Mat& matrix) {
+static std::ostream& operator<<(std::ostream& out, const Surab::Mat& matrix) {
     for (size_t row = 0; row < matrix.size(); row++) {
         out << "\t" << Surab::ToString(matrix[row]) << "\n";
     }

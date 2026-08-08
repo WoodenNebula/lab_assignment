@@ -25,38 +25,52 @@
 #include "src/commons.hpp"
 
 void merge(std::vector<int>& arr, int low, int mid, int high) {
-    std::vector<int> left(arr.begin() + low,    arr.begin() + mid + 1);
+    std::vector<int> left(arr.begin() + low, arr.begin() + mid + 1);
     std::vector<int> right(arr.begin() + mid + 1, arr.begin() + high + 1);
 
-    int i = 0, j = 0, k = low;
+    std::println("3. Merging: {} & {} - (left, mid, right)=({}, {}, {})",
+                 Surab::ToString(left), Surab::ToString(right), low, mid, high);
+    int leftIdx = 0, rightIdx = 0, arrIdx = low;
 
-    while (i < (int)left.size() && j < (int)right.size()) {
-        if (left[i] <= right[j])
-            arr[k++] = left[i++];
+    while (leftIdx < (int)left.size() && rightIdx < (int)right.size()) {
+        if (left[leftIdx] <= right[rightIdx])
+            arr[arrIdx++] = left[leftIdx++];
         else
-            arr[k++] = right[j++];
+            arr[arrIdx++] = right[rightIdx++];
     }
 
-    while (i < (int)left.size())  arr[k++] = left[i++];
-    while (j < (int)right.size()) arr[k++] = right[j++];
+    while (leftIdx < (int)left.size()) arr[arrIdx++] = left[leftIdx++];
+    while (rightIdx < (int)right.size()) arr[arrIdx++] = right[rightIdx++];
 }
 
 void mergeSort(std::vector<int>& arr, int low, int high) {
     if (low < high) {
         int mid = (low + high) / 2;
+
+        std::vector<int> tmp(arr.begin() + low, arr.begin() + mid);
+        std::println("1. Dividing: {} - low={}, mid={}", Surab::ToString(tmp),
+                     low, mid);
+
         mergeSort(arr, low, mid);
+
+        tmp = std::vector<int>(arr.begin() + mid + 1, arr.begin() + high);
+        std::println("2. Dividing: {} - mid+1={}, high={}",
+                     Surab::ToString(tmp), mid + 1, high);
+
         mergeSort(arr, mid + 1, high);
+
         merge(arr, low, mid, high);
     }
+    std::println("---Index passed, returning!---");
 }
 
 int main() {
     Header("MERGE SORT");
-    std::vector<int> array = { 38, 27, 43, 3, 9, 82, 10 };
+    std::vector<int> array = {38, 27, 43, 3, 9, 82, 10};
 
-    std::cout << "Original Array: " << ToString(array) << std::endl;
+    std::cout << "Original Array: " << Surab::ToString(array) << std::endl;
     mergeSort(array, 0, (int)array.size() - 1);
-    std::cout << "Sorted Array:   " << ToString(array) << std::endl;
+    std::cout << "Sorted Array: " << Surab::ToString(array) << std::endl;
 
     Footer();
     return 0;

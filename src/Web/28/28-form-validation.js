@@ -13,7 +13,8 @@ function validateForm() {
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
   const dob = document.getElementById("dob").value;
-  const gender = document.getElementById("gender").value;
+    const elem_gender = document.querySelector('input[name="gender"]:checked');
+  const gender = elem_gender ? elem_gender.value : null;
   const province = document.getElementById("province").value;
   const district = document.getElementById("district").value;
   const phone = document.getElementById("phone").value.trim();
@@ -21,6 +22,9 @@ function validateForm() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
+
+    const selected = document.getElementById("checkMark").checked;
+    console.log(selected);
 
   const alphaRegex = /^[A-Za-z]{1,50}$/;
   if (!firstName) {
@@ -61,8 +65,8 @@ function validateForm() {
     isValid = false;
   }
 
-  if (email && !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
-    setError("email", "must be a valid email: example@example.com");
+  if (!email || !/^([\w.%+-])+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
+    setError("email", "Must be a valid email: example@example.com");
     isValid = false;
   }
 
@@ -101,7 +105,7 @@ function registerEventListeners() {
   // Change district options based on selected province
   provinceSelect.addEventListener("change", () => {
     const selected = provinceSelect.value;
-    districtSelect.innerHTML = '<option value="">Select district</option>';
+    districtSelect.innerHTML = '<option value="" hidden>Select district</option>';
     if (!selected) return;
 
     provinceDistricts[selected].forEach((district) => {
@@ -117,6 +121,10 @@ function registerEventListeners() {
     forms = document.forms;
     forms[0].style.backgroundColor = "#f3f3f3";
   });
+
+
+  const checkMark = document.getElementById("checkMark");
+
 
   // Handle form submission
   const registrationForm = document.forms[0];
@@ -141,12 +149,12 @@ function initializeForm() {
   const provinceSelect = document.getElementById("province");
 
   // initialize province options
-  Object.keys(provinceDistricts).forEach((province) => {
+  for(const province in provinceDistricts) {
     const option = document.createElement("option");
     option.value = province;
     option.textContent = province;
     provinceSelect.appendChild(option);
-  });
+  }
 }
 
 initializeForm();
