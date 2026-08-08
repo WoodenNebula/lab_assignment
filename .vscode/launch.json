@@ -30,14 +30,14 @@
             "name": "1. Normal: Build & Launch File",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}\\bin\\${fileBasenameNoExtension}.exe",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "gdb.exe",
+            "miDebuggerPath": "/usr/sbin/gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -51,7 +51,7 @@
                 }
             ],
             "preLaunchTask": "C++: Build File"
-        }
+        },
     ],
     "version": "2.0.0"
 }

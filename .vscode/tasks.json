@@ -60,9 +60,9 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "${workspaceFolder}/bin/${fileBasenameNoExtension}",
                 "-I",
-                "${workspaceFolder}/src/"
+                "${workspaceFolder}"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -72,7 +72,6 @@
             ],
             "group": {
                 "kind": "build",
-                "isDefault": true
             },
             "presentation": {
                 "close": true,
@@ -84,7 +83,31 @@
                 "panel": "shared",
                 "clear": true
             },
-            "detail": "No linking file compilation task",
+            "detail": "No linking file compilation task"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ build active file",
+            "command": "/usr/sbin/g++",
+            "args": [
+                "--std",
+                "c++20",
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${workspaceFolder}/bin/${fileBasenameNoExtension}",
+                "-I",
+                "${workspaceFolder}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "compiler: /usr/sbin/g++"
         }
     ]
 }

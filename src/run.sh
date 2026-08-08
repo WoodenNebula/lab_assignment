@@ -34,7 +34,7 @@ compile() {
     if $isC; then
         bear -- gcc -g -I. $src -o $bin
     else
-        bear -- g++ -g -I. $src -o $bin
+        bear -- g++ -std=c++23 -g -I. $src -o $bin
     fi
 
     chmod u+x $bin
