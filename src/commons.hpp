@@ -23,10 +23,10 @@ static void Header(std::string_view Title) {
 
 static void Footer() {
     std::cout << "\n====================\n"
-              << "Surab Parajuli\n"
-              << "Section: A, 5th-Sem\n"
-              << "Roll: 34, Symbol No.: 80010139\n"
-              << "====================\n";
+        << "Surab Parajuli\n"
+        << "Section: A, 6th-Sem\n"
+        << "Roll: 34, Symbol No.: 80010139\n"
+        << "====================\n";
 #ifndef __linux
     //  syst("read -p \"Press any key to continue...\"");
     system("pause");
@@ -39,7 +39,8 @@ static void abortOnError(std::string_view msg) {
     exit(EXIT_FAILURE);
 }
 
-namespace Surab {
+namespace Surab
+{
 using Mat = std::vector<std::vector<double>>;
 
 template <std::ranges::sized_range ContainerType>
