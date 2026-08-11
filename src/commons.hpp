@@ -78,3 +78,21 @@ static std::ostream& operator<<(std::ostream& out, const Surab::Mat& matrix) {
     }
     return out;
 }
+
+namespace Surab
+{
+template <typename... Args>
+static void LogError(std::format_string<Args...> fmt, Args&&... args) {
+    std::cerr << RED << std::format(fmt, std::forward<Args>(args)...) << RESET << std::endl;
+}
+
+template <typename... Args>
+static void LogSuccess(std::format_string<Args...> msg, Args&&... args) {
+    std::cout << GREEN << std::format(msg, std::forward<Args>(args)...) << RESET << std::endl;
+}
+
+template <typename... Args>
+static void Log(std::format_string<Args...> msg, Args&&... args) {
+    std::cout << std::format(msg, std::forward<Args>(args)...) << std::endl;
+}
+}  // namespace Surab
