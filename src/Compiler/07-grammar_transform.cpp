@@ -6,6 +6,7 @@ Enter an empty line to finish.
 */
 
 #include "src/commons.hpp"
+#include "src/Compiler/utils.hpp"
 
 #include <print>
 #include <string>
@@ -16,41 +17,8 @@ Enter an empty line to finish.
 #include <algorithm>
 
 
-std::string Trim(std::string s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); }));
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(), s.end());
-    return s;
-}
-
-using ProdList = std::vector<std::string>;
-ProdList SplitProductions(const std::string& rhs) {
-    ProdList parts;
-    std::stringstream ss(rhs);
-    std::string item;
-    while (std::getline(ss, item, '|')) {
-        parts.push_back(Trim(item));
-    }
-    return parts;
-}
-
-using Grammar = std::unordered_map<std::string, ProdList>;
-Grammar ParseGrammarFromString(std::stringstream& Input) {
-    Grammar G;
-    std::string lineBuffer;
-    while (std::getline(Input, lineBuffer)) {
-        // Find the non-terminal
-        auto pos = lineBuffer.find("->");
-        if (pos == std::string::npos)
-            continue;
-
-        std::string LHS = Trim(lineBuffer.substr(0, pos));
-        std::string RHS = Trim(lineBuffer.substr(pos + 2));
-
-        auto parts = SplitProductions(RHS);
-        for (auto& p : parts) G[LHS].push_back(p);
-    }
-    return G;
-}
+using ProdList = Surab::Compiler::ProdList;
+using Grammar = Surab::Compiler::Grammar;
 
 // Indirect left recursion is not handled in this implementation
 Grammar EliminateDirectLeftRecursion(const Grammar& G) {
@@ -61,10 +29,10 @@ Grammar EliminateDirectLeftRecursion(const Grammar& G) {
             // if p starts with A
             if (p.rfind(A, 0) == 0) {
                 // remove prefix A
-                std::string rest = Trim(p.substr(A.size()));
+                std::string rest = Surab::Compiler::Trim(p.substr(A.size()));
                 alpha.push_back(rest.empty() ? "" : rest);
             }
-            else beta.push_back(Trim(p));
+            else beta.push_back(Surab::Compiler::Trim(p));
         }
         if (!alpha.empty()) {
             std::string Aprime = A + "'";
@@ -169,17 +137,6 @@ Grammar LeftFactorGrammar(const Grammar& G) {
     return transformedGrammar;
 }
 
-void PrintGrammar(const Grammar& G) {
-    for (const auto& [A, prods] : G) {
-        std::string rhs;
-        for (size_t i = 0; i < prods.size(); ++i) {
-            rhs += prods[i];
-            if (i != prods.size() - 1) rhs += " | ";
-        }
-        std::println("{} -> {}", A, rhs);
-    }
-}
-
 int main() {
     Header("Grammar Transformer");
 
@@ -188,18 +145,18 @@ int main() {
         B -> bc | a
     )");
 
-    Grammar G = ParseGrammarFromString(grammarString);
+    Grammar G = Surab::Compiler::ParseGrammarFromString(grammarString);
 
     Surab::Log("\nOriginal Grammar:");
-    PrintGrammar(G);
+    Surab::Compiler::PrintGrammar(G);
 
     Grammar leftFactoredGrammar = LeftFactorGrammar(G);
     Surab::LogSuccess("\nTransformed Grammar (after left factoring):");
-    PrintGrammar(leftFactoredGrammar);
+    Surab::Compiler::PrintGrammar(leftFactoredGrammar);
 
     Grammar leftRecursionFreeGrammar = EliminateDirectLeftRecursion(leftFactoredGrammar);
     Surab::LogSuccess("\nTransformed Grammar (after eliminating direct left recursion):");
-    PrintGrammar(leftRecursionFreeGrammar);
+    Surab::Compiler::PrintGrammar(leftRecursionFreeGrammar);
 
 
     Footer();
