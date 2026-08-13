@@ -98,6 +98,10 @@ SSet_t FOLLOW(
     auto [NT, T] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
     SSet_t followOfSymbol;
 
+    if (FollowResMap.contains(Token)) {
+        followOfSymbol.insert_range(FollowResMap.at(Token));
+    }
+
     for (const auto& [A, prodList] : G) {
         for (const auto& production : prodList) {
             std::vector<Token_t> tokenList = Surab::Compiler::TokenizeProduction(production, NT);

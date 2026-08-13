@@ -67,7 +67,7 @@ std::vector<Token_t> TokenizeProduction(const Production_t& Production, const SS
         if (Production == EPSILON) {
             Tokens.emplace_back(EPSILON);
             i++;
-            continue;
+            break;
         }
 
         // Try to match a non-terminal.
@@ -113,8 +113,6 @@ std::vector<Token_t> TokenizeProduction(const Production_t& Production, const SS
     return Tokens;
 }
 
-
-
 std::pair<SSet_t, SSet_t> IdentifyNonTerminalsAndTerminals(const Grammar_t& G) {
     SSet_t NT;
     SSet_t T;
@@ -148,8 +146,6 @@ void PrintGrammar(const Grammar_t& G) {
         std::println("{} -> {}", A, rhs);
     }
 }
-
-
 
 std::string C2S(char c) { return std::string(1, c); };
 
@@ -232,6 +228,10 @@ SSet_t FOLLOW(
 ) {
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
     SSet_t followOfSymbol;
+
+    if (FollowResMap.contains(TokenInstance)) {
+        followOfSymbol.insert_range(FollowResMap.at(TokenInstance));
+    }
 
     for (const auto& [A, productionList] : G) {
         for (const auto& prod : productionList) {
