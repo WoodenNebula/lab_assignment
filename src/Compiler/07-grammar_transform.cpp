@@ -17,47 +17,48 @@ Enter an empty line to finish.
 #include <algorithm>
 
 
-using ProdList = Surab::Compiler::ProdList;
-using Grammar = Surab::Compiler::Grammar;
+using Token_t = Surab::Compiler::Token_t;
+using Production_t = Surab::Compiler::Production_t;
+using Grammar_t = Surab::Compiler::Grammar_t;
 
 // Indirect left recursion is not handled in this implementation
-Grammar EliminateDirectLeftRecursion(const Grammar& G) {
-    Grammar additions;
+Grammar_t EliminateDirectLeftRecursion(const Grammar_t& G) {
+    Grammar_t additions;
     for (const auto& [A, prods] : G) {
-        ProdList alpha, beta;
+        std::vector<Production_t> alpha, beta;
         for (auto& p : prods) {
             // if p starts with A
             if (p.rfind(A, 0) == 0) {
                 // remove prefix A
-                std::string rest = Surab::Compiler::Trim(p.substr(A.size()));
-                alpha.push_back(rest.empty() ? "" : rest);
+                Token_t rest = Surab::Compiler::Trim(p.substr(A.size()));
+                alpha.push_back(rest.empty() ? EPSILON : rest);
             }
             else beta.push_back(Surab::Compiler::Trim(p));
         }
         if (!alpha.empty()) {
-            std::string Aprime = A + "'";
+            Token_t Aprime = A + "'";
             while (G.contains(Aprime)) {
                 Aprime += "'";
             }
 
-            ProdList newAprods;
+            std::vector<Production_t> newAprods;
             for (auto& b : beta) {
-                std::string nb = b + Aprime;
+                Token_t nb = b + Aprime;
                 newAprods.push_back(nb);
             }
             additions.emplace(A, newAprods);
 
-            ProdList aprimeProds;
+            std::vector<Production_t> aprimeProds;
             for (auto& a : alpha) {
-                std::string na = (a + Aprime);
+                Token_t na = (a + Aprime);
                 aprimeProds.push_back(na);
             }
-            aprimeProds.push_back("∈");
+            aprimeProds.push_back(EPSILON);
             additions.emplace(Aprime, aprimeProds);
         }
     }
 
-    Grammar transformedGrammar = G;
+    Grammar_t transformedGrammar = G;
     // update transformedGrammar with LeftRecursion eliminated productions
     for (const auto& [A, prods] : G) {
         if (additions.contains(A)) {
@@ -77,8 +78,8 @@ Grammar EliminateDirectLeftRecursion(const Grammar& G) {
     return transformedGrammar;
 }
 
-Grammar LeftFactorGrammar(const Grammar& G) {
-    Grammar transformedGrammar = G;
+Grammar_t LeftFactorGrammar(const Grammar_t& G) {
+    Grammar_t transformedGrammar = G;
     for (const auto& [A, prods] : G) {
         size_t minPrefixLength = 1;
         size_t numProdsWithSamePrefix = 0;
@@ -94,8 +95,6 @@ Grammar LeftFactorGrammar(const Grammar& G) {
             }
             else { break; }
         }
-
-        // Surab::Log("Number of productions with the same prefix for {}: {}", A, numProdsWithSamePrefix);
 
         // Find the longest common prefix among the productions
         bool matchingPrefix = numProdsWithSamePrefix > 1;
@@ -117,18 +116,18 @@ Grammar LeftFactorGrammar(const Grammar& G) {
         if (numProdsWithSamePrefix > 1) {
             // Surab::LogSuccess("Longest common prefix for {}: '{}'", A, commonPrefix);
 
-            std::string Aprime = A + "'";
+            Token_t Aprime = A + "'";
             while (G.contains(Aprime)) {
                 Aprime += "'";
             }
-            ProdList newAprods;
+            std::vector<Production_t> newAprods;
             for (size_t i = 0; i < numProdsWithSamePrefix; ++i) {
-                std::string suffix = prods[i].substr(commonPrefix.size());
-                newAprods.push_back(suffix.empty() ? "∈" : suffix);
+                Token_t suffix = prods[i].substr(commonPrefix.size());
+                newAprods.push_back(suffix.empty() ? EPSILON : suffix);
             }
             transformedGrammar[Aprime] = newAprods;
 
-            ProdList updatedProds(prods.begin() + numProdsWithSamePrefix, prods.end());
+            std::vector<Production_t> updatedProds(prods.begin() + numProdsWithSamePrefix, prods.end());
             updatedProds.emplace(updatedProds.begin(), commonPrefix + Aprime);
             transformedGrammar[A] = updatedProds;
         }
@@ -145,16 +144,16 @@ int main() {
         B -> bc | a
     )");
 
-    Grammar G = Surab::Compiler::ParseGrammarFromString(grammarString);
+    Grammar_t G = Surab::Compiler::ParseGrammarFromString(grammarString);
 
     Surab::Log("\nOriginal Grammar:");
     Surab::Compiler::PrintGrammar(G);
 
-    Grammar leftFactoredGrammar = LeftFactorGrammar(G);
+    Grammar_t leftFactoredGrammar = LeftFactorGrammar(G);
     Surab::LogSuccess("\nTransformed Grammar (after left factoring):");
     Surab::Compiler::PrintGrammar(leftFactoredGrammar);
 
-    Grammar leftRecursionFreeGrammar = EliminateDirectLeftRecursion(leftFactoredGrammar);
+    Grammar_t leftRecursionFreeGrammar = EliminateDirectLeftRecursion(leftFactoredGrammar);
     Surab::LogSuccess("\nTransformed Grammar (after eliminating direct left recursion):");
     Surab::Compiler::PrintGrammar(leftRecursionFreeGrammar);
 

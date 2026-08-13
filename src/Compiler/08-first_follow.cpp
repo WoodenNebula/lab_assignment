@@ -14,49 +14,52 @@ Empty line to finish. Nonterminals assumed uppercase start.
 #include <set>
 #include <sstream>
 
-using ProdList = Surab::Compiler::ProdList;
-using Grammar = Surab::Compiler::Grammar;
+using Grammar_t = Surab::Compiler::Grammar_t;
+using Token_t = Surab::Compiler::Token_t;
+using SSet_t = Surab::Compiler::SSet_t;
 
-using SSet = Surab::Compiler::SSet;
-
-SSet FIRST(std::string symbol, const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST_LIST) {
-    if (FIRST_LIST.contains(symbol)) {
-        return FIRST_LIST.at(symbol);
+SSet_t FIRST(
+    Token_t Token,
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap
+) {
+    if (FirstResMap.contains(Token)) {
+        return FirstResMap.at(Token);
     }
 
     auto [NT, T] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
 
-    if (symbol == EPSILON) {
+    if (Token == EPSILON) {
         return { EPSILON };
     }
 
-    if (NT.contains(symbol)) {
+    if (NT.contains(Token)) {
         // X -> A | B | aplha | ∈
         // return FIRST(A) U FIRST(B) U FIRST(alpha) U {∈}
-        SSet firstOfSymbol;
+        SSet_t firstOfSymbol;
 
-        for (const auto& prod : G.at(symbol)) {
-            SSet firstOfProd = FIRST(prod, G, FIRST_LIST);
+        for (const auto& prod : G.at(Token)) {
+            SSet_t firstOfProd = FIRST(prod, G, FirstResMap);
             firstOfSymbol.insert(firstOfProd.begin(), firstOfProd.end());
         }
         return firstOfSymbol;
 
     }
     // Symbol is a production or terminal
-    auto symbols = Surab::Compiler::TokenizeProduction(symbol, NT);
+    std::vector<Token_t> tokenList = Surab::Compiler::TokenizeProduction(Token, NT);
 
     // If it is a single terminal, return it.
-    if (symbols.size() == 1 && !NT.contains(symbols[0]))
-        return { symbols[0] };
+    if (tokenList.size() == 1 && !NT.contains(tokenList[0]))
+        return { tokenList[0] };
 
     // FIRST of a production.
-    SSet firstOfProduction;
+    SSet_t firstOfProduction;
     bool nullable = true;
 
-    for (const auto& sym : symbols) {
-        auto firstOfSym = FIRST(sym, G, FIRST_LIST);
+    for (const Token_t& token : tokenList) {
+        SSet_t firstOfSym = FIRST(token, G, FirstResMap);
 
-        for (const auto& x : firstOfSym) {
+        for (const Token_t& x : firstOfSym) {
             if (x != EPSILON)
                 firstOfProduction.insert(x);
         }
@@ -75,10 +78,10 @@ SSet FIRST(std::string symbol, const Grammar& G, const std::unordered_map<std::s
 }
 
 
-std::unordered_map<std::string, SSet> ComputeFirst(const Grammar& G) {
+std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
     auto [NT, _] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<std::string, SSet> FIRST_LIST;
+    std::unordered_map<Token_t, SSet_t> FIRST_LIST;
 
     for (const auto& X : NT)
         FIRST_LIST[X] = FIRST(X, G, FIRST_LIST);
@@ -86,23 +89,28 @@ std::unordered_map<std::string, SSet> ComputeFirst(const Grammar& G) {
     return FIRST_LIST;
 }
 
-SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST, std::unordered_map<std::string, SSet>& FOLLOW_LIST) {
+SSet_t FOLLOW(
+    Token_t Token,
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    std::unordered_map<Token_t, SSet_t>& FollowResMap
+) {
     auto [NT, T] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
-    SSet followOfSymbol;
+    SSet_t followOfSymbol;
 
-    for (const auto& [A, prods] : G) {
-        for (const auto& prod : prods) {
-            auto symbols = Surab::Compiler::TokenizeProduction(prod, NT);
+    for (const auto& [A, prodList] : G) {
+        for (const auto& production : prodList) {
+            std::vector<Token_t> tokenList = Surab::Compiler::TokenizeProduction(production, NT);
 
-            for (std::size_t i = 0; i < symbols.size(); ++i) {
-                if (symbols[i] != symbol)
+            for (std::size_t i = 0; i < tokenList.size(); ++i) {
+                if (tokenList[i] != Token)
                     continue;
 
                 bool nullableSuffix = true;
 
                 // Examine everything after symbol.
-                for (std::size_t j = i + 1; j < symbols.size(); ++j) {
-                    const auto& beta = symbols[j];
+                for (std::size_t j = i + 1; j < tokenList.size(); ++j) {
+                    const Token_t& beta = tokenList[j];
 
                     // Terminal
                     if (!NT.contains(beta)) {
@@ -114,9 +122,9 @@ SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::
                     }
 
                     // Non-terminal
-                    const auto& firstBeta = FIRST.at(beta);
+                    const SSet_t& firstBeta = FirstResMap.at(beta);
 
-                    for (const auto& x : firstBeta) {
+                    for (const Token_t& x : firstBeta) {
                         if (x != EPSILON)
                             followOfSymbol.insert(x);
                     }
@@ -129,8 +137,8 @@ SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::
 
                 // A -> α symbol
                 // or A -> α symbol β where β => ε
-                if (nullableSuffix && A != symbol) {
-                    SSet followOfA = FOLLOW(A, G, FIRST, FOLLOW_LIST);
+                if (nullableSuffix && A != Token) {
+                    SSet_t followOfA = FOLLOW(A, G, FirstResMap, FollowResMap);
                     followOfSymbol.insert(followOfA.begin(), followOfA.end());
                 }
             }
@@ -140,17 +148,25 @@ SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::
     return followOfSymbol;
 }
 
-std::unordered_map<std::string, SSet> ComputeFollow(const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST) {
+std::unordered_map<Token_t, SSet_t> ComputeFollow(
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const Token_t& StartSymbol = "S"
+) {
     auto [NT, _] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<std::string, SSet> FOLLOW_LIST;
+    std::unordered_map<Token_t, SSet_t> followResMap;
     // Initialize FOLLOW of start symbol
-    FOLLOW_LIST["S"].insert("$");
-
+    if (NT.contains(StartSymbol)) {
+        followResMap[StartSymbol].insert("$");
+    }
+    else {
+        followResMap[*NT.begin()].insert("$");
+    }
     for (const auto& X : NT)
-        FOLLOW_LIST[X] = FOLLOW(X, G, FIRST, FOLLOW_LIST);
+        followResMap[X] = FOLLOW(X, G, FirstResMap, followResMap);
 
-    return FOLLOW_LIST;
+    return followResMap;
 }
 
 
@@ -159,30 +175,30 @@ int main() {
     Header("FIRST and FOLLOW Calculator");
 
     std::stringstream grammarString(R"(
+        E -> TE'
+        E' -> +TE' | ∈
         F -> id | (E)
-        E -> TG
-        G -> +TG | ∈
-        T -> FH
-        H -> *FH | ∈
+        T' -> *FT' | ∈
+        T -> FT'
     )");
 
 
-    Grammar G = Surab::Compiler::ParseGrammarFromString(grammarString);
+    Grammar_t G = Surab::Compiler::ParseGrammarFromString(grammarString);
 
     Surab::Log("\nOriginal Grammar:");
     Surab::Compiler::PrintGrammar(G);
 
-    std::unordered_map<std::string, SSet> FIRST = ComputeFirst(G);
-    std::unordered_map<std::string, SSet> FOLLOW = ComputeFollow(G, FIRST);
+    std::unordered_map<Token_t, SSet_t> firstResMap = ComputeFirst(G);
+    std::unordered_map<Token_t, SSet_t> followResMap = ComputeFollow(G, firstResMap, "E");
 
     Surab::Log("\nFIRST sets:");
     for (auto& [A, _] : G) {
-        Surab::LogSuccess("FIRST({}) = {} ", A, FIRST[A]);
+        Surab::LogSuccess("FIRST({}) = {} ", A, firstResMap[A]);
     }
 
     Surab::Log("\nFOLLOW sets:");
     for (auto& [A, _] : G) {
-        Surab::LogSuccess("FOLLOW({}) = {} ", A, FOLLOW[A]);
+        Surab::LogSuccess("FOLLOW({}) = {} ", A, followResMap[A]);
     }
 
     Footer();

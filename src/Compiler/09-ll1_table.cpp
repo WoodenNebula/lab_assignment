@@ -14,18 +14,16 @@ Construct an LL(1) parsing table from a grammar (uses FIRST/FOLLOW computation).
 #include <iomanip>
 #include <sstream>
 
-using Grammar = Surab::Compiler::Grammar;
-using ProdList = Surab::Compiler::ProdList;
-using SSet = Surab::Compiler::SSet;
+using Token_t = Surab::Compiler::Token_t;
+using Grammar_t = Surab::Compiler::Grammar_t;
+using SSet_t = Surab::Compiler::SSet_t;
 
-using NT_t = std::string;
-using T_t = std::string;
-using ParseTable = std::unordered_map<NT_t, std::unordered_map<T_t, ProdList>>;
+using ParseTable_t = Surab::Compiler::ParseTable_t;
 
-void PrintTable(const ParseTable& table) {
+void PrintTable(const ParseTable_t& table) {
     // Build column and row data from the table
-    std::set<std::string> NonTerminals;
-    std::set<std::string> Terminals;
+    std::set<Token_t> NonTerminals;
+    std::set<Token_t> Terminals;
 
     for (const auto& [NT, T_map] : table) {
         NonTerminals.insert(NT);
@@ -35,34 +33,26 @@ void PrintTable(const ParseTable& table) {
     }
 
     // Build the text for every cell first.
-    std::map<std::pair<std::string, std::string>, std::string> cells;
+    std::map<std::pair<Token_t, Token_t>, std::string> cells;
 
-    for (const auto& A : NonTerminals) {
-        for (const auto& a : Terminals) {
-            auto ntIt = table.find(A);
+    for (const Token_t& A : NonTerminals) {
+        for (const Token_t& a : Terminals) {
 
-            if (ntIt == table.end()) {
-                cells[{A, a}] = "-";
+            if (!table.contains(A)) {
+                cells[{  A, a }] = "-";
                 continue;
             }
 
-            auto tIt = ntIt->second.find(a);
+            bool hasProduction = table.at(A).contains(a);
+            bool isEmptyProduction = hasProduction && table.at(A).at(a).empty();
 
-            if (tIt == ntIt->second.end() || tIt->second.empty()) {
-                cells[{A, a}] = "-";
+            if (!hasProduction || isEmptyProduction) {
+                cells[{ A, a }] = "-";
                 continue;
             }
 
-            std::string cell;
-
-            for (std::size_t i = 0; i < tIt->second.size(); ++i) {
-                cell += tIt->second[i];
-
-                if (i + 1 < tIt->second.size())
-                    cell += " | ";
-            }
-
-            cells[{A, a}] = cell;
+            Surab::Compiler::Production_t production = table.at(A).at(a);
+            cells[{ A, a }] = production;
         }
     }
 
@@ -71,12 +61,11 @@ void PrintTable(const ParseTable& table) {
 
     int max_width = 0;
     for (const auto& [table_key, val_map] : table) {
-        for (const auto& [terminal, productions] : val_map) {
-            for (const auto& production : productions) {
-                int width = production.size();
-                max_width = std::max(max_width, width);
-            }
+        for (const auto& [terminal, production] : val_map) {
+            int width = production.size();
+            max_width = std::max(max_width, width);
         }
+
     }
     max_width += 3;
 
@@ -118,27 +107,44 @@ void PrintTable(const ParseTable& table) {
     printSeparator();
 }
 
-ParseTable ConstructParseTable(const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST, const std::unordered_map<std::string, SSet>& FOLLOW) {
-    ParseTable table;
-    for (const auto& [A, productions] : G) {
-        for (const auto& prod : productions) {
+
+ParseTable_t ConstructParseTable(
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const std::unordered_map<Token_t, SSet_t>& FollowResMap
+) {
+    ParseTable_t table;
+    for (const auto& [A, productionList] : G) {
+        for (const auto& prod : productionList) {
             // FIRST of the production
-            SSet firstp = Surab::Compiler::FIRST(prod, G, FIRST);
+            SSet_t firstp = Surab::Compiler::FIRST(prod, G, FirstResMap);
 
             // For every terminal in FIRST(prod)
-            for (const auto& a : firstp) {
+            for (const Token_t& a : firstp) {
                 if (a != EPSILON) {
-                    table[A][a].push_back(prod);
+                    // If the cell is already occupied, there's a conflict
+
+                    bool cellOccupied = table.contains(A) && table.at(A).contains(a) && !table.at(A).at(a).empty();
+                    if (cellOccupied) {
+                        Surab::LogError("Conflict in parse table for [{}, {}]", A, a);
+                        break;
+                    }
+                    table[A][a] = prod;
                 }
             }
 
             // If the production can derive epsilon,
             // add it to every terminal in FOLLOW(A)
             if (firstp.contains(EPSILON)) {
-                SSet followA = Surab::Compiler::FOLLOW(A, G, FIRST, FOLLOW);
+                SSet_t followA = Surab::Compiler::FOLLOW(A, G, FirstResMap, FollowResMap);
 
                 for (const auto& b : followA) {
-                    table[A][b].push_back(prod);
+                    bool cellOccupied = table.contains(A) && table.at(A).contains(b) && !table.at(A).at(b).empty();
+                    if (cellOccupied) {
+                        Surab::LogError("Conflict in parse table for [{}, {}]", A, b);
+                        break;
+                    }
+                    table[A][b] = prod;
                 }
             }
         }
@@ -157,17 +163,15 @@ int main() {
         T -> FT'
     )");
 
-    Grammar G = Surab::Compiler::ParseGrammarFromString(grammarString);
+    Grammar_t G = Surab::Compiler::ParseGrammarFromString(grammarString);
 
     Surab::Log("\nOriginal Grammar:");
     Surab::Compiler::PrintGrammar(G);
 
-    std::unordered_map<std::string, SSet> FIRST, FOLLOW;
+    std::unordered_map<Token_t, SSet_t> FirstResMap = Surab::Compiler::ComputeFirst(G);
+    std::unordered_map<Token_t, SSet_t> FollowResMap = Surab::Compiler::ComputeFollow(G, FirstResMap, "E");
 
-    FIRST = Surab::Compiler::ComputeFirst(G);
-    FOLLOW = Surab::Compiler::ComputeFollow(G, FIRST, "E");
-
-    ParseTable table = ConstructParseTable(G, FIRST, FOLLOW);
+    ParseTable_t table = ConstructParseTable(G, FirstResMap, FollowResMap);
 
     Surab::Log("\nLL(1) Parsing Table:");
     PrintTable(table);

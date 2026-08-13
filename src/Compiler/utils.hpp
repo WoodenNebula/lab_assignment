@@ -1,3 +1,5 @@
+#pragma once
+
 #include "src/commons.hpp"
 
 #include <string>
@@ -17,13 +19,15 @@ std::string Trim(std::string s) {
     return s;
 }
 
-using ProdList = std::vector<std::string>;
-using Grammar = std::unordered_map<std::string, ProdList>;
-using SSet = std::set<std::string>;
-#define EPSILON "∈"
+using Token_t = std::string;
+using Production_t = Token_t;
+using Grammar_t = std::unordered_map<Token_t, std::vector<Production_t>>;
+using SSet_t = std::set<std::string>;
 
-ProdList SplitProductions(const std::string& rhs) {
-    ProdList parts;
+constexpr Token_t EPSILON = "∈";
+
+std::vector<Production_t> SplitProductions(const std::string& rhs) {
+    std::vector<Production_t> parts;
     std::stringstream ss(rhs);
     std::string item;
     while (std::getline(ss, item, '|')) {
@@ -32,8 +36,8 @@ ProdList SplitProductions(const std::string& rhs) {
     return parts;
 }
 
-Grammar ParseGrammarFromString(std::stringstream& Input) {
-    Grammar G;
+Grammar_t ParseGrammarFromString(std::stringstream& Input) {
+    Grammar_t G;
     std::string lineBuffer;
     while (std::getline(Input, lineBuffer)) {
         // Find the non-terminal
@@ -44,14 +48,14 @@ Grammar ParseGrammarFromString(std::stringstream& Input) {
         std::string LHS = Trim(lineBuffer.substr(0, pos));
         std::string RHS = Trim(lineBuffer.substr(pos + 2));
 
-        auto parts = SplitProductions(RHS);
-        for (auto& p : parts) G[LHS].push_back(p);
+        for (const Production_t& p : SplitProductions(RHS))
+            G[LHS].push_back(p);
     }
     return G;
 }
 
-std::vector<std::string> TokenizeProduction(const std::string& Production, const SSet& NonTerminals) {
-    std::vector<std::string> Tokens;
+std::vector<Token_t> TokenizeProduction(const Production_t& Production, const SSet_t& NonTerminals) {
+    std::vector<Token_t> Tokens;
 
     for (std::size_t i = 0; i < Production.size();) {
         // Skip whitespace
@@ -70,9 +74,10 @@ std::vector<std::string> TokenizeProduction(const std::string& Production, const
         // Longest match first.
         std::string matchedNT;
 
-        for (const auto& nt : NonTerminals) {
-            if (Production.compare(i, nt.size(), nt) == 0 &&
-                nt.size() > matchedNT.size()) {
+        for (const Token_t& nt : NonTerminals) {
+            bool isMatch = Production.compare(i, nt.size(), nt) == 0;
+            bool isLongerMatch = nt.size() > matchedNT.size();
+            if (isMatch && isLongerMatch) {
                 matchedNT = nt;
             }
         }
@@ -88,7 +93,7 @@ std::vector<std::string> TokenizeProduction(const std::string& Production, const
         // For now, terminals are sequences of
         // alphanumeric characters.
         if (std::isalnum(static_cast<unsigned char>(Production[i]))) {
-            std::string terminal;
+            Token_t terminal;
 
             while (i < Production.size() &&
                 std::isalnum(static_cast<unsigned char>(Production[i]))) {
@@ -101,7 +106,7 @@ std::vector<std::string> TokenizeProduction(const std::string& Production, const
 
         // Single-character terminal such as:
         // (, ), +, *, etc.
-        Tokens.emplace_back(1, Production[i]);
+        Tokens.emplace_back(1, Production.at(i));
         ++i;
     }
 
@@ -110,22 +115,22 @@ std::vector<std::string> TokenizeProduction(const std::string& Production, const
 
 
 
-std::pair<SSet, SSet> IdentifyNonTerminalsAndTerminals(const Grammar& G) {
-    SSet NT;
-    SSet T;
+std::pair<SSet_t, SSet_t> IdentifyNonTerminalsAndTerminals(const Grammar_t& G) {
+    SSet_t NT;
+    SSet_t T;
 
     // First collect all non-terminals.
-    for (const auto& [A, prods] : G)
+    for (const auto& [A, _] : G)
         NT.insert(A);
 
     // Then tokenize productions.
-    for (const auto& [A, prods] : G) {
-        for (const auto& prod : prods) {
-            auto symbols = TokenizeProduction(prod, NT);
+    for (const auto& [A, productionList] : G) {
+        for (const Production_t& prod : productionList) {
+            std::vector<Token_t> tokenList = TokenizeProduction(prod, NT);
 
-            for (const auto& symbol : symbols) {
-                if (symbol != EPSILON && !NT.contains(symbol))
-                    T.insert(symbol);
+            for (const Token_t& token : tokenList) {
+                if (token != EPSILON && !NT.contains(token))
+                    T.insert(token);
             }
         }
     }
@@ -133,7 +138,7 @@ std::pair<SSet, SSet> IdentifyNonTerminalsAndTerminals(const Grammar& G) {
     return { NT, T };
 }
 
-void PrintGrammar(const Grammar& G) {
+void PrintGrammar(const Grammar_t& G) {
     for (const auto& [A, prods] : G) {
         std::string rhs;
         for (size_t i = 0; i < prods.size(); ++i) {
@@ -148,44 +153,49 @@ void PrintGrammar(const Grammar& G) {
 
 std::string C2S(char c) { return std::string(1, c); };
 
-SSet FIRST(std::string symbol, const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST_LIST) {
-    if (FIRST_LIST.contains(symbol)) {
-        return FIRST_LIST.at(symbol);
+SSet_t FIRST(
+    Token_t TokenInstance,
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap
+) {
+    if (FirstResMap.contains(TokenInstance)) {
+        return FirstResMap.at(TokenInstance);
     }
 
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
 
-    if (symbol == EPSILON) {
+    if (TokenInstance == EPSILON) {
         return { EPSILON };
     }
 
-    if (NT.contains(symbol)) {
+    if (NT.contains(TokenInstance)) {
         // X -> A | B | aplha | ∈
         // return FIRST(A) U FIRST(B) U FIRST(alpha) U {∈}
-        SSet firstOfSymbol;
+        SSet_t firstOfSymbol;
 
-        for (const auto& prod : G.at(symbol)) {
-            SSet firstOfProd = FIRST(prod, G, FIRST_LIST);
+        for (const auto& production : G.at(TokenInstance)) {
+            SSet_t firstOfProd = FIRST(production, G, FirstResMap);
             firstOfSymbol.insert(firstOfProd.begin(), firstOfProd.end());
         }
         return firstOfSymbol;
 
     }
-    // Symbol is a production or terminal
-    auto symbols = TokenizeProduction(symbol, NT);
+    // TokenInstance is a Terminal Or Production
+    // Get list of tokens from the TokenInstance
+    std::vector<Token_t> tokenList = TokenizeProduction(TokenInstance, NT);
 
     // If it is a single terminal, return it.
-    if (symbols.size() == 1 && !NT.contains(symbols[0]))
-        return { symbols[0] };
+    if (tokenList.size() == 1 && !NT.contains(tokenList[0]))
+        return { tokenList[0] };
 
     // FIRST of a production.
-    SSet firstOfProduction;
+    SSet_t firstOfProduction;
     bool nullable = true;
 
-    for (const auto& sym : symbols) {
-        auto firstOfSym = FIRST(sym, G, FIRST_LIST);
+    for (const Token_t& token : tokenList) {
+        std::set<Token_t> firstOfSym = FIRST(token, G, FirstResMap);
 
-        for (const auto& x : firstOfSym) {
+        for (const Token_t& x : firstOfSym) {
             if (x != EPSILON)
                 firstOfProduction.insert(x);
         }
@@ -203,37 +213,39 @@ SSet FIRST(std::string symbol, const Grammar& G, const std::unordered_map<std::s
 
 }
 
-std::unordered_map<std::string, SSet> ComputeFirst(const Grammar& G) {
-    SSet NT;
-    for (const auto& [A, prods] : G) {
-        NT.insert(A);
-    }
+std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
+    auto [NT, _] = IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<std::string, SSet> FIRST_LIST;
+    std::unordered_map<Token_t, SSet_t> firstResMap;
 
     for (const auto& X : NT)
-        FIRST_LIST[X] = FIRST(X, G, FIRST_LIST);
+        firstResMap[X] = FIRST(X, G, firstResMap);
 
-    return FIRST_LIST;
+    return firstResMap;
 }
 
-SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST, const std::unordered_map<std::string, SSet>& FOLLOW_LIST) {
+SSet_t FOLLOW(
+    Token_t TokenInstance,
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const std::unordered_map<Token_t, SSet_t>& FollowResMap
+) {
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
-    SSet followOfSymbol;
+    SSet_t followOfSymbol;
 
-    for (const auto& [A, prods] : G) {
-        for (const auto& prod : prods) {
-            auto symbols = TokenizeProduction(prod, NT);
+    for (const auto& [A, productionList] : G) {
+        for (const auto& prod : productionList) {
+            std::vector<Token_t> tokenList = TokenizeProduction(prod, NT);
 
-            for (std::size_t i = 0; i < symbols.size(); ++i) {
-                if (symbols[i] != symbol)
+            for (std::size_t i = 0; i < tokenList.size(); ++i) {
+                if (tokenList[i] != TokenInstance)
                     continue;
 
                 bool nullableSuffix = true;
 
                 // Examine everything after symbol.
-                for (std::size_t j = i + 1; j < symbols.size(); ++j) {
-                    const auto& beta = symbols[j];
+                for (std::size_t j = i + 1; j < tokenList.size(); ++j) {
+                    const Token_t& beta = tokenList[j];
 
                     // Terminal
                     if (!NT.contains(beta)) {
@@ -245,7 +257,7 @@ SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::
                     }
 
                     // Non-terminal
-                    const auto& firstBeta = FIRST.at(beta);
+                    const std::set<Token_t>& firstBeta = FirstResMap.at(beta);
 
                     for (const auto& x : firstBeta) {
                         if (x != EPSILON)
@@ -260,8 +272,8 @@ SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::
 
                 // A -> α symbol
                 // or A -> α symbol β where β => ε
-                if (nullableSuffix && A != symbol) {
-                    SSet followOfA = FOLLOW(A, G, FIRST, FOLLOW_LIST);
+                if (nullableSuffix && A != TokenInstance) {
+                    SSet_t followOfA = FOLLOW(A, G, FirstResMap, FollowResMap);
                     followOfSymbol.insert(followOfA.begin(), followOfA.end());
                 }
             }
@@ -272,31 +284,35 @@ SSet FOLLOW(std::string symbol, const Grammar& G, const std::unordered_map<std::
 }
 
 
-std::unordered_map<std::string, SSet> ComputeFollow(const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST, std::string_view startSymbol = "S") {
+std::unordered_map<Token_t, SSet_t> ComputeFollow(
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const Token_t& StartSymbol = "S"
+) {
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
-    std::unordered_map<std::string, SSet> FOLLOW_LIST;
+    std::unordered_map<Token_t, SSet_t> followResMap;
     // Initialize FOLLOW of start symbol
-    if (NT.contains(std::string(startSymbol))) {
-        FOLLOW_LIST[std::string(startSymbol)].insert("$");
+    if (NT.contains(StartSymbol)) {
+        followResMap[StartSymbol].insert("$");
     }
     else {
-        FOLLOW_LIST[*NT.begin()].insert("$");
+        followResMap[*NT.begin()].insert("$");
     }
 
     for (const auto& X : NT)
-        FOLLOW_LIST[X] = FOLLOW(X, G, FIRST, FOLLOW_LIST);
+        followResMap[X] = FOLLOW(X, G, FirstResMap, followResMap);
 
-    return FOLLOW_LIST;
+    return followResMap;
 }
 
-using NT_t = std::string;
-using T_t = std::string;
-using ParseTable = std::unordered_map<NT_t, std::unordered_map<T_t, ProdList>>;
+using NT_t = Token_t;
+using T_t = Token_t;
+using ParseTable_t = std::unordered_map<NT_t, std::unordered_map<T_t, Production_t>>;
 
-void PrintTable(const ParseTable& table) {
+void PrintTable(const ParseTable_t& table) {
     // Build column and row data from the table
-    std::set<std::string> NonTerminals;
-    std::set<std::string> Terminals;
+    std::set<Token_t> NonTerminals;
+    std::set<Token_t> Terminals;
 
     for (const auto& [NT, T_map] : table) {
         NonTerminals.insert(NT);
@@ -306,34 +322,25 @@ void PrintTable(const ParseTable& table) {
     }
 
     // Build the text for every cell first.
-    std::map<std::pair<std::string, std::string>, std::string> cells;
+    std::map<std::pair<NT_t, T_t>, std::string> cells;
 
     for (const auto& A : NonTerminals) {
         for (const auto& a : Terminals) {
-            auto ntIt = table.find(A);
-
-            if (ntIt == table.end()) {
-                cells[{A, a}] = "-";
+            if (!table.contains(A)) {
+                cells[{  A, a }] = "-";
                 continue;
             }
 
-            auto tIt = ntIt->second.find(a);
+            bool hasProduction = table.at(A).contains(a);
+            bool isEmptyProduction = hasProduction && table.at(A).at(a).empty();
 
-            if (tIt == ntIt->second.end() || tIt->second.empty()) {
-                cells[{A, a}] = "-";
+            if (!hasProduction || isEmptyProduction) {
+                cells[{ A, a }] = "-";
                 continue;
             }
 
-            std::string cell;
-
-            for (std::size_t i = 0; i < tIt->second.size(); ++i) {
-                cell += tIt->second[i];
-
-                if (i + 1 < tIt->second.size())
-                    cell += " | ";
-            }
-
-            cells[{A, a}] = cell;
+            Production_t production = table.at(A).at(a);
+            cells[{ A, a }] = production;
         }
     }
 
@@ -342,12 +349,11 @@ void PrintTable(const ParseTable& table) {
 
     int max_width = 0;
     for (const auto& [table_key, val_map] : table) {
-        for (const auto& [terminal, productions] : val_map) {
-            for (const auto& production : productions) {
-                int width = production.size();
-                max_width = std::max(max_width, width);
-            }
+        for (const auto& [terminal, production] : val_map) {
+            int width = production.size();
+            max_width = std::max(max_width, width);
         }
+
     }
     max_width += 3;
 
@@ -389,27 +395,42 @@ void PrintTable(const ParseTable& table) {
     printSeparator();
 }
 
-ParseTable ConstructParseTable(const Grammar& G, const std::unordered_map<std::string, SSet>& FIRST, const std::unordered_map<std::string, SSet>& FOLLOW) {
-    ParseTable table;
-    for (const auto& [A, productions] : G) {
-        for (const auto& prod : productions) {
+ParseTable_t ConstructParseTable(
+    const Grammar_t& G,
+    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const std::unordered_map<Token_t, SSet_t>& FollowResMap
+) {
+    ParseTable_t table;
+    for (const auto& [A, productionList] : G) {
+        for (const auto& prod : productionList) {
             // FIRST of the production
-            SSet firstp = Surab::Compiler::FIRST(prod, G, FIRST);
+            SSet_t firstp = Surab::Compiler::FIRST(prod, G, FirstResMap);
 
             // For every terminal in FIRST(prod)
             for (const auto& a : firstp) {
                 if (a != EPSILON) {
-                    table[A][a].push_back(prod);
+                    // If the cell is already occupied, there's a conflict
+                    bool cellOccupied = table.contains(A) && table.at(A).contains(a) && !table.at(A).at(a).empty();
+                    if (cellOccupied) {
+                        LogError("Conflict in parse table for [{}, {}]", A, a);
+                        break;
+                    }
+                    table[A][a] = prod;
                 }
             }
 
             // If the production can derive epsilon,
             // add it to every terminal in FOLLOW(A)
             if (firstp.contains(EPSILON)) {
-                SSet followA = Surab::Compiler::FOLLOW(A, G, FIRST, FOLLOW);
+                SSet_t followA = Surab::Compiler::FOLLOW(A, G, FirstResMap, FollowResMap);
 
                 for (const auto& b : followA) {
-                    table[A][b].push_back(prod);
+                    bool cellOccupied = table.contains(A) && table.at(A).contains(b) && !table.at(A).at(b).empty();
+                    if (cellOccupied) {
+                        LogError("Conflict in parse table for [{}, {}]", A, b);
+                        break;
+                    }
+                    table[A][b] = prod;
                 }
             }
         }
@@ -417,7 +438,7 @@ ParseTable ConstructParseTable(const Grammar& G, const std::unordered_map<std::s
     return table;
 }
 
-
-
 } // namespace Compiler
 }
+
+#define EPSILON Surab::Compiler::EPSILON
