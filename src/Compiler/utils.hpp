@@ -91,13 +91,16 @@ std::vector<Token_t> TokenizeProduction(const Production_t& Production, const SS
         // Otherwise consume a terminal token.
         //
         // For now, terminals are sequences of
-        // alphanumeric characters.
-        if (std::isalnum(static_cast<unsigned char>(Production[i]))) {
+        // alphanumeric lower characters.
+        auto isSmallCaseLetter = [](char c) {return c >= 'a' && c <= 'z';};
+
+        if (std::isalnum(Production.at(i)) && isSmallCaseLetter(Production.at(i))) {
             Token_t terminal;
 
             while (i < Production.size() &&
-                std::isalnum(static_cast<unsigned char>(Production[i]))) {
-                terminal += Production[i++];
+                std::isalnum(Production.at(i)) &&
+                isSmallCaseLetter(Production.at(i))) {
+                terminal += Production.at(i++);
             }
 
             Tokens.push_back(terminal);
@@ -309,7 +312,7 @@ using NT_t = Token_t;
 using T_t = Token_t;
 using ParseTable_t = std::unordered_map<NT_t, std::unordered_map<T_t, Production_t>>;
 
-void PrintTable(const ParseTable_t& table) {
+void PrintParseTable(const ParseTable_t& table) {
     // Build column and row data from the table
     std::set<Token_t> NonTerminals;
     std::set<Token_t> Terminals;
@@ -394,6 +397,17 @@ void PrintTable(const ParseTable_t& table) {
 
     printSeparator();
 }
+
+
+constexpr int COL_WIDTH = 20;
+constexpr int ACTION_WIDTH = 30;
+void PrintParsingStep(const std::string& stack, const std::string& input, const std::string& action, const std::string& ColorCode = RESET) {
+    Surab::Log("| {:<{}} | {:<{}} | {}{:<{}}{} |", stack, COL_WIDTH, input, COL_WIDTH, ColorCode, action, ACTION_WIDTH, RESET);
+}
+void PrintParsingSeparator() {
+    Surab::Log("|{:-<{}}|{:-<{}}|{:-<{}}|", "", COL_WIDTH + 2, "", COL_WIDTH + 2, "", ACTION_WIDTH + 2);
+}
+
 
 ParseTable_t ConstructParseTable(
     const Grammar_t& G,
