@@ -44,21 +44,27 @@ namespace Surab
 using Mat = std::vector<std::vector<double>>;
 
 template <std::ranges::sized_range ContainerType>
-std::string ToString(const ContainerType& Container) {
-    if (Container.size() == 0) return "[ ]";
+std::string ToString(const ContainerType& Container, const std::string& Delimiter = ", ", bool UseBrackets = true) {
+    if (Container.empty())
+        return UseBrackets ? "[ ]" : "";
 
-    std::string containerStr = "[ ";
+    std::string containerStr = UseBrackets ? "[ " : "";
 
     for (const auto x : Container) {
-        containerStr += std::to_string(x) + ", ";
+        if constexpr (std::convertible_to<decltype(x), std::string>)
+            containerStr += x + Delimiter;
+        else
+            containerStr += std::to_string(x) + Delimiter;
     }
 
-    containerStr.pop_back();
-    containerStr.pop_back();
-    containerStr += " ]";
+    // Remove the last delimiter
+    containerStr.erase(containerStr.size() - Delimiter.size());
+    if (UseBrackets)
+        containerStr += " ]";
 
     return containerStr;
 }
+
 }  // namespace Surab
 
 static std::istream& operator>>(std::istream& in, Surab::Mat& matrix) {
