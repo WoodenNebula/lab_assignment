@@ -90,10 +90,11 @@ std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
 }
 
 SSet_t FOLLOW(
-    Token_t Token,
+    const Token_t& Token,
     const Grammar_t& G,
     const std::unordered_map<Token_t, SSet_t>& FirstResMap,
-    std::unordered_map<Token_t, SSet_t>& FollowResMap
+    const std::unordered_map<Token_t, SSet_t>& FollowResMap,
+    const Token_t& InitiatingToken = ""
 ) {
     auto [NT, T] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
     SSet_t followOfSymbol;
@@ -141,8 +142,11 @@ SSet_t FOLLOW(
 
                 // A -> α symbol
                 // or A -> α symbol β where β => ε
-                if (nullableSuffix && A != Token) {
-                    SSet_t followOfA = FOLLOW(A, G, FirstResMap, FollowResMap);
+                if (nullableSuffix &&
+                    A != Token &&
+                    A != InitiatingToken // Ensure the stack doesnt blow up!
+                    ) {
+                    SSet_t followOfA = FOLLOW(A, G, FirstResMap, FollowResMap, Token);
                     followOfSymbol.insert(followOfA.begin(), followOfA.end());
                 }
             }
@@ -179,11 +183,9 @@ int main() {
     Header("FIRST and FOLLOW Calculator");
 
     std::stringstream grammarString(R"(
-        E -> TE'
-        E' -> +TE' | ∈
-        F -> id | (E)
-        T' -> *FT' | ∈
-        T -> FT'
+        S -> AS | b
+        A -> bAA' | aA'
+        A' -> SAA' | ∈
     )");
 
 
@@ -193,7 +195,7 @@ int main() {
     Surab::Compiler::PrintGrammar(G);
 
     std::unordered_map<Token_t, SSet_t> firstResMap = ComputeFirst(G);
-    std::unordered_map<Token_t, SSet_t> followResMap = ComputeFollow(G, firstResMap, "E");
+    std::unordered_map<Token_t, SSet_t> followResMap = ComputeFollow(G, firstResMap, "S");
 
     Surab::Log("\nFIRST sets:");
     for (auto& [A, _] : G) {

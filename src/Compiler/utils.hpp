@@ -224,10 +224,11 @@ std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
 }
 
 SSet_t FOLLOW(
-    Token_t TokenInstance,
+    const Token_t& TokenInstance,
     const Grammar_t& G,
     const std::unordered_map<Token_t, SSet_t>& FirstResMap,
-    const std::unordered_map<Token_t, SSet_t>& FollowResMap
+    const std::unordered_map<Token_t, SSet_t>& FollowResMap,
+    const Token_t& InitiatingToken = ""
 ) {
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
     SSet_t followOfSymbol;
@@ -275,8 +276,11 @@ SSet_t FOLLOW(
 
                 // A -> α symbol
                 // or A -> α symbol β where β => ε
-                if (nullableSuffix && A != TokenInstance) {
-                    SSet_t followOfA = FOLLOW(A, G, FirstResMap, FollowResMap);
+                if (nullableSuffix &&
+                    A != TokenInstance &&
+                    A != InitiatingToken // Prevent the stack from blowing up
+                    ) {
+                    SSet_t followOfA = FOLLOW(A, G, FirstResMap, FollowResMap, TokenInstance);
                     followOfSymbol.insert(followOfA.begin(), followOfA.end());
                 }
             }
