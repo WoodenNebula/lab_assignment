@@ -14,15 +14,15 @@ constexpr int COL_WIDTH = 16;
 constexpr int ACTION_WIDTH = 24;
 
 void PrintTabularSteps(const std::string& stack, const std::string& input, const std::string& action, const std::string& ColorCode = RESET) {
-    Surab::Log("| {:^{}} | {:^{}} | {}{:^{}}{} |", stack, COL_WIDTH, input, COL_WIDTH, ColorCode, action, ACTION_WIDTH, RESET);
+    Surab::Log("| {:<{}} | {:<{}} | {}{:<{}}{} |", stack, COL_WIDTH, input, COL_WIDTH, ColorCode, action, ACTION_WIDTH, RESET);
 }
 void PrintSeparator() {
-    Surab::Log("|{:-^{}}|{:-^{}}|{:-^{}}|", "", COL_WIDTH + 2, "", COL_WIDTH + 2, "", ACTION_WIDTH + 2);
+    Surab::Log("|{:-<{}}|{:-<{}}|{:-<{}}|", "", COL_WIDTH + 2, "", COL_WIDTH + 2, "", ACTION_WIDTH + 2);
 }
 
 int main() {
     Header("Top-Down Non-Recursive Descent (LL(1) Parser)");
-    std::vector<std::string> inputTokens = { "id", "+", "id", "*", "id", "$" };
+    std::vector<Token_t> inputTokens = { "id", "+", "id", "*", "id", "$" };
 
     std::stringstream grammarString(R"(
         E -> TE'
@@ -45,7 +45,7 @@ int main() {
 
     Surab::Compiler::ParseTable_t table = Surab::Compiler::ConstructParseTable(G, FIRST, FOLLOW);
     Surab::Log("\n===Parse Table===");
-    Surab::Compiler::PrintTable(table);
+    Surab::Compiler::PrintParseTable(table);
 
     std::stack<Token_t> stack;
     stack.push("$");
