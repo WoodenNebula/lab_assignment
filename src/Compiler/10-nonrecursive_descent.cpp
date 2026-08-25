@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <stack>
-#include <unordered_map>
+#include <map>
 
 using SSet_t = Surab::Compiler::SSet_t;
 using Token_t = Surab::Compiler::Token_t;
@@ -40,8 +40,8 @@ int main() {
 
     auto [nonTerminalSet, terminalSet] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<Token_t, SSet_t> FIRST = Surab::Compiler::ComputeFirst(G);
-    std::unordered_map<Token_t, SSet_t> FOLLOW = Surab::Compiler::ComputeFollow(G, FIRST, startSymbol);
+    std::map<Token_t, SSet_t> FIRST = Surab::Compiler::ComputeFirst(G);
+    std::map<Token_t, SSet_t> FOLLOW = Surab::Compiler::ComputeFollow(G, FIRST, startSymbol);
 
     Surab::Compiler::ParseTable_t table = Surab::Compiler::ConstructParseTable(G, FIRST, FOLLOW);
     Surab::Log("\n===Parse Table===");

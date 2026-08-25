@@ -8,7 +8,7 @@ Supports arithmetic, relational, logical, and assignment operators.
 
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 enum class ELexemeCategory { Arithmetic, Relational, Logical, Assignment, Invalid };
 std::string CategoryToString(ELexemeCategory cat) {
@@ -26,7 +26,7 @@ struct LookAheadResult { bool isValid; char nextChar; };
 
 // map of valid second character to allowed first characters for two-character operators
 // key: second character(next), value: string of valid first characters
-inline const std::unordered_map<char, std::string_view> PAIR_OPERATOR_VALID_ANCESTORS = {
+inline const std::map<char, std::string_view> PAIR_OPERATOR_VALID_ANCESTORS = {
     { '&', "&" },
     { '|', "|" },
     { '=', "=!<>+-*/" },

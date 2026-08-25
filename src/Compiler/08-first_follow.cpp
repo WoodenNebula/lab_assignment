@@ -10,7 +10,7 @@ Empty line to finish. Nonterminals assumed uppercase start.
 #include <print>
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <set>
 #include <sstream>
 
@@ -21,7 +21,7 @@ using SSet_t = Surab::Compiler::SSet_t;
 SSet_t FIRST(
     Token_t Token,
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap
+    const std::map<Token_t, SSet_t>& FirstResMap
 ) {
     if (FirstResMap.contains(Token)) {
         return FirstResMap.at(Token);
@@ -78,10 +78,10 @@ SSet_t FIRST(
 }
 
 
-std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
+std::map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
     auto [NT, _] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<Token_t, SSet_t> FIRST_LIST;
+    std::map<Token_t, SSet_t> FIRST_LIST;
 
     for (const auto& X : NT)
         FIRST_LIST[X] = FIRST(X, G, FIRST_LIST);
@@ -92,8 +92,8 @@ std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
 SSet_t FOLLOW(
     const Token_t& Token,
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
-    const std::unordered_map<Token_t, SSet_t>& FollowResMap,
+    const std::map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FollowResMap,
     const Token_t& InitiatingToken = ""
 ) {
     auto [NT, T] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
@@ -156,14 +156,14 @@ SSet_t FOLLOW(
     return followOfSymbol;
 }
 
-std::unordered_map<Token_t, SSet_t> ComputeFollow(
+std::map<Token_t, SSet_t> ComputeFollow(
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FirstResMap,
     const Token_t& StartSymbol = "S"
 ) {
     auto [NT, _] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<Token_t, SSet_t> followResMap;
+    std::map<Token_t, SSet_t> followResMap;
     // Initialize FOLLOW of start symbol
     if (NT.contains(StartSymbol)) {
         followResMap[StartSymbol].insert("$");
@@ -194,8 +194,8 @@ int main() {
     Surab::Log("\nOriginal Grammar:");
     Surab::Compiler::PrintGrammar(G);
 
-    std::unordered_map<Token_t, SSet_t> firstResMap = ComputeFirst(G);
-    std::unordered_map<Token_t, SSet_t> followResMap = ComputeFollow(G, firstResMap, "S");
+    std::map<Token_t, SSet_t> firstResMap = ComputeFirst(G);
+    std::map<Token_t, SSet_t> followResMap = ComputeFollow(G, firstResMap, "S");
 
     Surab::Log("\nFIRST sets:");
     for (auto& [A, _] : G) {

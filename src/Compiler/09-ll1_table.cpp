@@ -8,7 +8,6 @@ Construct an LL(1) parsing table from a grammar (uses FIRST/FOLLOW computation).
 #include <print>
 #include <string>
 #include <vector>
-#include <unordered_map>
 #include <map>
 #include <set>
 #include <iomanip>
@@ -110,8 +109,8 @@ void PrintTable(const ParseTable_t& table) {
 
 ParseTable_t ConstructParseTable(
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
-    const std::unordered_map<Token_t, SSet_t>& FollowResMap
+    const std::map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FollowResMap
 ) {
     ParseTable_t table;
     for (const auto& [A, productionList] : G) {
@@ -168,8 +167,8 @@ int main() {
     Surab::Log("\nOriginal Grammar:");
     Surab::Compiler::PrintGrammar(G);
 
-    std::unordered_map<Token_t, SSet_t> FirstResMap = Surab::Compiler::ComputeFirst(G);
-    std::unordered_map<Token_t, SSet_t> FollowResMap = Surab::Compiler::ComputeFollow(G, FirstResMap, "E");
+    std::map<Token_t, SSet_t> FirstResMap = Surab::Compiler::ComputeFirst(G);
+    std::map<Token_t, SSet_t> FollowResMap = Surab::Compiler::ComputeFollow(G, FirstResMap, "E");
 
     ParseTable_t table = ConstructParseTable(G, FirstResMap, FollowResMap);
 

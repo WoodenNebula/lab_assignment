@@ -6,7 +6,6 @@
 #include <set>
 #include <sstream>
 #include <vector>
-#include <unordered_map>
 #include <map>
 
 namespace Surab
@@ -21,7 +20,7 @@ std::string Trim(std::string s) {
 
 using Token_t = std::string;
 using Production_t = Token_t;
-using Grammar_t = std::unordered_map<Token_t, std::vector<Production_t>>;
+using Grammar_t = std::map<Token_t, std::vector<Production_t>>;
 using SSet_t = std::set<std::string>;
 
 constexpr Token_t EPSILON = "∈";
@@ -155,7 +154,7 @@ std::string C2S(char c) { return std::string(1, c); };
 SSet_t FIRST(
     Token_t TokenInstance,
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap
+    const std::map<Token_t, SSet_t>& FirstResMap
 ) {
     if (FirstResMap.contains(TokenInstance)) {
         return FirstResMap.at(TokenInstance);
@@ -212,10 +211,10 @@ SSet_t FIRST(
 
 }
 
-std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
+std::map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
     auto [NT, _] = IdentifyNonTerminalsAndTerminals(G);
 
-    std::unordered_map<Token_t, SSet_t> firstResMap;
+    std::map<Token_t, SSet_t> firstResMap;
 
     for (const auto& X : NT)
         firstResMap[X] = FIRST(X, G, firstResMap);
@@ -226,8 +225,8 @@ std::unordered_map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
 SSet_t FOLLOW(
     const Token_t& TokenInstance,
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
-    const std::unordered_map<Token_t, SSet_t>& FollowResMap,
+    const std::map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FollowResMap,
     const Token_t& InitiatingToken = ""
 ) {
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
@@ -291,13 +290,13 @@ SSet_t FOLLOW(
 }
 
 
-std::unordered_map<Token_t, SSet_t> ComputeFollow(
+std::map<Token_t, SSet_t> ComputeFollow(
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FirstResMap,
     const Token_t& StartSymbol = "S"
 ) {
     auto [NT, T] = IdentifyNonTerminalsAndTerminals(G);
-    std::unordered_map<Token_t, SSet_t> followResMap;
+    std::map<Token_t, SSet_t> followResMap;
     // Initialize FOLLOW of start symbol
     if (NT.contains(StartSymbol)) {
         followResMap[StartSymbol].insert("$");
@@ -314,7 +313,7 @@ std::unordered_map<Token_t, SSet_t> ComputeFollow(
 
 using NT_t = Token_t;
 using T_t = Token_t;
-using ParseTable_t = std::unordered_map<NT_t, std::unordered_map<T_t, Production_t>>;
+using ParseTable_t = std::map<NT_t, std::map<T_t, Production_t>>;
 
 void PrintParseTable(const ParseTable_t& table) {
     // Build column and row data from the table
@@ -415,8 +414,8 @@ void PrintParsingSeparator() {
 
 ParseTable_t ConstructParseTable(
     const Grammar_t& G,
-    const std::unordered_map<Token_t, SSet_t>& FirstResMap,
-    const std::unordered_map<Token_t, SSet_t>& FollowResMap
+    const std::map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FollowResMap
 ) {
     ParseTable_t table;
     for (const auto& [A, productionList] : G) {
