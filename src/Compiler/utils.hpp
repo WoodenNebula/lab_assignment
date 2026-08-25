@@ -21,7 +21,9 @@ std::string Trim(std::string s) {
 using Token_t = std::string;
 using Production_t = Token_t;
 using Grammar_t = std::map<Token_t, std::vector<Production_t>>;
+using Grammar_t = std::map<Token_t, std::vector<Production_t>>;
 using SSet_t = std::set<std::string>;
+using GrammarList_t = std::vector<std::pair<Token_t, std::vector<Token_t>>>;
 
 constexpr Token_t EPSILON = "∈";
 
@@ -149,7 +151,38 @@ void PrintGrammar(const Grammar_t& G) {
     }
 }
 
-std::string C2S(char c) { return std::string(1, c); };
+Grammar_t AugmentGrammar(const Grammar_t& G, const Token_t& StartSymbol) {
+    Grammar_t augmented = G;
+    const Token_t augmentedStart = StartSymbol + "'";
+    augmented.insert(augmented.begin(), { augmentedStart, { StartSymbol } });
+    return augmented;
+}
+
+GrammarList_t ToProductionVector(const Grammar_t& G) {
+    const auto [nonTerminals, terminals] = IdentifyNonTerminalsAndTerminals(G);
+    GrammarList_t rules;
+    for (const auto& [lhs, productions] : G) {
+        for (const auto& production : productions) {
+            rules.push_back({ lhs, TokenizeProduction(production, nonTerminals) });
+        }
+    }
+    return rules;
+}
+
+std::string FormatProduction(const Token_t& lhs, const Production_t& rhs) {
+    return lhs + " -> " + rhs;
+}
+
+std::string FormatProduction(const std::pair<Token_t, std::vector<Token_t>>& rule) {
+    std::string rhs;
+    for (const auto& token : rule.second) {
+        if (!rhs.empty()) rhs += " ";
+        rhs += token;
+    }
+    return FormatProduction(rule.first, rhs);
+}
+
+std::string C2S(char c) { return std::string(1, c); }
 
 SSet_t FIRST(
     Token_t TokenInstance,
@@ -212,12 +245,33 @@ SSet_t FIRST(
 }
 
 std::map<Token_t, SSet_t> ComputeFirst(const Grammar_t& G) {
-    auto [NT, _] = IdentifyNonTerminalsAndTerminals(G);
-
+    const auto [NT, _] = IdentifyNonTerminalsAndTerminals(G);
     std::map<Token_t, SSet_t> firstResMap;
+    bool changed = true;
 
-    for (const auto& X : NT)
-        firstResMap[X] = FIRST(X, G, firstResMap);
+    while (changed) {
+        changed = false;
+        for (const auto& [lhs, productions] : G) {
+            for (const auto& production : productions) {
+                const auto tokens = TokenizeProduction(production, NT);
+                bool nullable = true;
+                for (const auto& token : tokens) {
+                    if (token == EPSILON) continue;
+                    const SSet_t firstToken = NT.contains(token) ? firstResMap[token] : SSet_t{ token };
+                    for (const auto& value : firstToken) {
+                        if (value != EPSILON && firstResMap[lhs].insert(value).second)
+                            changed = true;
+                    }
+                    if (!firstToken.contains(EPSILON)) {
+                        nullable = false;
+                        break;
+                    }
+                }
+                if (nullable && firstResMap[lhs].insert(EPSILON).second)
+                    changed = true;
+            }
+        }
+    }
 
     return firstResMap;
 }
