@@ -13,15 +13,8 @@ namespace Surab
 {
 namespace Compiler
 {
-std::string Trim(std::string s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); }));
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(), s.end());
-    return s;
-}
-
 using Token_t = std::string;
 using Production_t = Token_t;
-using Grammar_t = std::map<Token_t, std::vector<Production_t>>;
 using Grammar_t = std::map<Token_t, std::vector<Production_t>>;
 using SSet_t = std::set<std::string>;
 using GrammarList_t = std::vector<std::pair<Token_t, std::vector<Token_t>>>;
@@ -29,6 +22,8 @@ using GrammarList_t = std::vector<std::pair<Token_t, std::vector<Token_t>>>;
 constexpr Token_t EPSILON = "∈";
 constexpr std::string DOT = "•";
 
+namespace Grammar
+{
 std::vector<Production_t> SplitProductions(const std::string& rhs) {
     std::vector<Production_t> parts;
     std::stringstream ss(rhs);
@@ -142,16 +137,7 @@ std::pair<SSet_t, SSet_t> IdentifyNonTerminalsAndTerminals(const Grammar_t& G) {
     return { NT, T };
 }
 
-void PrintGrammar(const Grammar_t& G) {
-    for (const auto& [A, prods] : G) {
-        std::string rhs;
-        for (size_t i = 0; i < prods.size(); ++i) {
-            rhs += prods[i];
-            if (i != prods.size() - 1) rhs += " | ";
-        }
-        std::println("{} -> {}", A, rhs);
-    }
-}
+bool IsNonTerminal(const Token_t& symbol, const SSet_t& nonTerminals) { return nonTerminals.contains(symbol); }
 
 Grammar_t AugmentGrammar(const Grammar_t& G, const Token_t& StartSymbol) {
     Grammar_t augmented = G;
@@ -185,6 +171,10 @@ GrammarList_t ToProductionVector(const Grammar_t& G, const Token_t& StartSymbol 
     return rules;
 }
 
+
+////////////////////////
+// Printing functions //
+////////////////////////
 std::string FormatProduction(const Token_t& lhs, const Production_t& rhs) {
     return lhs + " -> " + rhs;
 }
@@ -197,7 +187,35 @@ std::string FormatProduction(const std::pair<Token_t, std::vector<Token_t>>& rul
     return FormatProduction(rule.first, rhs);
 }
 
-std::string C2S(char c) { return std::string(1, c); }
+void PrintGrammar(const Grammar_t& G) {
+    for (const auto& [A, prods] : G) {
+        std::string rhs;
+        for (size_t i = 0; i < prods.size(); ++i) {
+            rhs += prods[i];
+            if (i != prods.size() - 1) rhs += " | ";
+        }
+        std::println("{} -> {}", A, rhs);
+    }
+}
+
+void PrintGrammarList(const GrammarList_t& grammarList) {
+    for (size_t i = 0; i < grammarList.size(); ++i) {
+        const auto& [lhs, rhs] = grammarList[i];
+        std::string rhsStr;
+        for (const auto& token : rhs) {
+            rhsStr += token + " ";
+        }
+        Surab::Log("P[{}]: {} -> {}", i, lhs, rhsStr);
+    }
+}
+} // namespace Grammar
+
+using namespace Grammar;
+
+namespace Parser
+{
+using ActionTable_t = std::map<size_t, std::map<Token_t, std::string>>;
+using GotoTable_t = std::map< size_t, std::map<Token_t, size_t>>;
 
 SSet_t FIRST(
     Token_t TokenInstance,
@@ -358,7 +376,6 @@ SSet_t FOLLOW(
     return followOfSymbol;
 }
 
-
 std::map<Token_t, SSet_t> ComputeFollow(
     const Grammar_t& G,
     const std::map<Token_t, SSet_t>& FirstResMap,
@@ -380,25 +397,75 @@ std::map<Token_t, SSet_t> ComputeFollow(
     return followResMap;
 }
 
-void PrintGrammarList(const GrammarList_t& grammarList) {
-    for (size_t i = 0; i < grammarList.size(); ++i) {
-        const auto& [lhs, rhs] = grammarList[i];
-        std::string rhsStr;
-        for (const auto& token : rhs) {
-            rhsStr += token + " ";
+// Non-Terminal to Terminal to Production
+using ParseTable_t = std::map<Token_t, std::map<Token_t, Production_t>>;
+ParseTable_t ConstructParseTable(
+    const Grammar_t& G,
+    const std::map<Token_t, SSet_t>& FirstResMap,
+    const std::map<Token_t, SSet_t>& FollowResMap
+) {
+    ParseTable_t table;
+    for (const auto& [A, productionList] : G) {
+        for (const auto& prod : productionList) {
+            // FIRST of the production
+            SSet_t firstp = FIRST(prod, G, FirstResMap);
+
+            // For every terminal in FIRST(prod)
+            for (const auto& a : firstp) {
+                if (a != EPSILON) {
+                    // If the cell is already occupied, there's a conflict
+                    bool cellOccupied = table.contains(A) && table.at(A).contains(a) && !table.at(A).at(a).empty();
+                    if (cellOccupied) {
+                        LogError("Conflict in parse table for [{}, {}]", A, a);
+                        break;
+                    }
+                    table[A][a] = prod;
+                }
+            }
+
+            // If the production can derive epsilon,
+            // add it to every terminal in FOLLOW(A)
+            if (firstp.contains(EPSILON)) {
+                SSet_t followA = FOLLOW(A, G, FirstResMap, FollowResMap);
+
+                for (const auto& b : followA) {
+                    bool cellOccupied = table.contains(A) && table.at(A).contains(b) && !table.at(A).at(b).empty();
+                    if (cellOccupied) {
+                        LogError("Conflict in parse table for [{}, {}]", A, b);
+                        break;
+                    }
+                    table[A][b] = prod;
+                }
+            }
         }
-        Surab::Log("P[{}]: {} -> {}", i, lhs, rhsStr);
     }
+    return table;
 }
 
-using NT_t = Token_t;
-using T_t = Token_t;
-using ParseTable_t = std::map<NT_t, std::map<T_t, Production_t>>;
+
+////////////////////////
+// Printing functions //
+////////////////////////
+
+constexpr int COL_WIDTH = 20;
+constexpr int ACTION_WIDTH = 30;
+void PrintParsingStep(
+    const std::string& stack,
+    const std::string& input,
+    const std::string& action,
+    const std::string& ColorCode = RESET
+) {
+    Surab::Log("| {:<{}} | {:<{}} | {}{:<{}}{} |", stack, COL_WIDTH, input, COL_WIDTH, ColorCode, action, ACTION_WIDTH, RESET);
+}
+void PrintParsingSeparator() {
+    Surab::Log("|{:-<{}}|{:-<{}}|{:-<{}}|", "", COL_WIDTH + 2, "", COL_WIDTH + 2, "", ACTION_WIDTH + 2);
+}
 
 template <typename RowKey_t, typename ColKey_t, typename Value_t>
 void PrintParseTable(
     const std::map<RowKey_t, std::map<ColKey_t, Value_t>>& Table,
-    const std::string& RowHeader = "State") {
+    const std::string& RowHeader = "State"
+) {
     // Collect all row and column keys
     std::set<RowKey_t> RowKeys = Table
         | std::views::keys
@@ -491,60 +558,305 @@ void PrintParseTable(
 }
 
 
-constexpr int COL_WIDTH = 20;
-constexpr int ACTION_WIDTH = 30;
-void PrintParsingStep(const std::string& stack, const std::string& input, const std::string& action, const std::string& ColorCode = RESET) {
-    Surab::Log("| {:<{}} | {:<{}} | {}{:<{}}{} |", stack, COL_WIDTH, input, COL_WIDTH, ColorCode, action, ACTION_WIDTH, RESET);
-}
-void PrintParsingSeparator() {
-    Surab::Log("|{:-<{}}|{:-<{}}|{:-<{}}|", "", COL_WIDTH + 2, "", COL_WIDTH + 2, "", ACTION_WIDTH + 2);
-}
-
-
-ParseTable_t ConstructParseTable(
-    const Grammar_t& G,
-    const std::map<Token_t, SSet_t>& FirstResMap,
-    const std::map<Token_t, SSet_t>& FollowResMap
+void PrintCombinedParseTable(
+    const ActionTable_t& ActionTable,
+    const GotoTable_t& GotoTable,
+    const SSet_t& NonTerminals,
+    const SSet_t& Terminals
 ) {
-    ParseTable_t table;
-    for (const auto& [A, productionList] : G) {
-        for (const auto& prod : productionList) {
-            // FIRST of the production
-            SSet_t firstp = Surab::Compiler::FIRST(prod, G, FirstResMap);
+    std::vector<std::string> RowKeys;
+    std::vector<std::string> ColumnKeys;
 
-            // For every terminal in FIRST(prod)
-            for (const auto& a : firstp) {
-                if (a != EPSILON) {
-                    // If the cell is already occupied, there's a conflict
-                    bool cellOccupied = table.contains(A) && table.at(A).contains(a) && !table.at(A).at(a).empty();
-                    if (cellOccupied) {
-                        LogError("Conflict in parse table for [{}, {}]", A, a);
-                        break;
-                    }
-                    table[A][a] = prod;
+    std::string RowHeader = "States";
+
+    size_t actionTableColumnCount = 0;
+
+    // Collect all row and column keys from both tables
+    {
+        for (const auto& [stateId, row] : ActionTable) {
+            RowKeys.push_back(std::to_string(stateId));
+            for (const auto& [terminal, _] : row) {
+                if (!std::ranges::contains(ColumnKeys, terminal)) {
+                    ColumnKeys.push_back(terminal);
+                    ++actionTableColumnCount;
                 }
             }
+        }
 
-            // If the production can derive epsilon,
-            // add it to every terminal in FOLLOW(A)
-            if (firstp.contains(EPSILON)) {
-                SSet_t followA = Surab::Compiler::FOLLOW(A, G, FirstResMap, FollowResMap);
-
-                for (const auto& b : followA) {
-                    bool cellOccupied = table.contains(A) && table.at(A).contains(b) && !table.at(A).at(b).empty();
-                    if (cellOccupied) {
-                        LogError("Conflict in parse table for [{}, {}]", A, b);
-                        break;
-                    }
-                    table[A][b] = prod;
+        for (const auto& [stateId, row] : GotoTable) {
+            if (!std::ranges::contains(RowKeys, std::to_string(stateId))) {
+                RowKeys.push_back(std::to_string(stateId));
+            }
+            for (const auto& [nonTerminal, _] : row) {
+                if (!std::ranges::contains(ColumnKeys, nonTerminal)) {
+                    ColumnKeys.push_back(nonTerminal);
                 }
             }
         }
     }
-    return table;
+
+    RowKeys.insert(RowKeys.begin(), RowHeader);
+    ColumnKeys.insert(ColumnKeys.begin(), RowHeader);
+
+    std::map<std::string, std::map<std::string, std::string>> cells;
+
+    // Build cell values
+    for (const auto& rowKey : RowKeys) {
+        for (const auto& columnKey : ColumnKeys) {
+            std::string cell;
+            if (rowKey == RowHeader || columnKey == RowHeader) {
+                cell = columnKey == RowHeader ? rowKey : columnKey;
+            }
+            else {
+                if (IsNonTerminal(columnKey, NonTerminals)) {
+                    size_t stateId = std::stoi(rowKey);
+                    if (GotoTable.contains(stateId) && GotoTable.at(stateId).contains(columnKey)) {
+                        cell = std::to_string(GotoTable.at(stateId).at(columnKey));
+                    }
+                    else {
+                        cell = " ";
+                    }
+                }
+                else {
+                    size_t stateId = std::stoi(rowKey);
+                    if (ActionTable.contains(stateId) && ActionTable.at(stateId).contains(columnKey)) {
+                        cell = ActionTable.at(stateId).at(columnKey);
+                    }
+                    else {
+                        cell = "-";
+                    }
+                }
+            }
+            cells[rowKey][columnKey] = cell;
+        }
+    }
+
+    auto funcGetLengthAsString = [](const auto& value) {
+        return std::format("{}", value).size();
+        };
+
+
+    // Calculate individual column widths
+    std::map<std::string, int> columnWidths;
+    {
+        for (const std::string& columnKey : ColumnKeys) {
+            auto columnCellValues = cells
+                | std::views::values
+                | std::views::filter([columnKey](const std::map<std::string, std::string>& map) { return map.contains(columnKey); })
+                | std::views::join;
+
+            int width = std::ranges::max(columnCellValues | std::views::transform(funcGetLengthAsString));
+            columnWidths[columnKey] = width + 2;
+        }
+
+        // Calculate row-header width
+        int rowWidth = std::ranges::max(RowKeys | std::views::transform(funcGetLengthAsString));
+        rowWidth = std::max(rowWidth, (int)RowHeader.size());
+        rowWidth += 2;
+
+        columnWidths[RowHeader] = rowWidth;
+    }
+
+    // Separator
+    auto funcPrintSeparator = [&]() {
+        for (const auto& columnKey : ColumnKeys) {
+            std::print("+{:-<{}}", "", columnWidths.at(columnKey));
+        }
+        std::println("+");
+        };
+
+    auto funcPrintRow = [&](const std::vector<std::string>& rowValues) {
+        for (size_t i = 0; i < rowValues.size(); ++i) {
+            const auto& columnKey = ColumnKeys[i];
+            std::print("|{:^{}}", rowValues[i], columnWidths.at(columnKey));
+        }
+        std::println("|");
+        };
+
+    funcPrintSeparator();
+    // Pre-Header
+    {
+        std::string actionTableHeader = "Action Table";
+        std::string gotoTableHeader = "Goto Table";
+
+        std::print("|{:^{}}", "", columnWidths.at(RowHeader));
+        size_t actionTableColumnWidth = 0;
+        size_t gotoTableColumnWidth = 0;
+        for (size_t i = 1; i < ColumnKeys.size(); ++i) {
+            if (i <= actionTableColumnCount)
+                actionTableColumnWidth += columnWidths.at(ColumnKeys[i]);
+            else
+                gotoTableColumnWidth += columnWidths.at(ColumnKeys[i]);
+        }
+
+        actionTableColumnWidth = std::max(actionTableHeader.size(), actionTableColumnWidth);
+        // Add padding of the '|'
+        // -1 for the first column which is the row header
+        actionTableColumnWidth += actionTableColumnCount - 1;
+        std::print("|{:^{}}", actionTableHeader, actionTableColumnWidth);
+
+        gotoTableColumnWidth = std::max(gotoTableHeader.size(), gotoTableColumnWidth);
+        // Add padding of the '|' after the action table
+        // ColumnKeys.size() - actionTableColumnCount gives the number of columns in the goto table + row header
+        // -2 for the first column which is the row header and the last column which is the separator
+        gotoTableColumnWidth += ColumnKeys.size() - actionTableColumnCount - 2;
+        std::print("|{:^{}}", gotoTableHeader, gotoTableColumnWidth);
+
+        std::println("|");
+    }
+
+    funcPrintSeparator();
+    for (const auto& rowKey : RowKeys) {
+        auto rowValues = ColumnKeys
+            | std::views::transform([&](const auto& columnKey) { return cells.contains(rowKey) && cells.at(rowKey).contains(columnKey) ? cells.at(rowKey).at(columnKey) : "-"; })
+            | std::ranges::to<std::vector<std::string>>();
+
+        funcPrintRow(rowValues);
+        funcPrintSeparator();
+    }
+
 }
 
+
+} // namespace Parser
+
+
+namespace SLR
+{
+struct SItem {
+    size_t ProductionIndex;
+    size_t DotPosition;
+
+    bool operator<(const SItem& other) const {
+        return std::tie(ProductionIndex, DotPosition) < std::tie(other.ProductionIndex, other.DotPosition);
+    }
+
+    bool operator==(const SItem& other) const {
+        return ProductionIndex == other.ProductionIndex && DotPosition == other.DotPosition;
+    }
+};
+
+using SItemSet = std::set<SItem>;
+
+struct SCanonicalState {
+    size_t StateId;
+    size_t CalleeStateId;
+    Token_t CalleeSymbol;
+    SItemSet Items;
+};
+
+std::string FormatItem(const GrammarList_t& grammar, const SItem& item) {
+    const auto& [prodIndex, dot] = item;
+    const auto& [lhs, rhs] = grammar.at(prodIndex);
+    std::string result = lhs + " -> ";
+    for (size_t i = 0; i < rhs.size(); ++i) {
+        if (i == dot)
+            result += DOT;
+        result += rhs[i];
+    }
+    if (dot == rhs.size())
+        result += DOT;
+    return result;
+}
+
+std::string StateKey(const GrammarList_t& GrammarList, const SItemSet& State) {
+    std::string key;
+    for (const auto& item : State) {
+        if (!key.empty())
+            key += " | ";
+        key += FormatItem(GrammarList, item);
+    }
+    return key;
+}
+
+void PrintCanonicalStates(const GrammarList_t& GrammarList, const std::vector<SCanonicalState>& States) {
+    Surab::Log("\nCanonical LR(0) collection states:");
+
+    for (size_t i = 0; i < States.size(); ++i) {
+        std::string printString = std::format("I[{}]: ", i);
+
+        const auto& [StateId, CalleeStateId, CalleeSymbol, Items] = States[i];
+        printString += std::format("{}({}, {}) = ", StateId == 0 ? "Closure" : "Goto", CalleeStateId, CalleeSymbol);
+
+        printString += "[ ";
+        for (const auto& item : Items) {
+            printString += FormatItem(GrammarList, item) + ", ";
+        }
+
+        // Remove the last ", "
+        printString.erase(printString.size() - 2, 2);
+        printString += " ]";
+        Surab::Log("{}", printString);
+    }
+}
+} // namespace SLR
+
+
+namespace LR1
+{
+struct SItem {
+    size_t ProductionIndex;
+    size_t DotPosition;
+    Token_t Lookahead;
+
+    bool operator<(const SItem& other) const {
+        return std::tie(ProductionIndex, DotPosition, Lookahead) < std::tie(other.ProductionIndex, other.DotPosition, other.Lookahead);
+    }
+
+    bool operator==(const SItem& other) const {
+        return ProductionIndex == other.ProductionIndex && DotPosition == other.DotPosition && Lookahead == other.Lookahead;
+    }
+};
+
+using LR1ItemSet_t = std::set<SItem>;
+
+struct SCanonicalState {
+    size_t StateId;
+    size_t CalleeStateId;
+    Token_t CalleeSymbol;
+    LR1ItemSet_t Items;
+};
+
+std::string FormatItem(const GrammarList_t& Grammar, const SItem& Item) {
+    const auto& [prodIndex, dot, lookahead] = Item;
+    std::string result = SLR::FormatItem(Grammar, { prodIndex, dot });
+    result += ", " + lookahead;
+    return result;
+}
+
+void PrintCanonicalStates(const GrammarList_t& Grammar, const std::vector<SCanonicalState>& States) {
+    Surab::Log("\nCanonical LR(1) states:");
+    for (size_t i = 0; i < States.size(); ++i) {
+        std::string printString = std::format("I[{}]: ", i);
+
+        const auto& [StateId, CalleeStateId, CalleeSymbol, Items] = States[i];
+        printString += std::format("{}({}, {}) = ", StateId == 0 ? "Closure" : "Goto", CalleeStateId, CalleeSymbol);
+
+        printString += "[ ";
+        for (const auto& item : Items) {
+            printString += FormatItem(Grammar, item) + ", ";
+        }
+
+        // Remove the last ", "
+        printString.erase(printString.size() - 2, 2);
+        printString += " ]";
+        Surab::Log("{}", printString);
+    }
+}
+
+
+std::string StateKey(const GrammarList_t& grammar, const LR1ItemSet_t& state) {
+    std::string key;
+    for (const auto& item : state) {
+        if (!key.empty()) key += " | ";
+        key += FormatItem(grammar, item);
+    }
+    return key;
+}
+} // namespace SLR1
 } // namespace Compiler
+
+
 }
 
 #define EPSILON Surab::Compiler::EPSILON

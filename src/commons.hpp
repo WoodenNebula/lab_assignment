@@ -41,6 +41,15 @@ static void abortOnError(std::string_view msg) {
 
 namespace Surab
 {
+
+std::string C2S(char c) { return std::string(1, c); }
+
+std::string Trim(std::string s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); }));
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(), s.end());
+    return s;
+}
+
 using Mat = std::vector<std::vector<double>>;
 
 template <std::ranges::sized_range ContainerType>
