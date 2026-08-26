@@ -45,8 +45,7 @@ int main() {
 
     Surab::Compiler::ParseTable_t table = Surab::Compiler::ConstructParseTable(G, FIRST, FOLLOW);
     Surab::Log("\n===Parse Table===");
-    Surab::Compiler::PrintParseTable(table);
-
+    Surab::Compiler::PrintParseTable(table, "Non-Terminal");
     std::stack<Token_t> stack;
     stack.push("$");
     stack.push(startSymbol);

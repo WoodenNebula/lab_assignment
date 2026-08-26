@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 namespace Surab
 {
@@ -26,6 +27,7 @@ using SSet_t = std::set<std::string>;
 using GrammarList_t = std::vector<std::pair<Token_t, std::vector<Token_t>>>;
 
 constexpr Token_t EPSILON = "∈";
+constexpr std::string DOT = "•";
 
 std::vector<Production_t> SplitProductions(const std::string& rhs) {
     std::vector<Production_t> parts;
@@ -158,13 +160,27 @@ Grammar_t AugmentGrammar(const Grammar_t& G, const Token_t& StartSymbol) {
     return augmented;
 }
 
-GrammarList_t ToProductionVector(const Grammar_t& G) {
+GrammarList_t ToProductionVector(const Grammar_t& G, const Token_t& StartSymbol = "S") {
     const auto [nonTerminals, terminals] = IdentifyNonTerminalsAndTerminals(G);
     GrammarList_t rules;
     for (const auto& [lhs, productions] : G) {
         for (const auto& production : productions) {
+            if (lhs == StartSymbol + "'" || lhs == StartSymbol) {
+                // skip start and augmented start to add them at the beginning
+                continue;
+            }
             rules.push_back({ lhs, TokenizeProduction(production, nonTerminals) });
         }
+    }
+
+    auto prodsOfStart = G.at(StartSymbol);
+    for (const auto& production : prodsOfStart) {
+        rules.insert(rules.begin(), { StartSymbol, TokenizeProduction(production, nonTerminals) });
+    }
+
+    auto prodsOfAugmentedStart = G.at(StartSymbol + "'");
+    for (const auto& production : prodsOfAugmentedStart) {
+        rules.insert(rules.begin(), { StartSymbol + "'", TokenizeProduction(production, nonTerminals) });
     }
     return rules;
 }
@@ -176,7 +192,6 @@ std::string FormatProduction(const Token_t& lhs, const Production_t& rhs) {
 std::string FormatProduction(const std::pair<Token_t, std::vector<Token_t>>& rule) {
     std::string rhs;
     for (const auto& token : rule.second) {
-        if (!rhs.empty()) rhs += " ";
         rhs += token;
     }
     return FormatProduction(rule.first, rhs);
@@ -365,94 +380,114 @@ std::map<Token_t, SSet_t> ComputeFollow(
     return followResMap;
 }
 
+void PrintGrammarList(const GrammarList_t& grammarList) {
+    for (size_t i = 0; i < grammarList.size(); ++i) {
+        const auto& [lhs, rhs] = grammarList[i];
+        std::string rhsStr;
+        for (const auto& token : rhs) {
+            rhsStr += token + " ";
+        }
+        Surab::Log("P[{}]: {} -> {}", i, lhs, rhsStr);
+    }
+}
+
 using NT_t = Token_t;
 using T_t = Token_t;
 using ParseTable_t = std::map<NT_t, std::map<T_t, Production_t>>;
 
-void PrintParseTable(const ParseTable_t& table) {
-    // Build column and row data from the table
-    std::set<Token_t> NonTerminals;
-    std::set<Token_t> Terminals;
+template <typename RowKey_t, typename ColKey_t, typename Value_t>
+void PrintParseTable(
+    const std::map<RowKey_t, std::map<ColKey_t, Value_t>>& Table,
+    const std::string& RowHeader = "State") {
+    // Collect all row and column keys
+    std::set<RowKey_t> RowKeys = Table
+        | std::views::keys
+        | std::ranges::to<std::set<RowKey_t>>();
 
-    for (const auto& [NT, T_map] : table) {
-        NonTerminals.insert(NT);
-        for (const auto& [T, _] : T_map) {
-            Terminals.insert(T);
-        }
-    }
+    std::set<ColKey_t> ColumnKeys = Table
+        | std::views::values
+        | std::views::transform([](const std::map<ColKey_t, Value_t>& colMap) { return colMap | std::views::keys; })
+        | std::views::join
+        | std::ranges::to<std::set<ColKey_t>>();
 
-    // Build the text for every cell first.
-    std::map<std::pair<NT_t, T_t>, std::string> cells;
 
-    for (const auto& A : NonTerminals) {
-        for (const auto& a : Terminals) {
-            if (!table.contains(A)) {
-                cells[{  A, a }] = "-";
+    // Build the text for every cell
+    std::map<RowKey_t, std::map<ColKey_t, std::string>> cells;
+
+    for (const auto& rowKey : RowKeys) {
+        for (const auto& columnKey : ColumnKeys) {
+            if (!Table.contains(rowKey) || !Table.at(rowKey).contains(columnKey)) {
+                cells[rowKey][columnKey] = "-";
                 continue;
             }
 
-            bool hasProduction = table.at(A).contains(a);
-            bool isEmptyProduction = hasProduction && table.at(A).at(a).empty();
-
-            if (!hasProduction || isEmptyProduction) {
-                cells[{ A, a }] = "-";
-                continue;
-            }
-
-            Production_t production = table.at(A).at(a);
-            cells[{ A, a }] = production;
+            cells[rowKey][columnKey] = std::format("{}", Table.at(rowKey).at(columnKey));
         }
     }
 
-    // Calculate column widths.
-    int ntWidth = 5;
-
-    int max_width = 0;
-    for (const auto& [table_key, val_map] : table) {
-        for (const auto& [terminal, production] : val_map) {
-            int width = production.size();
-            max_width = std::max(max_width, width);
-        }
-
-    }
-    max_width += 3;
-
-    // Separator
-    auto printSeparator = [&]() -> void {
-        std::print("{}", "+" + std::string(ntWidth, '-'));
-        for (const auto& terminal : Terminals) {
-            std::print("{}", "+" + std::string(max_width, '-'));
-        }
-        std::println("{}", "+");
+    auto funcGetLengthAsString = [](const auto& value) {
+        return std::format("{}", value).size();
         };
 
-    printSeparator();
+    // Calculate row-header width
+    int rowWidth = std::ranges::max(RowKeys | std::views::transform(funcGetLengthAsString));
+    rowWidth = std::max(rowWidth, (int)RowHeader.size());
+    rowWidth += 2;
 
-    // Header
-    std::print("|{:^{}}", "NT", ntWidth);
+    // Calculate individual column widths
+    std::map<ColKey_t, int> columnWidths;
+    {
+        for (const ColKey_t& columnKey : ColumnKeys) {
+            auto columnCellValues = cells
+                | std::views::values
+                | std::views::filter([columnKey](const std::map<ColKey_t, std::string>& map) { return map.contains(columnKey); })
+                | std::views::join;
 
-    for (const auto& terminal : Terminals) {
-        std::print("|{:^{}}", terminal, max_width);
+            int width = std::ranges::max(columnCellValues | std::views::transform(funcGetLengthAsString));
+            columnWidths[columnKey] = width + 2;
+        }
     }
 
-    std::println("|");
+    // Separator
+    auto funcPrintSeparator = [&]() {
+        std::print("+{:-<{}}", "", rowWidth);
 
-    printSeparator();
-
-    // Rows
-    for (const auto& A : NonTerminals) {
-        std::print("|{:^{}}", A, ntWidth);
-
-        for (const auto& terminal : Terminals) {
-            const auto& cell = cells[{A, terminal}];
-
-            std::print("|{:^{}}", cell, max_width);
+        for (const auto& columnKey : ColumnKeys) {
+            std::print("+{:-<{}}", "", columnWidths.at(columnKey));
         }
 
+        std::println("+");
+        };
+
+
+    funcPrintSeparator();
+    // Header
+    {
+        std::print("|{:^{}}", RowHeader, rowWidth);
+        for (const auto& columnKey : ColumnKeys) {
+            std::print("|{:^{}}", std::format("{}", columnKey), columnWidths.at(columnKey)
+            );
+        }
         std::println("|");
     }
+    funcPrintSeparator();
 
-    printSeparator();
+
+    // Rows
+    {
+        for (const auto& rowKey : RowKeys) {
+            std::print("|{:^{}}", std::format("{}", rowKey), rowWidth);
+
+            for (const auto& columnKey : ColumnKeys) {
+                const auto& cell = cells.at(rowKey).at(columnKey);
+
+                std::print("|{:^{}}", cell, columnWidths.at(columnKey));
+            }
+
+            std::println("|");
+        }
+    }
+    funcPrintSeparator();
 }
 
 
@@ -513,3 +548,4 @@ ParseTable_t ConstructParseTable(
 }
 
 #define EPSILON Surab::Compiler::EPSILON
+#define DOT Surab::Compiler::DOT
