@@ -28,51 +28,53 @@ make_src_path() {
 compile() {
     local src="$1"
     local bin="$2"
-    local isC=$3
+    local isC="$3"
 
-    # compile c/c++ file
     if $isC; then
-        bear -- gcc -g -I. $src -o $bin
+        bear -- gcc -g -I. "$src" -o "$bin"
     else
-        bear -- g++ -std=c++23 -g -I. $src -o $bin
-    fi
+        bear -- g++ -std=c++23 -g -I. "$src" -o "$bin"
+    fi || return 1
 
-    chmod u+x $bin
+    chmod u+x "$bin"
 }
 
 run() {
-    if [ $# = 0 ]; then
+    if [[ $# -eq 0 ]]; then
         echo "File path required!!!"
-    else
-        file=${file#./}
-        make_src_path "$file"
-
-        # extract extension
-        ext="${src##*.}"
-
-        # make output folder
-        fdir="$(dirname "$src")"
-
-        binDir="${fdir#src/}"
-        binDir="./bin/$binDir"
-
-        bin="$binDir/$fileName"
-
-        mkdir -p "$binDir"
-
-        # file type
-        isC=false
-        if [[ "$ext" == "c" ]]; then
-            isC=true
-        else
-            isC=false
-        fi
-
-        compile $src $bin $isC
-        # run by passing remaining arguements
-        $bin "${@:2}"
-        echo
+        return 1
     fi
-}
 
+    local file="${1#./}"
+    make_src_path "$file"
+
+    # extract extension
+    local ext="${src##*.}"
+
+    # make output folder
+    local fdir="$(dirname "$src")"
+
+    local binDir="${fdir#src/}"
+    binDir="./bin/$binDir"
+
+    local bin="$binDir/$fileName"
+
+    mkdir -p "$binDir"
+
+    # file type
+    local isC=false
+    if [[ "$ext" == "c" ]]; then
+        isC=true
+    fi
+
+    # Compile, and don't run if compilation fails
+    if ! compile "$src" "$bin" "$isC"; then
+        echo "Compilation failed."
+        return 1
+    fi
+
+    # Run by passing remaining arguments
+    "$bin" "${@:2}"
+    echo
+}
 run "$@"
