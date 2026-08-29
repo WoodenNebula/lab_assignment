@@ -8,8 +8,14 @@
 #include <sstream>
 #include <map>
 
+using GrammarClass = Surab::Compiler::Grammar::GrammarClass;
+
 using Token_t = Surab::Compiler::Token_t;
-using Grammar_t = Surab::Compiler::Grammar_t;
+using TokenizedProduction_t = Surab::Compiler::Grammar::TokenizedProduction_t;
+
+using OrderedTokenSet = Surab::Compiler::OrderedTokenSet;
+using ParseTable_t = Surab::Compiler::Parser::ParseTable_t;
+
 
 void PrintState(
     const std::vector<Token_t>& Stack,
@@ -22,13 +28,21 @@ void PrintState(
     std::vector<Token_t> inputSlice(InputTokens.begin() + InputIndex, InputTokens.end());
     std::string inputStr = Surab::ToString(inputSlice, " ", false);
 
-    Surab::Compiler::PrintParsingStep(stackStr, inputStr, Action, ColorCode);
+    Surab::Compiler::Parser::PrintParsingStep(stackStr, inputStr, Action, ColorCode);
 }
 
-std::pair<bool, Token_t> IsHandle(const std::string& Tokens, const Grammar_t& G) {
-    for (const auto& [nonTerminal, productions] : G) {
-        auto it = std::find(productions.begin(), productions.end(), Tokens);
-        if (it != productions.end()) {
+std::pair<bool, Token_t> IsHandle(const std::string& Tokens, const GrammarClass& G) {
+    for (const auto& [nonTerminal, productionList] : G) {
+        std::vector<std::string> productionStrings;
+        for (const auto& production : productionList) {
+            std::string productionStr = GrammarClass::FormatTokens(production);
+            productionStrings.push_back(productionStr);
+        }
+
+        bool isHandle = std::ranges::any_of(productionStrings, [&](const std::string& prodStr) {
+            return prodStr == Tokens;
+            });
+        if (isHandle) {
             return { true, nonTerminal };
         }
     }
@@ -41,11 +55,11 @@ bool CanShift(const std::vector<Token_t>& InputTokens, const size_t& Index) {
     return bNotEndMarker;
 }
 
-bool ShiftReduceParse(const Grammar_t& G, const std::vector<Token_t>& InputTokens, const Token_t& StartSymbol) {
+bool ShiftReduceParse(const GrammarClass& G, const std::vector<Token_t>& InputTokens, const Token_t& StartSymbol) {
     Surab::Log("\n===Parsing Steps===");
-    Surab::Compiler::PrintParsingSeparator();
-    Surab::Compiler::PrintParsingStep("Stack", "Input Buffer", "Action");
-    Surab::Compiler::PrintParsingSeparator();
+    Surab::Compiler::Parser::PrintParsingSeparator();
+    Surab::Compiler::Parser::PrintParsingStep("Stack", "Input Buffer", "Action");
+    Surab::Compiler::Parser::PrintParsingSeparator();
 
     std::vector<Token_t> stack = { "$" };
     size_t ip = 0;
@@ -84,12 +98,12 @@ bool ShiftReduceParse(const Grammar_t& G, const std::vector<Token_t>& InputToken
         }
         else if (stack.back() == StartSymbol && InputTokens.at(ip) == "$") {
             PrintState(stack, InputTokens, ip, "Accept", GREEN);
-            Surab::Compiler::PrintParsingSeparator();
+            Surab::Compiler::Parser::PrintParsingSeparator();
             return true;
         }
         else {
             PrintState(stack, InputTokens, ip, "Reject", RED);
-            Surab::Compiler::PrintParsingSeparator();
+            Surab::Compiler::Parser::PrintParsingSeparator();
             return false;
         }
 
@@ -102,16 +116,15 @@ int main() {
     std::stringstream grammarString(R"(
         S -> S + S | S * S | id
     )");
-    Token_t startSymbol = "S";
+    GrammarClass G(grammarString, "S");
 
-    Grammar_t G = Surab::Compiler::ParseGrammarFromString(grammarString);
-    Surab::Log("\nOriginal Grammar:");
-    Surab::Compiler::PrintGrammar(G);
+    Surab::Log("\n===Original Grammar===");
+    G.PrintGrammar();
 
     std::vector<Token_t> inputTokens = { "id", "+", "id", "*", "id", "$" };
     Surab::Log("\nInput Tokens: {}", Surab::ToString(inputTokens));
 
-    bool isAccepted = ShiftReduceParse(G, inputTokens, startSymbol);
+    bool isAccepted = ShiftReduceParse(G, inputTokens, G.GetStartSymbol());
 
     if (isAccepted) {
         Surab::LogSuccess("\n{} is accepted by the grammar.", Surab::ToString(inputTokens));

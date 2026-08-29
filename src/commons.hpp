@@ -8,6 +8,7 @@
 #include <vector>
 
 #define RED "\033[91m"
+#define CYAN "\033[96m"
 #define GREEN "\033[92m"
 #define RESET "\033[0m"
 

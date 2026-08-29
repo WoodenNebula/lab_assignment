@@ -7,18 +7,13 @@
 #include <stack>
 #include <map>
 
-using SSet_t = Surab::Compiler::SSet_t;
+using GrammarClass = Surab::Compiler::Grammar::GrammarClass;
+
 using Token_t = Surab::Compiler::Token_t;
+using TokenizedProduction_t = Surab::Compiler::Grammar::TokenizedProduction_t;
 
-constexpr int COL_WIDTH = 16;
-constexpr int ACTION_WIDTH = 24;
-
-void PrintTabularSteps(const std::string& stack, const std::string& input, const std::string& action, const std::string& ColorCode = RESET) {
-    Surab::Log("| {:<{}} | {:<{}} | {}{:<{}}{} |", stack, COL_WIDTH, input, COL_WIDTH, ColorCode, action, ACTION_WIDTH, RESET);
-}
-void PrintSeparator() {
-    Surab::Log("|{:-<{}}|{:-<{}}|{:-<{}}|", "", COL_WIDTH + 2, "", COL_WIDTH + 2, "", ACTION_WIDTH + 2);
-}
+using OrderedTokenSet = Surab::Compiler::OrderedTokenSet;
+using ParseTable_t = Surab::Compiler::Parser::ParseTable_t;
 
 int main() {
     Header("Top-Down Non-Recursive Descent (LL(1) Parser)");
@@ -31,30 +26,31 @@ int main() {
         T' -> *FT' | ∈
         T -> FT'
     )");
-    Surab::Compiler::Token_t startSymbol = "E";
 
-    Surab::Compiler::Grammar_t G = Surab::Compiler::ParseGrammarFromString(grammarString);
+    GrammarClass G(grammarString, "E");
 
     Surab::Log("\n===Original Grammar===");
-    Surab::Compiler::PrintGrammar(G);
+    G.PrintGrammar();
 
-    auto [nonTerminalSet, terminalSet] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
+    // auto [nonTerminalSet, terminalSet] = Surab::Compiler::IdentifyNonTerminalsAndTerminals(G);
+    OrderedTokenSet nonTerminalSet = G.GetNonTerminals();
 
-    std::map<Token_t, SSet_t> FIRST = Surab::Compiler::ComputeFirst(G);
-    std::map<Token_t, SSet_t> FOLLOW = Surab::Compiler::ComputeFollow(G, FIRST, startSymbol);
+    std::unordered_map<Token_t, OrderedTokenSet> FIRST = Surab::Compiler::Parser::ComputeFirst(G);
+    std::unordered_map<Token_t, OrderedTokenSet> FOLLOW = Surab::Compiler::Parser::ComputeFollow(G, FIRST);
 
-    Surab::Compiler::ParseTable_t table = Surab::Compiler::ConstructParseTable(G, FIRST, FOLLOW);
+    ParseTable_t table = Surab::Compiler::Parser::ConstructParseTable(G, FIRST, FOLLOW);
     Surab::Log("\n===Parse Table===");
-    Surab::Compiler::PrintParseTable(table, "Non-Terminal");
+    Surab::Compiler::Parser::PrintParseTable(table, "Non-Terminal");
+
     std::stack<Token_t> stack;
     stack.push("$");
-    stack.push(startSymbol);
+    stack.push(G.GetStartSymbol());
     size_t ip = 0;
 
     Surab::Log("\n===Parsing Steps===");
-    PrintSeparator();
-    PrintTabularSteps("Stack", "Input", "Action");
-    PrintSeparator();
+    Surab::Compiler::Parser::PrintParsingSeparator();
+    Surab::Compiler::Parser::PrintParsingStep("Stack", "Input", "Action");
+    Surab::Compiler::Parser::PrintParsingSeparator();
 
     while (!stack.empty()) {
         // print stack
@@ -69,14 +65,14 @@ int main() {
         for (size_t i = ip; i < inputTokens.size(); ++i) {
             inputStr += inputTokens[i] + " ";
         }
-        inputStr = Surab::Compiler::Trim(inputStr);
+        inputStr = Surab::Trim(inputStr);
 
         Surab::Compiler::Token_t X = stack.top();
         Surab::Compiler::Token_t a = inputTokens[ip];
 
         // End of stack and input
         if (X == a && X == "$") {
-            PrintTabularSteps(stackStr, inputStr, "Accept", GREEN);
+            Surab::Compiler::Parser::PrintParsingStep(stackStr, inputStr, "Accept", GREEN);
             break;
         }
 
@@ -84,40 +80,38 @@ int main() {
         if (X == a) {
             stack.pop();
             ++ip;
-            PrintTabularSteps(stackStr, inputStr, std::format("POP({})", X));
+            Surab::Compiler::Parser::PrintParsingStep(stackStr, inputStr, std::format("POP({})", X));
             continue;
         }
 
         // No Production for non-terminal, error
         if (X != "$" && !nonTerminalSet.contains(X)) {
-            PrintSeparator();
+            Surab::Compiler::Parser::PrintParsingSeparator();
             Surab::LogError("Error: unexpected terminal {}", X);
-            PrintTabularSteps(stackStr, inputStr, "");
+            Surab::Compiler::Parser::PrintParsingStep(stackStr, inputStr, "");
             break;
         }
 
         // No LL(1) table entry for non-terminal, error
         if (!table.contains(X) || !table.at(X).contains(a)) {
-            PrintSeparator();
+            Surab::Compiler::Parser::PrintParsingSeparator();
             Surab::LogError("Error: no table entry for {} with input {}", X, a);
-            PrintTabularSteps(stackStr, inputStr, "");
+            Surab::Compiler::Parser::PrintParsingStep(stackStr, inputStr, "");
             break;
         }
 
-        Surab::Compiler::Production_t production = table.at(X).at(a);
-
-        std::vector<Token_t> tokenList = Surab::Compiler::TokenizeProduction(production, nonTerminalSet);
+        TokenizedProduction_t production = GrammarClass::TokenizeProduction(GrammarClass::ParseProductionStringLine(table.at(X).at(a)).second, nonTerminalSet);
         stack.pop();
-        PrintTabularSteps(stackStr, inputStr, std::format("{} -> {}", X, tokenList[0]));
+        Surab::Compiler::Parser::PrintParsingStep(stackStr, inputStr, std::format("{} -> {}", X, production[0]));
 
         // push rhs in reverse (ignore epsilon)
-        if (!(tokenList.size() == 1 && tokenList[0] == EPSILON)) {
-            for (auto rit = tokenList.rbegin(); rit != tokenList.rend(); ++rit) {
+        if (!(production.size() == 1 && production[0] == EPSILON)) {
+            for (auto rit = production.rbegin(); rit != production.rend(); ++rit) {
                 stack.push(*rit);
             }
         }
     }
-    PrintSeparator();
+    Surab::Compiler::Parser::PrintParsingSeparator();
 
     Footer();
     return 0;
