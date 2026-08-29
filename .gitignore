@@ -3,6 +3,7 @@ helloWorld.c
 bin
 settings.json
 **/test**
+**/tmp**
 src/CG/Ref/
 .cache
 compile_commands.json
