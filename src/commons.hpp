@@ -6,6 +6,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <source_location>
 
 #define RED "\033[91m"
 #define CYAN "\033[96m"
@@ -18,6 +19,8 @@
 #else
 #define LOG(x)
 #endif
+
+#define LINE static_cast<int>(std::source_location::current().line())
 
 static void Header(std::string_view Title) {
     std::cout << "=== " << std::uppercase << Title << " ===" << std::endl;
