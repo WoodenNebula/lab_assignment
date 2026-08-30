@@ -9,6 +9,7 @@
 
 #define RED "\033[91m"
 #define CYAN "\033[96m"
+#define GREY "\033[90m"
 #define GREEN "\033[92m"
 #define RESET "\033[0m"
 
