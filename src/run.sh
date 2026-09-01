@@ -59,7 +59,7 @@ compile_flex() {
     fi
 
     # Compile generated lexer
-    if ! bear -- gcc -g -I. "$binDir/${baseName}.yy.cpp" -o "$bin"; then
+    if ! bear -- g++ -std=c++23 -g -I. "$binDir/${baseName}.yy.cpp" -o "$bin"; then
         echo "Compilation failed."
         return 1
     fi
