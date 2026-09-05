@@ -3,14 +3,14 @@ using Assignments;
 
 namespace Basics {
     internal class Program {
+        private static string GetAssignmentClassName(int n) => $"Assignments.Assignment{n}";
         private static bool FindAssignmentClassFromParam(string[] args, out string ClassName) {
             int parsedNum = -1;
             if (args.Length == 0 || !int.TryParse(args[0], out parsedNum)) {
-                Console.WriteLine("Usage: dotnet run <assignment number>");
                 ClassName = "";
                 return false;
             }
-            ClassName = $"Assignments.Assignment{parsedNum}";
+            ClassName = GetAssignmentClassName(parsedNum);
             return true;
         }
 
@@ -34,11 +34,22 @@ namespace Basics {
         }
 
         static void Main(string[] args) {
-            if (!FindAssignmentClassFromParam(args, out string className))
+            if (FindAssignmentClassFromParam(args, out string className)) {
+                AssignmentBase? foundAssignment = GetAssignmentObject(className);
+                foundAssignment?.Execute();
                 return;
+            }
 
-            AssignmentBase? assignmentOne = GetAssignmentObject(className);
-            assignmentOne?.Execute();
+            foreach (int n in Enumerable.Range(1, 17)) {
+                AssignmentBase? foundAssignment = GetAssignmentObject(GetAssignmentClassName(n));
+                Console.WriteLine();
+                Console.WriteLine("---------");
+                Console.WriteLine($"Executing Assignment [{n}]");
+                Console.WriteLine();
+                foundAssignment?.Execute();
+                Console.WriteLine("---------");
+                Console.WriteLine();
+            }
         }
     }
 }
