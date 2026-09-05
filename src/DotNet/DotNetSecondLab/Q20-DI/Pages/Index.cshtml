@@ -1,0 +1,129 @@
+@page
+@model IndexModel
+
+@{
+	ViewData["Title"] = "Dependency Injection Demonstration";
+}
+
+<div class="container mt-5">
+	<h1 class="mb-4">ASP.NET Core Dependency Injection Lifetimes</h1>
+
+	<div class="alert alert-info">
+		<p><strong>How to test the difference:</strong></p>
+		<ul>
+			<li>Refresh this page multiple times and note the IDs below</li>
+			<li>Each refresh represents a new HTTP request (new scope)</li>
+			<li>The Singleton ID should NEVER change across requests</li>
+			<li>The Scoped ID should change each request (new scope per request)</li>
+			<li>The Transient IDs should be different even within the same request</li>
+		</ul>
+	</div>
+
+	<div class="row">
+		<!-- Transient Service -->
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header bg-danger text-white">
+					<h5 class="mb-0">Transient Service</h5>
+				</div>
+				<div class="card-body">
+					<p><strong>Behavior:</strong> New instance every time</p>
+					<div class="alert alert-light border">
+						<small class="text-muted">First injection:</small><br/>
+						<code>@Model.TransientInfo1</code>
+					</div>
+					<div class="alert alert-light border">
+						<small class="text-muted">Second injection (same request):</small><br/>
+						<code>@Model.TransientInfo2</code>
+					</div>
+					<div class="alert @(Model.TransientSame ? "alert-warning" : "alert-success")">
+						@if (Model.TransientSame) {
+							<span>❌ IDs are SAME (unexpected)</span>
+						} else {
+							<span>✓ IDs are DIFFERENT (expected)</span>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Scoped Service -->
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header bg-warning text-dark">
+					<h5 class="mb-0">Scoped Service</h5>
+				</div>
+				<div class="card-body">
+					<p><strong>Behavior:</strong> Same per HTTP request</p>
+					<div class="alert alert-light border">
+						<small class="text-muted">First injection:</small><br/>
+						<code>@Model.ScopedInfo1</code>
+					</div>
+					<div class="alert alert-light border">
+						<small class="text-muted">Second injection (same request):</small><br/>
+						<code>@Model.ScopedInfo2</code>
+					</div>
+					<div class="alert @(Model.ScopedSame ? "alert-success" : "alert-warning")">
+						@if (Model.ScopedSame) {
+							<span>✓ IDs are SAME (expected)</span>
+						} else {
+							<span>❌ IDs are DIFFERENT (unexpected)</span>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Singleton Service -->
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<div class="card-header bg-success text-white">
+					<h5 class="mb-0">Singleton Service</h5>
+				</div>
+				<div class="card-body">
+					<p><strong>Behavior:</strong> Same across all requests</p>
+					<div class="alert alert-light border">
+						<small class="text-muted">First injection:</small><br/>
+						<code>@Model.SingletonInfo1</code>
+					</div>
+					<div class="alert alert-light border">
+						<small class="text-muted">Second injection (same request):</small><br/>
+						<code>@Model.SingletonInfo2</code>
+					</div>
+					<div class="alert @(Model.SingletonSame ? "alert-success" : "alert-warning")">
+						@if (Model.SingletonSame) {
+							<span>✓ IDs are SAME (expected)</span>
+						} else {
+							<span>❌ IDs are DIFFERENT (unexpected)</span>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr class="my-5" />
+
+	<div class="mt-5 text-center">
+		<a href="javascript:location.reload();" class="btn btn-primary btn-lg">Refresh Page (New Request)</a>
+	</div>
+
+	<hr class="my-5" />
+
+	<footer class="text-center text-muted mt-5">
+		<p>====================</p>
+		<p>Surab Parajuli</p>
+		<p>Section: A, 6th-Sem</p>
+		<p>Roll: 34, Symbol No.: 80010139</p>
+		<p>====================</p>
+	</footer>
+</div>
+
+<style>
+	code {
+		background-color: #f5f5f5;
+		padding: 4px 8px;
+		border-radius: 4px;
+		word-break: break-all;
+	}
+</style>
