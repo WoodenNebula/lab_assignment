@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <div class="mt-4">
+        <h3>Current Date and Time</h3>
+        <p>@ViewBag.CurrentDateTime.ToString("dddd, MMMM d, yyyy h:mm:ss tt")</p>
+    </div>
+
+    <div class="mt-4">
+        <h3>Student Information</h3>
+        <p><strong>Name:</strong> @ViewBag.StudentName</p>
+        <p><strong>Roll Number:</strong> @ViewBag.RollNumber</p>
+        <p><strong>Section:</strong> A, 6th-Sem</p>
+        <p><strong>Symbol No.:</strong> 80010139</p>
+    </div>
+
+    <div class="mt-4">
+        <h3>Multiplication Table of @ViewBag.MultiplicationTableNumber</h3>
+        <table class="table table-bordered mx-auto" style="width: auto;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Multiplier</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.MultiplicationTable) {
+                    <tr>
+                        <td>@ViewBag.MultiplicationTableNumber × @item.Item1</td>
+                        <td>@item.Item2</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-5">
+        <p>
+            <a asp-controller="Home" asp-action="StudentForm" class="btn btn-primary btn-lg">
+                Fill Student Form
+            </a>
+        </p>
+    </div>
+</div>
