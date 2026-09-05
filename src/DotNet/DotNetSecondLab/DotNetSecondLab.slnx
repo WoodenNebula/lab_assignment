@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Q19-MVC/Q19-MVC.csproj" />
   <Project Path="Q20-DI/Q20-DI.csproj" Id="6fe7fafa-0eb9-4ad8-937d-292e828b8912" />
+  <Project Path="Q21-CRUD-Console/Q21-CRUD-Console.csproj" Id="eec7b233-21a3-4637-8b30-88d8a4dd658f" />
 </Solution>
