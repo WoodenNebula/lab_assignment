@@ -6,4 +6,5 @@
   <Project Path="Q23-MVC-EFC/Q23-MVC-EFC.csproj" Id="04222131-e5f1-4a4d-bb79-b9fa51ff8a2b" />
   <Project Path="Q24-CRUD-EF-Db/Q24-CRUD-EF-Db.csproj" Id="7afc666d-feb2-464a-af21-2faa01259f4f" />
   <Project Path="Q25-WebAPI-EF/Q25-WebAPI-EF.csproj" Id="9ec1900f-8f01-4fe1-a9a7-a183960b32bb" />
+  <Project Path="Q26-SessionMgmt/Q26-SessionMgmt.csproj" Id="ad054bc9-8e31-4946-8033-4d7203ddd537" />
 </Solution>

@@ -1,0 +1,21 @@
+﻿<h3>PageOne — Enter your name</h3>
+
+<h4>Option 1: Query String</h4>
+<form asp-action="P2Query" method="get">
+    <input type="text" name="userName" required />
+    <button type="submit">Go to PageOne via Query String</button>
+</form>
+
+<h4>Option 2: Hidden Field</h4>
+<form asp-action="P2Hidden" method="post" onsubmit="return copyToHidden()">
+    <input type="text" id="visibleInput" required />
+    <input type="hidden" name="userName" id="hiddenInput" />
+    <button type="submit">Go to PageTwo via Hidden Field</button>
+</form>
+
+<script>
+    function copyToHidden() {
+        document.getElementById('hiddenInput').value = document.getElementById('visibleInput').value;
+        return true;
+    }
+</script>

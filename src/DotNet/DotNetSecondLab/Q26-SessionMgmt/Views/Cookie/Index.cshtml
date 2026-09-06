@@ -1,0 +1,7 @@
+﻿<h3>Cookie Demo</h3>
+<p>Current cookie value: <strong>@(ViewBag.CookieValue ?? "not set")</strong></p>
+<form asp-action="SetCookie" method="post">
+    <input type="text" name="visitorName" required />
+    <button type="submit">Save as Cookie</button>
+</form>
+<p>Unlike Session, this value is stored in the browser and persists across browser restarts (7-day expiry here).</p>

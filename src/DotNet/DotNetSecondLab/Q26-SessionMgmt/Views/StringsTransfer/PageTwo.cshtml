@@ -1,0 +1,12 @@
+﻿<h3>PageTwo — Received Value</h3>
+<p>Name received: <strong>@ViewBag.Name</strong></p>
+<p>Transferred via: <strong>@ViewBag.Method</strong></p>
+
+@if (ViewBag.Method == "Query String")
+{
+    <p>Check the URL above — the name is visible as <code>?userName=...</code></p>
+}
+else
+{
+    <p>The name was submitted via POST inside a hidden <code>&lt;input type="hidden"&gt;</code> field — not visible in the URL.</p>
+}
