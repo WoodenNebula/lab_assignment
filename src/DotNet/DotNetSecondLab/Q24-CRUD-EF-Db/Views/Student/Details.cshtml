@@ -1,0 +1,53 @@
+@model Q24_CRUD_EF_Db.Models.Student
+
+@{
+	ViewData["Title"] = "Student Details";
+}
+
+<h1>Student Details</h1>
+
+<div class="card">
+	<div class="card-body">
+		<dl class="row">
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.StudentId)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.StudentId)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.FirstName)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.FirstName)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.LastName)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.LastName)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+			<dd class="col-sm-9">
+				<a href="mailto:@Model.Email">@Html.DisplayFor(model => model.Email)</a>
+			</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.Phone)</dt>
+			<dd class="col-sm-9">
+				<a href="tel:@Model.Phone">@Html.DisplayFor(model => model.Phone)</a>
+			</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.DateOfBirth)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.DateOfBirth)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.Course)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.Course)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.Gpa)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.Gpa)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.Remarks)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.Remarks)</dd>
+
+			<dt class="col-sm-3">@Html.DisplayNameFor(model => model.EnrollmentDate)</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.EnrollmentDate)</dd>
+		</dl>
+	</div>
+</div>
+
+<div class="mt-3">
+	<a asp-action="Edit" asp-route-id="@Model.StudentId" class="btn btn-warning">Edit</a>
+	<a asp-action="Delete" asp-route-id="@Model.StudentId" class="btn btn-danger">Delete</a>
+	<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

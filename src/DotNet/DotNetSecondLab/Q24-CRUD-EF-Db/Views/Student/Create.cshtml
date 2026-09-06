@@ -1,0 +1,78 @@
+@model Q24_CRUD_EF_Db.Models.Student
+
+@{
+	ViewData["Title"] = "Create Student";
+}
+
+<h1>Create Student</h1>
+
+<div class="row">
+	<div class="col-md-8">
+		<form asp-action="Create" method="post" novalidate>
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group mb-3">
+				<label asp-for="FirstName" class="form-label"></label>
+				<input asp-for="FirstName" class="form-control" />
+				<span asp-validation-for="FirstName" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="LastName" class="form-label"></label>
+				<input asp-for="LastName" class="form-control" />
+				<span asp-validation-for="LastName" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Email" class="form-label"></label>
+				<input asp-for="Email" class="form-control" type="email" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Phone" class="form-label"></label>
+				<input asp-for="Phone" class="form-control" type="tel" />
+				<span asp-validation-for="Phone" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="DateOfBirth" class="form-label"></label>
+				<input asp-for="DateOfBirth" class="form-control" type="date" />
+				<span asp-validation-for="DateOfBirth" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Course" class="form-label"></label>
+				<input asp-for="Course" class="form-control" />
+				<span asp-validation-for="Course" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Gpa" class="form-label"></label>
+				<input asp-for="Gpa" class="form-control" type="number" step="0.01" />
+				<span asp-validation-for="Gpa" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Remarks" class="form-label"></label>
+				<textarea asp-for="Remarks" class="form-control" rows="3"></textarea>
+				<span asp-validation-for="Remarks" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="EnrollmentDate" class="form-label"></label>
+				<input asp-for="EnrollmentDate" class="form-control" type="date" />
+				<span asp-validation-for="EnrollmentDate" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">Create</button>
+				<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
