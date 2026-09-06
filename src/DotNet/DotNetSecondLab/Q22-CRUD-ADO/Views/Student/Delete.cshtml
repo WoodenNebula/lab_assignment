@@ -1,0 +1,67 @@
+@model Student
+
+@{
+	ViewData["Title"] = "Delete Student";
+}
+
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<h1 class="text-danger">Delete Student</h1>
+			<hr />
+
+			@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage)) {
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					@ViewBag.ErrorMessage
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			}
+
+			<div class="alert alert-warning" role="alert">
+				<strong>Warning:</strong> This action cannot be undone. Are you sure you want to delete this student?
+			</div>
+
+			<div class="card">
+				<div class="card-body">
+					<div class="mb-3">
+						<strong>Student ID:</strong>
+						<p>@Model.StdID</p>
+					</div>
+
+					<div class="mb-3">
+						<strong>Name:</strong>
+						<p>@Model.Name</p>
+					</div>
+
+					<div class="mb-3">
+						<strong>Address:</strong>
+						<p>@Model.Address</p>
+					</div>
+
+					<div class="mb-3">
+						<strong>Faculty:</strong>
+						<p>@Model.Faculty</p>
+					</div>
+
+					<div class="mb-3">
+						<strong>Email:</strong>
+						<p>@Model.Email</p>
+					</div>
+				</div>
+			</div>
+
+			<form asp-action="Delete" asp-controller="Student" method="post" class="mt-4">
+				<input type="hidden" name="id" value="@Model.StdID" />
+
+				<div class="d-flex gap-2">
+					<button type="submit" class="btn btn-danger">
+						Yes, Delete Student
+					</button>
+					<a asp-action="Index" class="btn btn-secondary">
+						Cancel
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
