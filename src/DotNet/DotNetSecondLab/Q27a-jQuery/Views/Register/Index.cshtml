@@ -1,0 +1,37 @@
+﻿@model RegisterViewModel
+
+<h3>Registration Form</h3>
+
+@if (ViewBag.Success == true)
+{
+    <p style="color:green;">Registration successful!</p>
+}
+
+<form id="registerForm" method="post">
+    <div>
+        <label>Name</label>
+        <input type="text" id="Name" name="Name" />
+        <span id="nameError" style="color:red;"></span>
+    </div>
+    <div>
+        <label>Email</label>
+        <input type="text" id="Email" name="Email" />
+        <span id="emailError" style="color:red;"></span>
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" id="Password" name="Password" />
+        <span id="passwordError" style="color:red;"></span>
+    </div>
+    <div>
+        <label>Phone Number</label>
+        <input type="text" id="Phone" name="Phone" />
+        <span id="phoneError" style="color:red;"></span>
+    </div>
+    <button type="submit">Register</button>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js"></script>
+}
