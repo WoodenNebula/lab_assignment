@@ -3,4 +3,5 @@
   <Project Path="Q20-DI/Q20-DI.csproj" Id="6fe7fafa-0eb9-4ad8-937d-292e828b8912" />
   <Project Path="Q21-CRUD-Console/Q21-CRUD-Console.csproj" Id="eec7b233-21a3-4637-8b30-88d8a4dd658f" />
   <Project Path="Q22-CRUD-ADO/Q22-CRUD-ADO.csproj" Id="682b1383-7f07-4015-ad3d-1fa0611621de" />
+  <Project Path="Q23-MVC-EFC/Q23-MVC-EFC.csproj" Id="04222131-e5f1-4a4d-bb79-b9fa51ff8a2b" />
 </Solution>
