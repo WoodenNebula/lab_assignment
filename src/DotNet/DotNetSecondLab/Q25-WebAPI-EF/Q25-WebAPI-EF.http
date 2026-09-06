@@ -1,0 +1,6 @@
+@Q25_WebAPI_EF_HostAddress = http://localhost:5255
+
+GET {{Q25_WebAPI_EF_HostAddress}}/student/
+Accept: application/json
+
+###
