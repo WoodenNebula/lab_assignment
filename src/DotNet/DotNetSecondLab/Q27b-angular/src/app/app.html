@@ -1,0 +1,75 @@
+<div class="container">
+  <h1>Registration Form</h1>
+
+  <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
+
+    <label>Name:</label>
+    <input type="text" name="name" [(ngModel)]="name" required #nameField="ngModel">
+
+    @if (nameField.invalid && (nameField.touched || submitted)) {
+    <p class="error">Name is required.</p>
+    } @else {
+    <br>
+    }
+
+
+    <label>Email:</label>
+    <input type="email" name="email" [(ngModel)]="email" required email #emailField="ngModel">
+    @if (emailField.invalid && (emailField.touched || submitted)) {
+    <p class="error">Please enter a valid email address.</p>
+    }
+    @else { <br> }
+
+    <label>Phone Number:</label>
+    <input type="tel" name="phone" [(ngModel)]="phoneNumber" required pattern="[0-9]{10}" #phoneField="ngModel">
+
+    @if (phoneField.invalid && (phoneField.touched || submitted)) {
+    <p class="error">Please enter a valid 10-digit phone number.</p>
+    }
+    @else { <br> }
+
+    <label>Password:</label>
+    <input type="password" name="password" [(ngModel)]="password" required minlength="8" #passwordField="ngModel">
+
+    @if (passwordField.invalid && (passwordField.touched || submitted)) {
+    <p class="error"> Password must be at least 8 characters. </p>
+    }
+    @else { <br> }
+
+
+
+
+    <label>Confirm Password:</label>
+    <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required #confirmPasswordField="ngModel">
+
+    @if ( confirmPasswordField.invalid && (confirmPasswordField.touched || submitted)) {
+    <p class="error">Please confirm your password.</p>
+    }
+    @else { <br> }
+
+    @if ( submitted && password !== confirmPassword && confirmPassword !== '') {
+    <p class="error">Passwords do not match.</p>
+    }
+    @else { <br> }
+
+    <button type="submit" [disabled]="registrationForm.invalid">
+      Register
+    </button>
+
+  </form>
+</div>
+
+<footer class="border-top text-muted">
+  <div>
+    <p class="text-center" style="font-size: 1.3em;  margin-top: 1rem !important; ">
+      <strong>Q27(b): Client Side Scripting: Angular</strong>
+    </p>
+    <p class="text-center" style="font-size: 1.3em;">
+      ====================<br />
+      Surab Parajuli<br />
+      Section: A, 6th-Sem<br />
+      Roll: 34, Symbol No.: 80010139<br />
+      ====================
+    </p>
+  </div>
+</footer>
