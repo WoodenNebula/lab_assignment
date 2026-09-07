@@ -1,0 +1,27 @@
+﻿@model Student
+<h3>Edit Student</h3>
+
+<form asp-action="Edit" method="post">
+```
+<input type="hidden" asp-for="StudentId" />
+
+<div>
+    <label asp-for="Name"></label>
+    <input asp-for="Name" />
+    <span asp-validation-for="Name"></span>
+</div>
+
+<div>
+    <label asp-for="Course"></label>
+    <input asp-for="Course" />
+    <span asp-validation-for="Course"></span>
+</div>
+
+<button type="submit">Save</button>
+<a asp-action="Index">Cancel</a>
+
+</form>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

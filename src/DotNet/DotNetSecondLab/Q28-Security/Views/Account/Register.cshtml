@@ -1,0 +1,10 @@
+﻿@model RegisterViewModel
+@{
+<h3>Register</h3>
+<form asp-action="Register" method="post">
+    <div asp-validation-summary="All"></div>
+    <div><label>Email</label><input asp-for="Email" /></div>
+    <div><label>Password</label><input asp-for="Password" /></div>
+    <button type="submit">Register</button>
+</form>
+}

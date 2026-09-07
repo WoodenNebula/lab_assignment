@@ -1,0 +1,13 @@
+﻿<h3>SQL Injection Demonstration (Educational Only)</h3>
+
+<h4 style="color:red;">Vulnerable Search (String Concatenation)</h4>
+<form asp-action="VulnerableSearch" method="post">
+    <input type="text" name="username" style="width:400px" placeholder="Try: ' OR '1'='1" />
+    <button type="submit">Search (Vulnerable)</button>
+</form>
+
+<h4 style="color:green;">Safe Search (Parameterized Query)</h4>
+<form asp-action="SafeSearch" method="post">
+    <input type="text" name="username" style="width:400px" />
+    <button type="submit">Search (Safe)</button>
+</form>

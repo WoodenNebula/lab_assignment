@@ -1,0 +1,8 @@
+﻿@model Student 
+<p>@Model.Name — @Model.Course</p> 
+@if (ViewContext.RouteData.Values["action"]!.ToString() == "Delete") {
+	<form asp-action="Delete" method="post"> 
+		<input type="hidden" asp-for="StudentId" /> 
+		<button type="submit">Confirm Delete</button> 
+	</form>
+}

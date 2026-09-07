@@ -1,0 +1,18 @@
+﻿<h3>CSRF Demonstration</h3>
+
+@if (ViewBag.Message != null)
+{
+    <p>@ViewBag.Message</p>
+}
+
+<h4 style="color:green;">Secure Form (Anti-Forgery Token Included)</h4>
+<form asp-action="ChangeName" method="post">
+    <input type="text" name="newName" />
+    <button type="submit">Change Name (Secure)</button>
+</form>
+
+<h4 style="color:red;">Vulnerable Form (Token Deliberately Skipped)</h4>
+<form asp-action="ChangeNameUnsafe" method="post">
+    <input type="text" name="newName" />
+    <button type="submit">Change Name (Vulnerable)</button>
+</form>

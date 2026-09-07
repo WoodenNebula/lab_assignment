@@ -1,0 +1,23 @@
+﻿@model Student
+
+<h3>Student Details</h3>
+
+<div>
+    <strong>Student ID:</strong> @Model.StudentId
+</div>
+
+<div>
+    <strong>Name:</strong> @Model.Name
+</div>
+
+<div>
+    <strong>Course:</strong> @Model.Course
+</div>
+
+<br />
+
+<a asp-action="Index">Back to Students</a>
+
+@if (User.IsInRole("Admin"))
+{ <span> | </span> <a asp-action="Edit" asp-route-id="@Model.StudentId">Edit</a>
+}

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Student>
+
+<h3>Students</h3>
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create">Add New Student</a>
+}
+<table class="table">
+    <tr><th>Name</th><th>Course</th><th></th></tr>
+    @foreach (var s in Model)
+    {
+        <tr>
+            <td>@s.Name</td>
+            <td>@s.Course</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@s.StudentId">Details</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <text> | <a asp-action="Edit" asp-route-id="@s.StudentId">Edit</a> | <a asp-action="Delete" asp-route-id="@s.StudentId">Delete</a></text>
+                }
+            </td>
+        </tr>
+    }
+</table>

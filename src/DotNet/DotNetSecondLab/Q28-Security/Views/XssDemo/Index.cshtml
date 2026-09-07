@@ -1,0 +1,16 @@
+﻿<h3>XSS Demonstration </h3>
+
+<form method="post">
+    <label>Enter text (try: &lt;script&gt;alert('XSS')&lt;/script&gt;)</label>
+    <input type="text" name="userInput" style="width:400px" />
+    <button type="submit">Submit</button>
+</form>
+
+@if (ViewBag.UserInput != null)
+{
+    <h4 style="color:red;">Unsafe Rendering (Intentionally Vulnerable)</h4>
+    <div>@Html.Raw(ViewBag.UserInput)</div>
+
+    <h4 style="color:green;">Safe Rendering (Standard Razor Encoding)</h4>
+    <div>@ViewBag.UserInput</div>
+}

@@ -1,0 +1,13 @@
+﻿<h3>Open Redirect Demonstration (Educational Only)</h3>
+
+<h4 style="color:red;">Vulnerable Redirect</h4>
+<form asp-action="VulnerableRedirect" method="get">
+    <input type="text" name="returnUrl" style="width:400px" placeholder="Try: https://example.com" />
+    <button type="submit">Go (Vulnerable)</button>
+</form>
+
+<h4 style="color:green;">Safe Redirect</h4>
+<form asp-action="SafeRedirect" method="get">
+    <input type="text" name="returnUrl" style="width:400px" placeholder="Try: /Home/Index or https://example.com" />
+    <button type="submit">Go (Safe)</button>
+</form>
