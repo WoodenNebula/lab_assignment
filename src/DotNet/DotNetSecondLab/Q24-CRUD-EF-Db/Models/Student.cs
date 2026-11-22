@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Q24_CRUD_EF_Db.Models;
 
-namespace Q24_CRUD_EF_Db.Models;
-
-public partial class Student
-{
+public partial class Student {
     public int StudentId { get; set; }
 
     public string FirstName { get; set; } = null!;
